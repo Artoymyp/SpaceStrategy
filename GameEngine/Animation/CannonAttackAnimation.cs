@@ -24,8 +24,8 @@ namespace SpaceStrategy.Animation
 			{
 				weaponIndexes.Add(i);
 			}
-			workingWeapons = GeometryHelper.GetRandomItems(weaponIndexes, totalPower);
-			List<int> hitWeapons = GeometryHelper.GetRandomItems(workingWeapons, workingWeapons.Count);//damage);
+			workingWeapons = weaponIndexes.GetRandomItems(totalPower);
+			var hitWeapons = workingWeapons.GetRandomItems(workingWeapons.Count);
 
 			TimeSpan blobStartTime = new TimeSpan();
 			TimeSpan maxBlobLifeTime = new TimeSpan();

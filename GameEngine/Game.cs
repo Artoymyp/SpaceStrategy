@@ -797,7 +797,9 @@ namespace SpaceStrategy
 				}
 				if (!isSpaceshipBaseBM) { possiblyRemovedBms.Add(bm); }
 			}
-			var bmsToRemove = GeometryHelper.GetRandomItems<BlastMarker>(possiblyRemovedBms, Dice.RollDices(6, 1, "Максимальное количество удаленных маркеров взрыва."));
+
+			int removedBmsCount = Dice.RollDices(6, 1, "Максимальное количество удаленных маркеров взрыва.");
+			var bmsToRemove = possiblyRemovedBms.GetRandomItems(removedBmsCount);
 			foreach (var bm in bmsToRemove)
 			{
 				graphicObjects.Remove(bm);

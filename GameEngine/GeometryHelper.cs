@@ -94,7 +94,7 @@ namespace SpaceStrategy
 			return (int)Math.Ceiling(p);
 		}
 
-		internal static List<T> GetRandomItems<T>(List<T> items, int count)
+		internal static List<T> GetRandomItems<T>(this List<T> items, int count)
 		{
 			List<T> result = new List<T>();
 			List<T> temp = items.ToList();
