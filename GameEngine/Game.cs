@@ -117,8 +117,7 @@ namespace SpaceStrategy
 		public bool Paused { get; set; }
 		internal double GetSpaceshipMoveDistanceInLastTurn(GothicSpaceshipBase spaceship)
 		{
-			double distance;
-			if (MoveDistanceInLastTurn.TryGetValue(spaceship, out distance))
+			if (MoveDistanceInLastTurn.TryGetValue(spaceship, out var distance))
 				return distance;
 			else return 0;
 		}
@@ -274,9 +273,8 @@ namespace SpaceStrategy
 					}
 					if (spaceship.IsCollisionObject)
 						spaceship.BlastMarkersAtBase.SetCurBlastMarkers(curBlastMarkersAtBase);
-					
-					double movedDistance;
-					if (spaceship.TryMove(TimerStep, out movedDistance))
+
+					if (spaceship.TryMove(TimerStep, out var movedDistance))
 					{
 						newAllShipsStand = false;
 
@@ -527,8 +525,7 @@ namespace SpaceStrategy
 			switch (GameState) {
 				case GameState.Battle:
 					if (button == System.Windows.Forms.MouseButtons.Left) {
-						GothicSpaceshipBase newSelectedSpaceship;
-						if (TrySelectSpaceship(gameCoord, out newSelectedSpaceship)) {
+						if (TrySelectSpaceship(gameCoord, out var newSelectedSpaceship)) {
 							if (newSelectedSpaceship is GothicSpaceship)
 							{
 								if (SelectedSpaceship == null)
@@ -569,8 +566,7 @@ namespace SpaceStrategy
 						case GamePhase.Attack:
 							if (button == System.Windows.Forms.MouseButtons.Right) {
 								if (SelectedSpaceship != null && SelectedSpaceship.Player == CurrentPlayer) {
-									GothicSpaceshipBase attackedSpaceship;
-									if (TrySelectSpaceship(gameCoord, out attackedSpaceship)) {
+									if (TrySelectSpaceship(gameCoord, out var attackedSpaceship)) {
 										if (attackedSpaceship!= SelectedSpaceship && (Params.FriendlyFire || attackedSpaceship.Player != CurrentPlayer)) {
 											SelectedSpaceship.Attack(attackedSpaceship);
 										}

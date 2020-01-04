@@ -55,9 +55,8 @@ namespace SpaceStrategy.Animation
 			dirNorm.Normalize();
 			for (int i = 0; i < workingWeapons.Count; i++)
 			{
-				List<Position> weaponPoses;
 				Position weaponPos;
-				if (source.OwnerSpaceship.weaponPlacements.TryGetValue(source, out weaponPoses))
+				if (source.OwnerSpaceship.weaponPlacements.TryGetValue(source, out var weaponPoses))
 				{
 					weaponPos = weaponPoses[workingWeapons[i]];
 				}

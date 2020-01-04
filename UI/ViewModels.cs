@@ -243,8 +243,7 @@ namespace SpaceshipStrategy.ViewModels
 			SpaceStrategy.GothicSpaceship.CriticalDamageCollection damageCollection = value as SpaceStrategy.GothicSpaceship.CriticalDamageCollection;
 			if (damageCollection != null) {
 				foreach (var damage in damageCollection) {
-					SpaceshipStatusViewModel damageViewModel;
-					if (statusesDictionary.TryGetValue(damage.GetType(), out damageViewModel)) {
+					if (statusesDictionary.TryGetValue(damage.GetType(), out var damageViewModel)) {
 						result.Add(damageViewModel);
 					}
 				}

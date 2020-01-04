@@ -44,8 +44,7 @@ namespace SpaceStrategy
 		{
 			if (State == SpaceshipState.Moving && Speed >0) {
 				double distance = Speed * dt.Milliseconds / 1000.0;
-				double unusedDistance;
-				Trajectory.MoveAlong(distance, out unusedDistance);
+				Trajectory.MoveAlong(distance, out var unusedDistance);
 				usedDistance = distance - unusedDistance;
 				return true;
 			}

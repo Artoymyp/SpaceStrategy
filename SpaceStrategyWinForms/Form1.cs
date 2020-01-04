@@ -117,8 +117,7 @@ namespace SpaceStrategyWinForms
 		}
 		bool IsApplicationIdle()
 		{
-			NativeMessage result;
-			return PeekMessage(out result, IntPtr.Zero, (uint)0, (uint)0, (uint)0) == 0;
+			return PeekMessage(out var result, IntPtr.Zero, (uint)0, (uint)0, (uint)0) == 0;
 		}
 		Game gameEngine;
 		private void Form1_Load(object sender, EventArgs e)

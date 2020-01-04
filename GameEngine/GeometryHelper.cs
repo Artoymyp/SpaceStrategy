@@ -54,8 +54,7 @@ namespace SpaceStrategy
 
 		internal static double PerpendicularDistance(Point2d Point2d, Point2d startPoint, Point2d endPoint)
 		{
-			double distance;
-			if (TryGetPerpendicular(Point2d, startPoint, endPoint, out distance))
+			if (TryGetPerpendicular(Point2d, startPoint, endPoint, out var distance))
 				return distance;
 			else return double.PositiveInfinity;
 		}
