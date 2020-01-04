@@ -8,8 +8,8 @@ namespace SpaceStrategy
 {
 	internal abstract class Trajectory : GraphicObject
 	{
-        protected double Length { get; set; }
-        protected double distanceFromStart { get; set; }
+		protected double Length { get; set; }
+		protected double distanceFromStart { get; set; }
 
 		internal Point2d StartPoint { get; set; }
 		internal Point2d EndPoint { get; set; }

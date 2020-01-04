@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace SpaceStrategy.Weapon
 {
-    internal class PlasmaDriveExplosion : DriveExplosionWeapon
-    {
-        public PlasmaDriveExplosion(GothicSpaceship owner, float range) : base(owner, range, GeometryHelper.RoundUp((float)owner.Class.HP / 2.0)) { }
-    }
+	internal class PlasmaDriveExplosion : DriveExplosionWeapon
+	{
+		public PlasmaDriveExplosion(GothicSpaceship owner, float range) : base(owner, range, GeometryHelper.RoundUp((float)owner.Class.HP / 2.0)) { }
+	}
 }

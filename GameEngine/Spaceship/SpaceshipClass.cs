@@ -17,7 +17,7 @@ namespace SpaceStrategy
 		{
 			ClassName = className;
 			Type = typeName;
-            Category = category;
+			Category = category;
 			HP = hp;
 			TurretsPower = turretsCount;
 			Shield = shieldPower;

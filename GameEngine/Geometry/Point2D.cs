@@ -16,10 +16,10 @@ namespace SpaceStrategy
 			m_X = x;
 			m_Y = y;
 		}
-        public double X { get { return m_X; } set { m_X = value; } }
-        public double Y { get { return m_Y; } set { m_Y = value; } }
-        public double Ro { get { return m_X; } set { m_X = value; } }
-        public double R { get { return m_Y; } set { m_Y = value; } }
+		public double X { get { return m_X; } set { m_X = value; } }
+		public double Y { get { return m_Y; } set { m_Y = value; } }
+		public double Ro { get { return m_X; } set { m_X = value; } }
+		public double R { get { return m_Y; } set { m_Y = value; } }
 
 		public Vector VectorTo(Point2d targetPoint)
 		{
@@ -94,30 +94,30 @@ namespace SpaceStrategy
 		//{
 		//	return string.Format("({0}; {1})", X.ToString(), Y.ToString());
 		//}
-        /// <summary>
-        /// Point2d(Rad, Dist)
-        /// </summary>
-        /// <param name="origin"></param>
-        /// <returns></returns>
-        public Point2d ToPolarCS(Point2d origin)
-        {
-            double distance = DistanceTo(origin);
-            double ang = origin.VectorTo(this).ToRadian();
-            return new Point2d(ang, distance);
-        }
-        public Point2d ToPolarCS()
-        {
-            return ToPolarCS(new Point2d());
-        }
-        public Point2d ToEuclidCS(Point2d origin)
-        {
-            return new Point2d(GeometryHelper.Cos(Ro) * R + origin.X, GeometryHelper.Sin(Ro) * R + origin.Y);
-        }
-        public Point2d ToEuclidCS()
-        {
-            return ToEuclidCS(new Point2d());
-        }
-        public override string ToString()
+		/// <summary>
+		/// Point2d(Rad, Dist)
+		/// </summary>
+		/// <param name="origin"></param>
+		/// <returns></returns>
+		public Point2d ToPolarCS(Point2d origin)
+		{
+			double distance = DistanceTo(origin);
+			double ang = origin.VectorTo(this).ToRadian();
+			return new Point2d(ang, distance);
+		}
+		public Point2d ToPolarCS()
+		{
+			return ToPolarCS(new Point2d());
+		}
+		public Point2d ToEuclidCS(Point2d origin)
+		{
+			return new Point2d(GeometryHelper.Cos(Ro) * R + origin.X, GeometryHelper.Sin(Ro) * R + origin.Y);
+		}
+		public Point2d ToEuclidCS()
+		{
+			return ToEuclidCS(new Point2d());
+		}
+		public override string ToString()
 		{
 			return string.Format("({0}; {1})", m_X, m_Y);
 		}

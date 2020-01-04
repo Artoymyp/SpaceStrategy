@@ -61,7 +61,7 @@ namespace UI
 			set { SetValue(RadiusProperty, value); }
 		}
 
-		// Using a DependencyProperty as the backing store for Radius.  This enables animation, styling, binding, etc...
+		// Using a DependencyProperty as the backing store for Radius. This enables animation, styling, binding, etc...
 		public static readonly DependencyProperty RadiusProperty =
 			DependencyProperty.Register("Radius", typeof(double), typeof(SpaceshipSideIcon), new PropertyMetadata(50.0));
 
@@ -72,7 +72,7 @@ namespace UI
 			set { SetValue(StartAngProperty, value); }
 		}
 
-		// Using a DependencyProperty as the backing store for StartAng.  This enables animation, styling, binding, etc...
+		// Using a DependencyProperty as the backing store for StartAng. This enables animation, styling, binding, etc...
 		public static readonly DependencyProperty StartAngProperty =
 			DependencyProperty.Register("StartAng", typeof(double), typeof(SpaceshipSideIconControl), new PropertyMetadata(0.0, new PropertyChangedCallback(InvalidateAreaProperty)));
 
@@ -87,7 +87,7 @@ namespace UI
 			set { SetValue(EndAngProperty, value); }
 		}
 
-		// Using a DependencyProperty as the backing store for EndAng.  This enables animation, styling, binding, etc...
+		// Using a DependencyProperty as the backing store for EndAng. This enables animation, styling, binding, etc...
 		public static readonly DependencyProperty EndAngProperty =
 			DependencyProperty.Register("EndAng", typeof(double), typeof(SpaceshipSideIconControl), new PropertyMetadata(Math.PI / 2));
 

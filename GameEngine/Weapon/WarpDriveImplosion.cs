@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace SpaceStrategy.Weapon
 {
-    internal class WarpDriveImplosion: DriveExplosionWeapon
-    {
-        public WarpDriveImplosion(GothicSpaceship owner, float range) : base(owner, range, owner.Class.HP) { }
-    }
+	internal class WarpDriveImplosion: DriveExplosionWeapon
+	{
+		public WarpDriveImplosion(GothicSpaceship owner, float range) : base(owner, range, owner.Class.HP) { }
+	}
 }

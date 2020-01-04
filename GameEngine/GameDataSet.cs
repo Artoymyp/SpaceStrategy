@@ -8,8 +8,8 @@
 }
 
 namespace SpaceStrategy.GameDataSetTableAdapters {
-    
-    
-    public partial class SpaceshipClassTableAdapter {
-    }
+	
+	
+	public partial class SpaceshipClassTableAdapter {
+	}
 }

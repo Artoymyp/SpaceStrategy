@@ -52,9 +52,9 @@ namespace SpaceStrategy
 			Angle = angle;
 		}
 
-        internal double DistanceTo(Position position)
-        {
-            return Location.DistanceTo(position.Location);
-        }
-    }
+		internal double DistanceTo(Position position)
+		{
+			return Location.DistanceTo(position.Location);
+		}
+	}
 }

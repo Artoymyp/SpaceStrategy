@@ -78,25 +78,25 @@ namespace SpaceStrategy
 			items.Add(20,	new Row() { DamageDiceCount = new int[] { 18, 14, 10, 7, 4 } });
 			
 		}
-        private static int GetDiceCount(int firepower,int columnIndex)
-        {
-            int result = 0;
-            int maxFirepower = items.Count;
-            int remainingFirepower = firepower;
-            while (remainingFirepower > maxFirepower)
-            {
-                result += items[maxFirepower].DamageDiceCount[columnIndex];
-                remainingFirepower -= maxFirepower;
-            }
+		private static int GetDiceCount(int firepower,int columnIndex)
+		{
+			int result = 0;
+			int maxFirepower = items.Count;
+			int remainingFirepower = firepower;
+			while (remainingFirepower > maxFirepower)
+			{
+				result += items[maxFirepower].DamageDiceCount[columnIndex];
+				remainingFirepower -= maxFirepower;
+			}
 
-            result += items[remainingFirepower].DamageDiceCount[columnIndex];
-            return result;
-        }
-        internal static bool GetBlastMarkersOnLine(IEnumerable<BlastMarker> markers, Point2d startPoint, Point2d endPoint){
-            if (markers.Any(bm=>GeometryHelper.PerpendicularDistance(bm.Position.Location, startPoint, endPoint)<BlastMarker.CollisionRadius))
-                return true;
-            else return false;
-	    }
+			result += items[remainingFirepower].DamageDiceCount[columnIndex];
+			return result;
+		}
+		internal static bool GetBlastMarkersOnLine(IEnumerable<BlastMarker> markers, Point2d startPoint, Point2d endPoint){
+			if (markers.Any(bm=>GeometryHelper.PerpendicularDistance(bm.Position.Location, startPoint, endPoint)<BlastMarker.CollisionRadius))
+				return true;
+			else return false;
+		}
 		private class Row
 		{
 			public int[] DamageDiceCount;

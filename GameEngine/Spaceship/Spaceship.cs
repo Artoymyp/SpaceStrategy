@@ -11,7 +11,7 @@ namespace SpaceStrategy
 {
 	public abstract class Spaceship: GraphicObject
 	{
-        double speed;
+		double speed;
 		#region Constructors
 		private Spaceship()
 		{
@@ -36,29 +36,29 @@ namespace SpaceStrategy
 		internal Game Game { get; private set; }
 		internal TrajectoryCollection Trajectory { get; set; }
 		internal SpaceshipState State { get; set; }
-        public virtual double Speed { get { return speed; } }
+		public virtual double Speed { get { return speed; } }
 		internal float Diameter { get { return Game.Params.SpaceshipDiameter; } }
 		internal bool IsSelected { get; set; }
-        public virtual void OnTime(TimeSpan dt) { }
+		public virtual void OnTime(TimeSpan dt) { }
 		public bool TryMove(TimeSpan dt, out double usedDistance)
 		{
 			if (State == SpaceshipState.Moving && Speed >0) {
-                double distance = Speed * dt.Milliseconds / 1000.0;
-                double unusedDistance;
-                Trajectory.MoveAlong(distance, out unusedDistance);
-                usedDistance = distance - unusedDistance;
+				double distance = Speed * dt.Milliseconds / 1000.0;
+				double unusedDistance;
+				Trajectory.MoveAlong(distance, out unusedDistance);
+				usedDistance = distance - unusedDistance;
 				return true;
 			}
-            usedDistance = 0;
+			usedDistance = 0;
 			return false;
 		}
 	}
-    public enum SpaceshipState
-    {
-        DeterminingPosition,
-        DeterminingDirection,
-        Moving,
-        Standing,
-        Removed
-    }
+	public enum SpaceshipState
+	{
+		DeterminingPosition,
+		DeterminingDirection,
+		Moving,
+		Standing,
+		Removed
+	}
 }

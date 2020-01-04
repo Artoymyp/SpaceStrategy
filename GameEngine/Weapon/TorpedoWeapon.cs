@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SpaceStrategy
 {
-    public class TorpedoWeapon : AimedWeapon
+	public class TorpedoWeapon : AimedWeapon
 	{
 		private TorpedoSalvo launchedTorpedo;
 		public TorpedoWeapon(GothicSpaceship owner, GameDataSet.SpaceshipClassWeaponryRow data) : base(owner, data) {
@@ -40,7 +40,7 @@ namespace SpaceStrategy
 				curDir = new Vector(1, 0);
 			else
 				curDir.Normalize();
-            double dist = GeometryHelper.Distance(curDir.ToRadian() + GeometryHelper.PiDiv4, curDir.ToRadian() - GeometryHelper.PiDiv4, true);
+			double dist = GeometryHelper.Distance(curDir.ToRadian() + GeometryHelper.PiDiv4, curDir.ToRadian() - GeometryHelper.PiDiv4, true);
 			Position pos = new Position(launchedTorpedo.Position.Location, curDir);
 			//if (Math.Abs(pos.Degree - Owner.Position.Degree) <= 45)
 			//	launchedTorpedo.Position = pos;
@@ -52,30 +52,30 @@ namespace SpaceStrategy
 				launchedTorpedo.Position = new Position(launchedTorpedo.Position.Location, OwnerSpaceship.Position.Direction);
 		}
 
-        protected override void LockOnTarget(object sender, Point2dSelectEventArgs e)
+		protected override void LockOnTarget(object sender, Point2dSelectEventArgs e)
 		{
 			Game.CursorMove -= AimingOnTarget;
 			Game.PointSelected -= LockOnTarget;
 			launchedTorpedo.Launch(this);
 			IsUsed = true;
 		}
-        public override int Power
-        {
-            get
-            {
-                if (OwnerSpaceship.SpecialOrder != GothicOrder.BraceForImpact)
-                {
-                    return power;
-                }
-                else
-                {
-                    return GeometryHelper.RoundUp(power / 2);
-                }
-            }
-            set
-            {
-                base.Power = value;
-            }
-        }
+		public override int Power
+		{
+			get
+			{
+				if (OwnerSpaceship.SpecialOrder != GothicOrder.BraceForImpact)
+				{
+					return power;
+				}
+				else
+				{
+					return GeometryHelper.RoundUp(power / 2);
+				}
+			}
+			set
+			{
+				base.Power = value;
+			}
+		}
 	}
 }

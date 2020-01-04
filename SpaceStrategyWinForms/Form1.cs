@@ -21,19 +21,19 @@ namespace SpaceStrategyWinForms
 			InitializeComponent();
 			spaceshipLibraryGridView.AutoGenerateColumns = false;
 
-            gameEngine = new Game();
-            gameEngine.PropertyChanged += gameEngine_PropertyChanged;
-            
-            bool fullscreen = true;
-            if (fullscreen)
-            {
-                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-                this.ClientSize = new Size(gameEngine.Size.Width + splitContainer1.Panel1.Width, gameEngine.Size.Height);
-            }
-            else
-            {
-                this.ClientSize = new Size((gameEngine.Size.Width + splitContainer1.Panel1.Width)/2, gameEngine.Size.Height);            
-            }
+			gameEngine = new Game();
+			gameEngine.PropertyChanged += gameEngine_PropertyChanged;
+			
+			bool fullscreen = true;
+			if (fullscreen)
+			{
+				this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+				this.ClientSize = new Size(gameEngine.Size.Width + splitContainer1.Panel1.Width, gameEngine.Size.Height);
+			}
+			else
+			{
+				this.ClientSize = new Size((gameEngine.Size.Width + splitContainer1.Panel1.Width)/2, gameEngine.Size.Height);			
+			}
 			
 			starfieldControl1.GameEngine = gameEngine;
 
@@ -48,10 +48,10 @@ namespace SpaceStrategyWinForms
 			timer1.Interval = gameEngine.TimerStep.Milliseconds;
 			timer1.Start();
 		}
-        void gameEngine_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "SelectedSpaceship")
-            {
+		void gameEngine_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "SelectedSpaceship")
+			{
 
 				SpecialOrdersPanelViewModel curCommandPanelViewModel = commandPanel1.DataContext as SpecialOrdersPanelViewModel;
 				if (curCommandPanelViewModel == null) {
@@ -60,8 +60,8 @@ namespace SpaceStrategyWinForms
 					commandPanel1.DataContext = curCommandPanelViewModel;
 				}
 				curCommandPanelViewModel.Spaceship = gameEngine.SelectedSpaceship;
-                spaceshipInfo1.DataContext = curCommandPanelViewModel.Spaceship;
-            }
+				spaceshipInfo1.DataContext = curCommandPanelViewModel.Spaceship;
+			}
 			else if (e.PropertyName == "GameState") {
 				if (gameEngine.GameState == GameState.End) {
 					var endDialog = new UI.EndDialog();
@@ -69,7 +69,7 @@ namespace SpaceStrategyWinForms
 					endDialog.ShowDialog();
 				}
 			}
-        }
+		}
 
 		void gameEngine_NextBattlePhase(object sender, NextBattlePhaseEventArgs e)
 		{
@@ -144,32 +144,32 @@ namespace SpaceStrategyWinForms
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			gameEngine.OnTimer();
-            //specialOrderPanel.Enabled = true;
+			//specialOrderPanel.Enabled = true;
 
-            //List<Button> orderButtons = new List<Button>(){
-            //    allAheadButton,
-            //    comeToNewDirectionButton,
-            //    burnRetrosButton,
-            //    lockOnButton,
-            //    braceForImpactButton,
-            //    reloadOrdnanceButton,
-            //    launchTorpedoButton
-            //};
+			//List<Button> orderButtons = new List<Button>(){
+			//	allAheadButton,
+			//	comeToNewDirectionButton,
+			//	burnRetrosButton,
+			//	lockOnButton,
+			//	braceForImpactButton,
+			//	reloadOrdnanceButton,
+			//	launchTorpedoButton
+			//};
 
-            //var availableOrders = gameEngine.AvailableOrders;
-            //foreach (var orderButton in orderButtons) {
-            //    if ((orderButton == allAheadButton && availableOrders.Contains(GothicTrajectorySpecialOrder.AllAheadFull)) ||
-            //        (orderButton == comeToNewDirectionButton && availableOrders.Contains(GothicTrajectorySpecialOrder.ComeToNewDirection)) ||
-            //        (orderButton == burnRetrosButton && availableOrders.Contains(GothicTrajectorySpecialOrder.BurnRetros)) ||
-            //        (orderButton == lockOnButton && availableOrders.Contains(GothicTrajectorySpecialOrder.LockOn)) ||
-            //        (orderButton == braceForImpactButton && availableOrders.Contains(GothicTrajectorySpecialOrder.BraceForImpact)) ||
-            //        (orderButton == reloadOrdnanceButton && availableOrders.Contains(GothicTrajectorySpecialOrder.ReloadOrdnance)) ||
-            //        (orderButton == launchTorpedoButton && availableOrders.Contains(GothicTrajectorySpecialOrder.LaunchOrdnance))) {
-            //        orderButton.Enabled = true;
-            //    }
-            //    else
-            //        orderButton.Enabled = false;
-            //}
+			//var availableOrders = gameEngine.AvailableOrders;
+			//foreach (var orderButton in orderButtons) {
+			//	if ((orderButton == allAheadButton && availableOrders.Contains(GothicTrajectorySpecialOrder.AllAheadFull)) ||
+			//		(orderButton == comeToNewDirectionButton && availableOrders.Contains(GothicTrajectorySpecialOrder.ComeToNewDirection)) ||
+			//		(orderButton == burnRetrosButton && availableOrders.Contains(GothicTrajectorySpecialOrder.BurnRetros)) ||
+			//		(orderButton == lockOnButton && availableOrders.Contains(GothicTrajectorySpecialOrder.LockOn)) ||
+			//		(orderButton == braceForImpactButton && availableOrders.Contains(GothicTrajectorySpecialOrder.BraceForImpact)) ||
+			//		(orderButton == reloadOrdnanceButton && availableOrders.Contains(GothicTrajectorySpecialOrder.ReloadOrdnance)) ||
+			//		(orderButton == launchTorpedoButton && availableOrders.Contains(GothicTrajectorySpecialOrder.LaunchOrdnance))) {
+			//		orderButton.Enabled = true;
+			//	}
+			//	else
+			//		orderButton.Enabled = false;
+			//}
 			
 		}
 		
@@ -243,28 +243,28 @@ namespace SpaceStrategyWinForms
 		//	gameEngine.PreviewSpecialOrder(GothicOrder.NormalMove);
 		//}
 
-        //private void allAheadButton_Click(object sender, EventArgs e)
-        //{
-        //    gameEngine.GiveSpecialOrder(GothicTrajectorySpecialOrder.AllAheadFull);
-        //}
+		//private void allAheadButton_Click(object sender, EventArgs e)
+		//{
+		//	gameEngine.GiveSpecialOrder(GothicTrajectorySpecialOrder.AllAheadFull);
+		//}
 
-        //private void burnRetrosButton_Click(object sender, EventArgs e)
-        //{
-        //    gameEngine.GiveSpecialOrder(GothicTrajectorySpecialOrder.BurnRetros);
-        //}
+		//private void burnRetrosButton_Click(object sender, EventArgs e)
+		//{
+		//	gameEngine.GiveSpecialOrder(GothicTrajectorySpecialOrder.BurnRetros);
+		//}
 
-        //private void changeCourse_Click(object sender, EventArgs e)
-        //{
-        //    gameEngine.GiveSpecialOrder(GothicTrajectorySpecialOrder.ComeToNewDirection);
-        //}
-        //private void launchTorpedoButton_Click(object sender, EventArgs e)
-        //{
-        //    gameEngine.GiveSpecialOrder(GothicTrajectorySpecialOrder.LaunchOrdnance);
-        //}
-        //private void reloadOrdnanceButton_Click(object sender, EventArgs e)
-        //{
-        //    gameEngine.GiveSpecialOrder(GothicTrajectorySpecialOrder.ReloadOrdnance);
-        //}
+		//private void changeCourse_Click(object sender, EventArgs e)
+		//{
+		//	gameEngine.GiveSpecialOrder(GothicTrajectorySpecialOrder.ComeToNewDirection);
+		//}
+		//private void launchTorpedoButton_Click(object sender, EventArgs e)
+		//{
+		//	gameEngine.GiveSpecialOrder(GothicTrajectorySpecialOrder.LaunchOrdnance);
+		//}
+		//private void reloadOrdnanceButton_Click(object sender, EventArgs e)
+		//{
+		//	gameEngine.GiveSpecialOrder(GothicTrajectorySpecialOrder.ReloadOrdnance);
+		//}
 
 		private void startGameButton_Click(object sender, EventArgs e)
 		{
@@ -278,11 +278,11 @@ namespace SpaceStrategyWinForms
 			gameEngine.EndBattlePhase();
 		}
 
-        private void starfieldControl1_KeyDown(object sender, KeyEventArgs e)
-        {
-            e.Handled = true;
-            gameEngine.OnKeyDown(e);
-        }
+		private void starfieldControl1_KeyDown(object sender, KeyEventArgs e)
+		{
+			e.Handled = true;
+			gameEngine.OnKeyDown(e);
+		}
 	}
 
 	[StructLayout(LayoutKind.Sequential)]

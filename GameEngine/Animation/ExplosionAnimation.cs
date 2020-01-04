@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpaceStrategy.Animation
 {
-    class ExplosionAnimation
-    {
-    }
+	class ExplosionAnimation
+	{
+	}
 }

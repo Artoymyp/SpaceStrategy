@@ -9,7 +9,7 @@ namespace SpaceStrategy
 	internal abstract class AnimationObject
 	{
 		TimeSpan Time;
-        public TimeSpan AnimationDuration { get; protected set; }
+		public TimeSpan AnimationDuration { get; protected set; }
 		public bool Cyclic;
 		protected float Phase;
 		internal AnimationObject(Game game, TimeSpan animationDuration, bool cyclic = false)
