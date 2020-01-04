@@ -1,0 +1,10 @@
+﻿<Window x:Class="UI.EndDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="clr-namespace:UI"
+        SizeToContent="WidthAndHeight"
+        Title="EndDialog" Height="300" Width="300">
+    <Grid>
+        <ui:CruiserCrashEndScreen/>
+    </Grid>
+</Window>

@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2F7C6504-F291-4120-84E4-D377109942FF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SpaceStrategy</RootNamespace>
+    <AssemblyName>GameEngine</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Animation\AnimationHelper.cs" />
+    <Compile Include="Animation\AnimationObject.cs" />
+    <Compile Include="Animation\BlastMarker.cs" />
+    <Compile Include="Animation\CannonAttackAnimation.cs" />
+    <Compile Include="Animation\ExplosionAnimation.cs" />
+    <Compile Include="Animation\LaserAttackAnimation.cs" />
+    <Compile Include="Animation\ShiledActiveAnimation.cs" />
+    <Compile Include="AttackCompass.cs" />
+    <Compile Include="Animation\BlastMarkerAnimation.cs" />
+    <Compile Include="Component\ScriptManager.cs" />
+    <Compile Include="Dice.cs" />
+    <Compile Include="Scenario.cs" />
+    <Compile Include="Spaceship\GothicSpaceship.cs" />
+    <Compile Include="Weapon\AimedWeapon.cs" />
+    <Compile Include="Weapon\DirectFireWeapon.cs" />
+    <Compile Include="Weapon\LanceWeapon.cs" />
+    <Compile Include="Weapon\CannonWeapon.cs" />
+    <Compile Include="Weapon\NovaWeapon.cs" />
+    <Compile Include="Weapon\DriveExplosion.cs" />
+    <Compile Include="Weapon\PlasmaDriveExplosion.cs" />
+    <Compile Include="Weapon\TurretWeapon.cs" />
+    <Compile Include="Trajectory\CircularTrajectory.cs" />
+    <Compile Include="Geometry\CorrdConverter.cs" />
+    <Compile Include="CursorEventArgs.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="Component\GameCursor.cs" />
+    <Compile Include="GameData.cs" />
+    <Compile Include="GameDataSet.cs">
+      <DependentUpon>GameDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="GameDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GameDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Component\GamePrinter.cs" />
+    <Compile Include="Animation\Gauges.cs" />
+    <Compile Include="GeometryHelper.cs" />
+    <Compile Include="Spaceship\GothicSpaceshipBase.cs" />
+    <Compile Include="GothicSpaceshipBonus.cs" />
+    <Compile Include="Trajectory\GothicTrajectory.cs" />
+    <Compile Include="Animation\GraphicObject.cs" />
+    <Compile Include="Weapon\GunneryTable.cs" />
+    <Compile Include="Trajectory\LinearTrajectory.cs" />
+    <Compile Include="NextBattlePhaseEventArgs.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="PlayerList.cs" />
+    <Compile Include="Geometry\Point2D.cs" />
+    <Compile Include="Point2DSelectEventArgs.cs" />
+    <Compile Include="Geometry\Position.cs" />
+    <Compile Include="Component\PositioningZone.cs" />
+    <Compile Include="Animation\SpaceshipExplosionAnimation.cs" />
+    <Compile Include="Spaceship\TorpedoSalvo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Spaceship\Spaceship.cs" />
+    <Compile Include="Spaceship\SpaceshipClass.cs" />
+    <Compile Include="Component\StarfieldVisual.cs" />
+    <Compile Include="Weapon\TorpedoWeapon.cs" />
+    <Compile Include="Trajectory\Trajectory.cs" />
+    <Compile Include="Trajectory\TrajectoryCollection.cs" />
+    <Compile Include="Geometry\Vector.cs" />
+    <Compile Include="Weapon\SpaceshipWeapon.cs" />
+    <Compile Include="Weapon\WarpDriveImplosion.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\FullAheadIcon.bmp" />
+    <None Include="background.jpg" />
+    <Content Include="GameData.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GameData_log.ldf">
+      <DependentUpon>GameData.mdf</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="GameDataSet.xsc">
+      <DependentUpon>GameDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="GameDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>GameDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="GameDataSet.xss">
+      <DependentUpon>GameDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
