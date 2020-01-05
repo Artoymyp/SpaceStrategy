@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace SpaceStrategy.Animation
 {
@@ -13,8 +10,6 @@ namespace SpaceStrategy.Animation
 		public CannonAttackAnimation(CannonWeapon source, Spaceship target)//, int damage)
 			: base(target.Game, new TimeSpan(), false)
 		{
-			this.target = target;
-			this.source = source;
 			List<int> weaponIndexes = new List<int>();
 
 			int totalPower = source.Power;
@@ -24,7 +19,7 @@ namespace SpaceStrategy.Animation
 			{
 				weaponIndexes.Add(i);
 			}
-			workingWeapons = weaponIndexes.GetRandomItems(totalPower);
+			List<int> workingWeapons = weaponIndexes.GetRandomItems(totalPower);
 			var hitWeapons = workingWeapons.GetRandomItems(workingWeapons.Count);
 
 			TimeSpan blobStartTime = new TimeSpan();
@@ -61,11 +56,9 @@ namespace SpaceStrategy.Animation
 		List<FireBlob> fireBlobs = new List<FireBlob>();
 		TimeSpan TimeFromLastFire;
 		static TimeSpan FireSpan { get { return new TimeSpan(0, 0, 0, 0, 30); } }
-		List<Vector> randWeaponAttackDistComponent = new List<Vector>();
-		List<int> workingWeapons = new List<int>();
+
 		static Color color { get { return Color.DeepSkyBlue; } }
-		Spaceship target;
-		CannonWeapon source;
+
 		internal override void OnTime(TimeSpan dt)
 		{
 			fireBlobs.RemoveAll(a => a.Complete);
@@ -97,26 +90,16 @@ namespace SpaceStrategy.Animation
 				blob.Draw(dc);
 			}
 		}
-		private void DrawLaserLine(Graphics dc, Point2d source, Point2d target)
-		{
-			Pen p = new Pen(color, 0.05F);
-			dc.DrawLine(p, source, target);			
-		}
-		private void DrawLaserBlob(Graphics dc, RectangleF blobRect, Point2d point)
-		{
-			if (blobRect != null)
-				dc.FillEllipse(new SolidBrush(color), blobRect);
 
-		}
+
 		private class FireBlob
 		{
 			public FireBlob(Position startPos, double maxDistance, bool placeExplosion)
 			{
 				Position = startPos;
 				this.maxDist = maxDistance;
-				this.placeExplosion = placeExplosion;
 			}
-			bool placeExplosion;
+
 			Position Position;
 			double distance=0;
 			double maxDist;
