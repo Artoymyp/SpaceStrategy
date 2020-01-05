@@ -28,26 +28,26 @@ namespace SpaceshipStrategy.ViewModels
 	}
 	public class GameViewModel:BaseViewModel
 	{
-		private Game game;
+		private Game _game;
 		public GameViewModel(Game game)
 		{
-			this.game = game;
+			this._game = game;
 		}
 	}
 		public class GameCommand : ICommand
 	{
-		public delegate void ICommandOnExecute(object parameter);
-		public delegate bool ICommandOnCanExecute(object parameter);
+		public delegate void CommandOnExecute(object parameter);
+		public delegate bool CommandOnCanExecute(object parameter);
 
-		private ICommandOnExecute _execute;
-		private ICommandOnCanExecute _canExecute;
+		private CommandOnExecute _execute;
+		private CommandOnCanExecute _canExecute;
 
-		public GameCommand(ICommandOnExecute onExecuteMethod, ICommandOnCanExecute onCanExecuteMethod)
+		public GameCommand(CommandOnExecute onExecuteMethod, CommandOnCanExecute onCanExecuteMethod)
 		{
 			_execute = onExecuteMethod;
 			_canExecute = onCanExecuteMethod;
 		}
-		public GameCommand(ICommandOnExecute onExecuteMethod, ICommandOnCanExecute onCanExecuteMethod, System.Drawing.Image image)
+		public GameCommand(CommandOnExecute onExecuteMethod, CommandOnCanExecute onCanExecuteMethod, System.Drawing.Image image)
 		{
 			_execute = onExecuteMethod;
 			_canExecute = onCanExecuteMethod;
@@ -96,17 +96,17 @@ namespace SpaceshipStrategy.ViewModels
 		} 
 	public class SpecialOrderCommand : GameCommand
 	{
-		GothicOrder order;
+		GothicOrder _order;
 		public SpecialOrderCommand() : base(delegate { }, a => true) { }
-		public SpecialOrderCommand(ICommandOnExecute onExecuteMethod, ICommandOnCanExecute onCanExecuteMethod, System.Drawing.Image image, GothicOrder order, string name)
+		public SpecialOrderCommand(CommandOnExecute onExecuteMethod, CommandOnCanExecute onCanExecuteMethod, System.Drawing.Image image, GothicOrder order, string name)
 			: base(onExecuteMethod, onCanExecuteMethod, image)
 		{
-			this.order = order;
+			this._order = order;
 			this.Name = name;
 		}
-		public GothicOrder Order { get { return order; } }
-		string name;
-		public string Name { get { return name; } set { name = value; } }
+		public GothicOrder Order { get { return _order; } }
+		string _name;
+		public string Name { get { return _name; } set { _name = value; } }
 		public string Description { get; set; }
 
 	}
@@ -143,11 +143,11 @@ namespace SpaceshipStrategy.ViewModels
 	}
 	public abstract class SpaceshipStatusViewModel
 	{
-		string name;
+		string _name;
 		public SpaceshipStatusViewModel(string name, Bitmap image)
 		{
 			Image = image.ToBitmapImage();
-			this.name = name;
+			this._name = name;
 		}
 		public string Name { get; set; }
 		public ImageSource Image { get; private set; }
@@ -164,20 +164,20 @@ namespace SpaceshipStrategy.ViewModels
 
 	public class SpecialOrdersPanelViewModel:BaseViewModel
 	{
-		List<SpecialOrderCommand> commands;
-		GothicSpaceship gothicSpaceship;
+		List<SpecialOrderCommand> _commands;
+		GothicSpaceship _gothicSpaceship;
 		public GothicSpaceship Spaceship
 		{
-			get { return gothicSpaceship; }
+			get { return _gothicSpaceship; }
 			set
 			{
-				if (gothicSpaceship != value) {
-					if (gothicSpaceship != null) {
-						gothicSpaceship.PropertyChanged -= OnSpaceshipPropertyChanged;
+				if (_gothicSpaceship != value) {
+					if (_gothicSpaceship != null) {
+						_gothicSpaceship.PropertyChanged -= OnSpaceshipPropertyChanged;
 					}
-					gothicSpaceship = value;
-					if (gothicSpaceship != null) {
-						gothicSpaceship.PropertyChanged += OnSpaceshipPropertyChanged;
+					_gothicSpaceship = value;
+					if (_gothicSpaceship != null) {
+						_gothicSpaceship.PropertyChanged += OnSpaceshipPropertyChanged;
 					}
 					CommandManager.InvalidateRequerySuggested();
 					NotifyPropertyChanged("Statuses");
@@ -186,7 +186,7 @@ namespace SpaceshipStrategy.ViewModels
 		}
 		public SpecialOrdersPanelViewModel()
 		{
-			commands = new List<SpecialOrderCommand>();
+			_commands = new List<SpecialOrderCommand>();
 			AddCommand(UI.Properties.Resources.AllAheadFull, GothicOrder.AllAheadFull,"Полный вперед!");
 			AddCommand(UI.Properties.Resources.BurnRetros, GothicOrder.BurnRetros,"Полный назад!");
 			AddCommand(UI.Properties.Resources.ChangeDirection, GothicOrder.ComeToNewDirection, "Резкий поворот!");
@@ -198,7 +198,7 @@ namespace SpaceshipStrategy.ViewModels
 
 			//NotifyPropertyChanged("Commands");
 		}
-		public List<SpecialOrderCommand> Commands { get { return commands; } }
+		public List<SpecialOrderCommand> Commands { get { return _commands; } }
 		
 		internal void OnSpaceshipPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
@@ -212,30 +212,30 @@ namespace SpaceshipStrategy.ViewModels
 		void GiveSpecialOrder(object param)
 		{
 			GothicOrder order = (GothicOrder)param;
-			gothicSpaceship.SetSpecialOrder(order);
+			_gothicSpaceship.SetSpecialOrder(order);
 		}
 		bool CanGiveSpecialOrder(object param)
 		{
 			if (param == null)
 				return false;
-			if (gothicSpaceship == null)
+			if (_gothicSpaceship == null)
 				return false;
 			GothicOrder order = (GothicOrder)param;
-			return gothicSpaceship.AvailableOrders.Contains(order);
+			return _gothicSpaceship.AvailableOrders.Contains(order);
 		}
 		private void AddCommand(Bitmap icon, GothicOrder order, string name)
 		{
-			commands.Add(new SpecialOrderCommand(GiveSpecialOrder, CanGiveSpecialOrder, icon, order, name));
+			_commands.Add(new SpecialOrderCommand(GiveSpecialOrder, CanGiveSpecialOrder, icon, order, name));
 		}
 	}
 	public class DamageTypeToViewModelConverter : IValueConverter
 	{
-		static Dictionary<Type, SpaceshipStatusViewModel> statusesDictionary;
+		static Dictionary<Type, SpaceshipStatusViewModel> _StatusesDictionary;
 		static DamageTypeToViewModelConverter(){
-			statusesDictionary = new Dictionary<Type, SpaceshipStatusViewModel>();
-			statusesDictionary.Add(typeof(FireDamage), new SpaceshipDamageStatusViewModel("Пожар!", UI.Properties.Resources.DamagedFire, "Пожар. В конце каждого хода пожар попытаются потушить (1к6). В случае провала корабль получить 1 очко урона."));
-			statusesDictionary.Add(typeof(ThrustersDamaged), new SpaceshipDamageStatusViewModel("Основные двигатели повреждены!", UI.Properties.Resources.DamagedSpeed, "Скорость снижена на 10 пунктов до восстановления повреждения."));
-			statusesDictionary.Add(typeof(EngineRoomDamaged), new SpaceshipDamageStatusViewModel("Маневровые двигатели повреждены!", UI.Properties.Resources.DamagedTurn, "Корабль не может поворачивать до восстановления повреждения."));
+			_StatusesDictionary = new Dictionary<Type, SpaceshipStatusViewModel>();
+			_StatusesDictionary.Add(typeof(FireDamage), new SpaceshipDamageStatusViewModel("Пожар!", UI.Properties.Resources.DamagedFire, "Пожар. В конце каждого хода пожар попытаются потушить (1к6). В случае провала корабль получить 1 очко урона."));
+			_StatusesDictionary.Add(typeof(ThrustersDamaged), new SpaceshipDamageStatusViewModel("Основные двигатели повреждены!", UI.Properties.Resources.DamagedSpeed, "Скорость снижена на 10 пунктов до восстановления повреждения."));
+			_StatusesDictionary.Add(typeof(EngineRoomDamaged), new SpaceshipDamageStatusViewModel("Маневровые двигатели повреждены!", UI.Properties.Resources.DamagedTurn, "Корабль не может поворачивать до восстановления повреждения."));
 		}
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
@@ -243,7 +243,7 @@ namespace SpaceshipStrategy.ViewModels
 			SpaceStrategy.GothicSpaceship.CriticalDamageCollection damageCollection = value as SpaceStrategy.GothicSpaceship.CriticalDamageCollection;
 			if (damageCollection != null) {
 				foreach (var damage in damageCollection) {
-					if (statusesDictionary.TryGetValue(damage.GetType(), out var damageViewModel)) {
+					if (_StatusesDictionary.TryGetValue(damage.GetType(), out var damageViewModel)) {
 						result.Add(damageViewModel);
 					}
 				}
@@ -275,7 +275,7 @@ namespace SpaceshipStrategy.ViewModels
 				case Side.Back:
 					return null;
 					break;
-				case Side.LFR:
+				case Side.LeftFrontRight:
 					return UI.Properties.Resources.SpaceshipSideDorsal.ToBitmapImage();
 					break;
 				case Side.All:
@@ -312,7 +312,7 @@ namespace SpaceshipStrategy.ViewModels
 
 	public class CruiserCrashPlayerPointsViewModel : BaseViewModel
 	{
-		private Game game { get { return Player.Game; } }
+		private Game Game { get { return Player.Game; } }
 		public CruiserCrashPlayerPointsViewModel(Player player)
 		{
 			this.Player = player;
@@ -324,16 +324,16 @@ namespace SpaceshipStrategy.ViewModels
 			get
 			{
 				int result = 0;
-				foreach (var player in game.Players) {
+				foreach (var player in Game.Players) {
 					if (player == Player)
 						continue;
 					foreach (var ss in player.Spaceships) {
-						result += ss.Class.HP - ss.HitPoints;
+						result += ss.Class.HitPoints - ss.HitPoints;
 					}
 				}
-				foreach (var ss in game.DestroyedSpaceships) {
+				foreach (var ss in Game.DestroyedSpaceships) {
 					if (ss.Player != Player) {
-						result += ss.Class.HP;
+						result += ss.Class.HitPoints;
 					}
 				}
 				return result;
@@ -344,11 +344,11 @@ namespace SpaceshipStrategy.ViewModels
 			get
 			{
 				int result = 0;
-				foreach (var player in game.Players) {
+				foreach (var player in Game.Players) {
 					if (player == Player)
 						continue;
 					foreach (var ss in player.Spaceships) {
-						if (ss.HitPoints < (float)ss.Class.HP / 2.0 && ss.HitPoints>0)
+						if (ss.HitPoints < (float)ss.Class.HitPoints / 2.0 && ss.HitPoints>0)
 							result += 1;
 					}
 				}
@@ -360,7 +360,7 @@ namespace SpaceshipStrategy.ViewModels
 			get
 			{
 				int result = 0;
-				foreach (var player in game.Players) {
+				foreach (var player in Game.Players) {
 					if (player == Player)
 						continue;
 					foreach (var ss in player.Spaceships) {
@@ -368,7 +368,7 @@ namespace SpaceshipStrategy.ViewModels
 							result += 1;
 					}
 				}
-				foreach (var ss in game.DestroyedSpaceships) {
+				foreach (var ss in Game.DestroyedSpaceships) {
 					if (ss.Player != Player) {
 						result += 1;
 					}

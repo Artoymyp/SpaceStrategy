@@ -8,13 +8,13 @@ namespace SpaceStrategy
 	public struct Position
 	{
 		public Point2d Location;
-		private Vector direction;
+		private Vector _direction;
 		public Vector Direction
 		{
-			get { return direction;}
+			get { return _direction;}
 			set {
-			direction = value;
-			Angle = direction.ToRadian();
+			_direction = value;
+			Angle = _direction.ToRadian();
 		} }
 		/// <summary>
 		/// Radian angle.
@@ -34,7 +34,7 @@ namespace SpaceStrategy
 		}
 		public Position(Point2d location){
 			Location = location;
-			direction = new Vector(1,0);
+			_direction = new Vector(1,0);
 			Angle = 0;
 		}
 		public static implicit operator Point2d(Position p) { return new Point2d(p.Location.X, p.Location.Y); }
@@ -42,13 +42,13 @@ namespace SpaceStrategy
 		public Position(Point2d location, Vector direction)
 		{
 			Location = location;
-			this.direction = direction;
+			this._direction = direction;
 			Angle = direction.ToRadian();
 		}
 		public Position(Point2d location, double angle)
 		{
 			Location = location;
-			direction = new Vector(GeometryHelper.Cos(angle),GeometryHelper.Sin(angle)/*,0*/);
+			_direction = new Vector(GeometryHelper.Cos(angle),GeometryHelper.Sin(angle)/*,0*/);
 			Angle = angle;
 		}
 

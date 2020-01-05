@@ -10,11 +10,11 @@ namespace SpaceStrategy
 	public abstract class GraphicObject
 	{
 		public Position Position { get; set; }
-		private bool isCollisionObject = true;
-		public virtual bool IsCollisionObject { get { return isCollisionObject; } set { isCollisionObject = value; } }
+		private bool _isCollisionObject = true;
+		public virtual bool IsCollisionObject { get { return _isCollisionObject; } set { _isCollisionObject = value; } }
 		public abstract void Draw(Graphics dc);
-		bool isVisible = true;
-		public bool IsVisible { get { return isVisible; } internal set { isVisible=value;} }
+		bool _isVisible = true;
+		public bool IsVisible { get { return _isVisible; } internal set { _isVisible=value;} }
 
 	}
 }

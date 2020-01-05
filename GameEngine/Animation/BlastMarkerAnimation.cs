@@ -10,17 +10,17 @@ namespace SpaceStrategy
 {
 	internal class BlastMarkerAnimation: AnimationObject
 	{
-		Position Position;
+		Position _position;
 		internal BlastMarkerAnimation(Position position):base(AnimationHelper.Game, new TimeSpan(), true)
 		{
-			Position = position;
+			_position = position;
 		}
 			
 		internal override void Draw(System.Drawing.Graphics dc)
 		{
 			var oldDc = dc.Save();
-			dc.TranslateTransform((float)Position.Location.X, (float)Position.Location.Y);
-			dc.RotateTransform((float)Position.Degree);
+			dc.TranslateTransform((float)_position.Location.X, (float)_position.Location.Y);
+			dc.RotateTransform((float)_position.Degree);
 
 			Color epicenterColor = Color.Gold;
 			Color perimeterColor = Color.FromArgb(128, Color.Orange);

@@ -10,18 +10,18 @@ namespace SpaceStrategy
 	{
 		public void AddEvent(ScriptEvent action)
 		{
-			actions.Add(action);
+			_actions.Add(action);
 		}
-		List<ScriptEvent> actions = new List<ScriptEvent>();
+		List<ScriptEvent> _actions = new List<ScriptEvent>();
 
 		public void OnTime(TimeSpan dt)
 		{
-			actions.RemoveAll(a => a.Complete);
-			for (int i = 0; i < actions.Count; i++)
+			_actions.RemoveAll(a => a.Complete);
+			for (int i = 0; i < _actions.Count; i++)
 			{
-				var script = actions[i];
+				var script = _actions[i];
 				script.CurTime += dt;
-				if (script.CurTime >= script.NeedTime)
+				if (script.CurTime >= script.StartTime)
 				{
 					script.Run();
 				}
@@ -31,12 +31,12 @@ namespace SpaceStrategy
 	internal class ScriptEvent
 	{
 		protected Action Action { get; set; }
-		public ScriptEvent(Action action, TimeSpan needTime)
+		public ScriptEvent(Action action, TimeSpan startTime)
 		{
 			Complete = false;
 			CurTime = new TimeSpan();
 			this.Action = action;
-			NeedTime = needTime;
+			StartTime = startTime;
 		}
 		public void Run()
 		{
@@ -47,47 +47,47 @@ namespace SpaceStrategy
 			}
 		}
 		public bool Complete { get; private set; }
-		public TimeSpan NeedTime { get; private set; }
+		public TimeSpan StartTime { get; private set; }
 		public TimeSpan CurTime { get; set; }
 	}
 	internal class InflictDamage : ScriptEvent
 	{
-		public InflictDamage(GothicSpaceshipBase spaceship, SpaceshipWeapon attakcer, int damage, TimeSpan needTime)
-			: base(null, needTime)
+		public InflictDamage(GothicSpaceshipBase spaceship, SpaceshipWeapon attacker, int damage, TimeSpan startTime)
+			: base(null, startTime)
 		{
-			this.spaceship = spaceship;
-			this.damage = damage;
-			this.attakcer = attakcer;
+			this.Spaceship = spaceship;
+			this._damage = damage;
+			this._attacker = attacker;
 			Action = InflictSpaceshipDamage;
 		}
-		protected GothicSpaceshipBase spaceship;
-		SpaceshipWeapon attakcer;
-		int damage;
+		protected GothicSpaceshipBase Spaceship;
+		SpaceshipWeapon _attacker;
+		int _damage;
 		protected virtual void InflictSpaceshipDamage()
 		{
-			spaceship.InflictDamage(damage);
+			Spaceship.InflictDamage(_damage);
 		}
 	}
 
 	internal class InflictDamageToTorpedo : InflictDamage
 	{
-		public InflictDamageToTorpedo(TorpedoSalvo torpedo, TurretWeapon attakcer, int damage, TimeSpan needTime, TimeSpan destructionDispersion)
-			: base(torpedo, attakcer, damage, needTime)
+		public InflictDamageToTorpedo(TorpedoSalvo torpedo, TurretWeapon attacker, int damage, TimeSpan startTime, TimeSpan destructionDispersion)
+			: base(torpedo, attacker, damage, startTime)
 		{
-			this.destructionDispersion = destructionDispersion;
+			this._destructionDispersion = destructionDispersion;
 		}
-		TimeSpan destructionDispersion;
+		TimeSpan _destructionDispersion;
 		protected override void InflictSpaceshipDamage()
 		{
-			(spaceship as TorpedoSalvo).SetMaxTorpedoDestructionDelay(destructionDispersion);
+			(Spaceship as TorpedoSalvo).SetMaxTorpedoDestructionDelay(_destructionDispersion);
 
 			base.InflictSpaceshipDamage();
 		}
 	}
 	internal class ShowAnimationEvent : ScriptEvent
 	{
-		public ShowAnimationEvent(AnimationObject animation, TimeSpan needTime)
-			: base(null, needTime)
+		public ShowAnimationEvent(AnimationObject animation, TimeSpan startTime)
+			: base(null, startTime)
 		{
 			Animation = animation;
 			Action = ShowAnimation;

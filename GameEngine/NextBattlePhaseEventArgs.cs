@@ -8,12 +8,12 @@ namespace SpaceStrategy
 	public class NextBattlePhaseEventArgs
 	{
 		public Player CurrentPlayer;
-		public GamePhase battlePhase;
+		public GamePhase BattlePhase;
 
-		public NextBattlePhaseEventArgs(Player CurrentPlayer, GamePhase battlePhase)
+		public NextBattlePhaseEventArgs(Player currentPlayer, GamePhase battlePhase)
 		{
-			this.CurrentPlayer = CurrentPlayer;
-			this.battlePhase = battlePhase;
+			this.CurrentPlayer = currentPlayer;
+			this.BattlePhase = battlePhase;
 		}
 	}
 }

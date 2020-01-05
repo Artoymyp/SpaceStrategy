@@ -25,27 +25,27 @@ namespace SpaceStrategy
 			var x45degree = GeometryHelper.Cos(GeometryHelper.Pi / 4) * radius;
 
 			var centerPoint = new Point2d(0, 0);
-			var cornerPointDR = new Point2d(x45degree, x45degree);
-			var cornerPointTR = new Point2d(x45degree, -x45degree);
-			var cornerPointDL = new Point2d(-x45degree, x45degree);
-			var cornerPointTL = new Point2d(-x45degree, -x45degree);
+			var bottomRightPoint = new Point2d(x45degree, x45degree);
+			var topRightPoint = new Point2d(x45degree, -x45degree);
+			var bottomLeftPoint = new Point2d(-x45degree, x45degree);
+			var topLeftPoint = new Point2d(-x45degree, -x45degree);
 			switch (side) {
 				case Side.Left:
-					dc.DrawLine(pen, cornerPointTL, centerPoint);
-					dc.DrawLine(pen, cornerPointTR, centerPoint);
+					dc.DrawLine(pen, topLeftPoint, centerPoint);
+					dc.DrawLine(pen, topRightPoint, centerPoint);
 					dc.DrawArc(pen, -radius, -radius, 2 * radius, 2 * radius, -135, 90);
 					break;
 				case Side.Front:
-					dc.DrawLine(pen, cornerPointTR, centerPoint);
-					dc.DrawLine(pen, cornerPointDR, centerPoint);
+					dc.DrawLine(pen, topRightPoint, centerPoint);
+					dc.DrawLine(pen, bottomRightPoint, centerPoint);
 					dc.DrawArc(pen, -radius, -radius, 2 * radius, 2 * radius, -45, 90);
 					break;
 				case Side.Right:
-					dc.DrawLine(pen, cornerPointDR, centerPoint);
-					dc.DrawLine(pen, cornerPointDL, centerPoint);
+					dc.DrawLine(pen, bottomRightPoint, centerPoint);
+					dc.DrawLine(pen, bottomLeftPoint, centerPoint);
 					dc.DrawArc(pen, -radius, -radius, 2 * radius, 2 * radius, 45, 90);
 					break;
-				case Side.LFR:
+				case Side.LeftFrontRight:
 					dc.Restore(dcState);
 					Draw(dc, color, pos, Side.Left, radius);
 					Draw(dc, color, pos, Side.Front, radius);

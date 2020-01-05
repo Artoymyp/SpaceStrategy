@@ -10,7 +10,7 @@ namespace SpaceStrategy
 {
 	public static class GamePrinter
 	{
-		static List<string> lines = new List<string>();
+		static List<string> _Lines = new List<string>();
 		static GamePrinter() {
 			TopLeftCorner = new Point2d(0, 50);
 			MaxRowsCount = 10;
@@ -20,8 +20,8 @@ namespace SpaceStrategy
 		}
 		static public void AddLine(string newLine)
 		{
-			lines.Insert(0, newLine);
-			lines = lines.Take(MaxRowsCount).ToList();
+			_Lines.Insert(0, newLine);
+			_Lines = _Lines.Take(MaxRowsCount).ToList();
 		}
 		static public Point2d TopLeftCorner { get; set; }
 		static public int MaxRowsCount {get; set;}
@@ -30,10 +30,10 @@ namespace SpaceStrategy
 		static public Brush Brush { get; set; }
 		static public void Draw(Graphics dc)
 		{
-			for (int i = 0; i < Math.Min(MaxRowsCount, lines.Count); i++) {
+			for (int i = 0; i < Math.Min(MaxRowsCount, _Lines.Count); i++) {
 				var p = TopLeftCorner + new Vector(0, (float)(Font.SizeInPoints * i) * 1.5);
 				Point linePosition = new Point((int)p.X, (int)p.Y);
-				TextRenderer.DrawText(dc, lines[i], Font, linePosition, Color);
+				TextRenderer.DrawText(dc, _Lines[i], Font, linePosition, Color);
 				//PointF linePosition = TopLeftCorner + new Vector(0, (float)(Font.SizeInPoints * i) * 1.5);
 				//dc.DrawString(lines[i], Font, Brush, linePosition);
 			}

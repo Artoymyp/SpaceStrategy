@@ -21,31 +21,31 @@ namespace SpaceStrategyWinForms
 			InitializeComponent();
 			spaceshipLibraryGridView.AutoGenerateColumns = false;
 
-			gameEngine = new Game();
-			gameEngine.PropertyChanged += gameEngine_PropertyChanged;
+			_gameEngine = new Game();
+			_gameEngine.PropertyChanged += gameEngine_PropertyChanged;
 			
 			bool fullscreen = true;
 			if (fullscreen)
 			{
 				this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-				this.ClientSize = new Size(gameEngine.Size.Width + splitContainer1.Panel1.Width, gameEngine.Size.Height);
+				this.ClientSize = new Size(_gameEngine.Size.Width + splitContainer1.Panel1.Width, _gameEngine.Size.Height);
 			}
 			else
 			{
-				this.ClientSize = new Size((gameEngine.Size.Width + splitContainer1.Panel1.Width)/2, gameEngine.Size.Height);			
+				this.ClientSize = new Size((_gameEngine.Size.Width + splitContainer1.Panel1.Width)/2, _gameEngine.Size.Height);			
 			}
 			
-			starfieldControl1.GameEngine = gameEngine;
+			starfieldControl1.GameEngine = _gameEngine;
 
-			gameEngine.StartPositioningShips += gameEngine_StartPositioningShips;
-			gameEngine.BattleStarted += gameEngine_BattleStarted;
-			gameEngine.StartPositioningPhase += gameEngine_StartPositioningPhase;
-			gameEngine.NextTurn += gameEngine_NextTurn;
-			gameEngine.NextBattlePhase += gameEngine_NextBattlePhase;
+			_gameEngine.StartPositioningShips += gameEngine_StartPositioningShips;
+			_gameEngine.BattleStarted += gameEngine_BattleStarted;
+			_gameEngine.StartPositioningPhase += gameEngine_StartPositioningPhase;
+			_gameEngine.NextTurn += gameEngine_NextTurn;
+			_gameEngine.NextBattlePhase += gameEngine_NextBattlePhase;
 			Application.Idle += HandleApplicationIdle;
 
 
-			timer1.Interval = gameEngine.TimerStep.Milliseconds;
+			timer1.Interval = _gameEngine.TimerStep.Milliseconds;
 			timer1.Start();
 		}
 		void gameEngine_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -55,17 +55,17 @@ namespace SpaceStrategyWinForms
 
 				SpecialOrdersPanelViewModel curCommandPanelViewModel = commandPanel1.DataContext as SpecialOrdersPanelViewModel;
 				if (curCommandPanelViewModel == null) {
-					SpecialOrderButtonBehaviour.Game = gameEngine;
+					SpecialOrderButtonBehaviour.Game = _gameEngine;
 					curCommandPanelViewModel = new SpecialOrdersPanelViewModel();
 					commandPanel1.DataContext = curCommandPanelViewModel;
 				}
-				curCommandPanelViewModel.Spaceship = gameEngine.SelectedSpaceship;
+				curCommandPanelViewModel.Spaceship = _gameEngine.SelectedSpaceship;
 				spaceshipInfo1.DataContext = curCommandPanelViewModel.Spaceship;
 			}
 			else if (e.PropertyName == "GameState") {
-				if (gameEngine.GameState == GameState.End) {
+				if (_gameEngine.GameState == GameState.End) {
 					var endDialog = new UI.EndDialog();
-					endDialog.DataContext = gameEngine.Players;
+					endDialog.DataContext = _gameEngine.Players;
 					endDialog.ShowDialog();
 				}
 			}
@@ -102,7 +102,7 @@ namespace SpaceStrategyWinForms
 			int raceIndex = -1;
 			foreach (DataRowView raceItem in comboBox1.Items) {
 				var raceRow = raceItem.Row as GameDataSet.RaceRow;
-				if (raceRow.Name == gameEngine.CurrentPlayer.Race)
+				if (raceRow.Name == _gameEngine.CurrentPlayer.Race)
 					raceIndex = comboBox1.Items.IndexOf(raceItem);
 			}
 			if (raceIndex != -1)
@@ -119,12 +119,12 @@ namespace SpaceStrategyWinForms
 		{
 			return PeekMessage(out var result, IntPtr.Zero, (uint)0, (uint)0, (uint)0) == 0;
 		}
-		Game gameEngine;
+		Game _gameEngine;
 		private void Form1_Load(object sender, EventArgs e)
 		{
 			comboBox1.ValueMember = "Name";
 			comboBox1.DisplayMember = "Name";
-			comboBox1.DataSource = gameEngine.GameData.Races;
+			comboBox1.DataSource = _gameEngine.GameData.Races;
 			comboBox1.SelectedValueChanged += comboBox1_SelectedValueChanged;
 			comboBox1.SelectedIndex = 1;
 
@@ -136,13 +136,13 @@ namespace SpaceStrategyWinForms
 			spaceshipLibraryGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;// ExceptHeader;
 			string raceId = (string)comboBox1.SelectedValue;
 			//dataGridView1.DataSource = gameEngine.GameData.GetSpaceshipClassesByRaceId(raceId, gameEngine.Scenario.SingleShipMaxPoints);
-			spaceshipLibraryGridView.DataSource = gameEngine.Scenario.GetAvailableSpaceshipClasses(raceId);
+			spaceshipLibraryGridView.DataSource = _gameEngine.Scenario.GetAvailableSpaceshipClasses(raceId);
 
 		}
 
 		private void timer1_Tick(object sender, EventArgs e)
 		{
-			gameEngine.OnTimer();
+			_gameEngine.OnTimer();
 			//specialOrderPanel.Enabled = true;
 
 			//List<Button> orderButtons = new List<Button>(){
@@ -177,14 +177,14 @@ namespace SpaceStrategyWinForms
 			if (spaceshipLibraryGridView.CurrentRow !=null) {
 				var selectedSpaceshipClass = spaceshipLibraryGridView.CurrentRow.DataBoundItem as SpaceshipClass;
 				if (selectedSpaceshipClass != null) {
-					gameEngine.CurrentPlayer.PositioningZone.BeginSpaceshipCreation(selectedSpaceshipClass);
+					_gameEngine.CurrentPlayer.PositioningZone.BeginSpaceshipCreation(selectedSpaceshipClass);
 				}
 			}
 		}
 
 		private void starfieldControl1_MouseClick(object sender, MouseEventArgs e)
 		{
-			gameEngine.OnMouseClick(new Point2d(e.X,e.Y),e.Button);
+			_gameEngine.OnMouseClick(new Point2d(e.X,e.Y),e.Button);
 			//if (gameEngine.SelectedSpaceship != null)
 			//	weaponryTable.DataSource = gameEngine.SelectedSpaceship.Weapons;
 			//else
@@ -192,11 +192,11 @@ namespace SpaceStrategyWinForms
 		}
 		private void starfieldControl1_MouseMove(object sender, MouseEventArgs e)
 		{
-			gameEngine.MouseMove(new Point2d(e.X, e.Y), e.Button);
+			_gameEngine.MouseMove(new Point2d(e.X, e.Y), e.Button);
 		}
 		private void starfieldControl1_MouseDown(object sender, MouseEventArgs e)
 		{
-			gameEngine.OnMouseDown(new Point2d(e.X, e.Y), e.Button);
+			_gameEngine.OnMouseDown(new Point2d(e.X, e.Y), e.Button);
 		}
 
 		private void starfieldControl1_Paint(object sender, PaintEventArgs e)
@@ -207,7 +207,7 @@ namespace SpaceStrategyWinForms
 
 		private void startBattleButton_Click(object sender, EventArgs e)
 		{
-			gameEngine.StartBattle();
+			_gameEngine.StartBattle();
 			comboBox1.Enabled = false;
 			//dataGridView1.Enabled = false;
 		}
@@ -268,19 +268,19 @@ namespace SpaceStrategyWinForms
 		private void startGameButton_Click(object sender, EventArgs e)
 		{
 			startGameButton.Visible = false;
-			gameEngine.StartGame();
+			_gameEngine.StartGame();
 		}
 
 		private void turnEndButton_Click(object sender, EventArgs e)
 		{
 			turnEndButton.Enabled = false;
-			gameEngine.EndBattlePhase();
+			_gameEngine.EndBattlePhase();
 		}
 
 		private void starfieldControl1_KeyDown(object sender, KeyEventArgs e)
 		{
 			e.Handled = true;
-			gameEngine.OnKeyDown(e);
+			_gameEngine.OnKeyDown(e);
 		}
 	}
 

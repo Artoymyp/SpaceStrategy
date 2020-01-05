@@ -7,7 +7,7 @@ namespace SpaceStrategy
 {
 	public class TorpedoWeapon : AimedWeapon
 	{
-		private TorpedoSalvo launchedTorpedo;
+		private TorpedoSalvo _launchedTorpedo;
 		public TorpedoWeapon(GothicSpaceship owner, GameDataSet.SpaceshipClassWeaponryRow data) : base(owner, data) {
 			LoadedTorpedoCount = this.Power;
 		}
@@ -26,37 +26,37 @@ namespace SpaceStrategy
 			if (torpedoToLaunch > LoadedTorpedoCount)
 				torpedoToLaunch = LoadedTorpedoCount;
 			LoadedTorpedoCount -= torpedoToLaunch;
-			launchedTorpedo = new TorpedoSalvo(OwnerSpaceship.Game, OwnerSpaceship.Player, this, OwnerSpaceship.Position, torpedoToLaunch, Range, LineColor);
+			_launchedTorpedo = new TorpedoSalvo(OwnerSpaceship.Game, OwnerSpaceship.Player, this, OwnerSpaceship.Position, torpedoToLaunch, Range, LineColor);
 			
-			Game.AddTorpedoSalvo(launchedTorpedo);
-			Game.CommittedAttacks.Add(new Tuple<Spaceship, Spaceship>(launchedTorpedo, this.OwnerSpaceship));
-			Game.CommittedAttacks.Add(new Tuple<Spaceship, Spaceship>(this.OwnerSpaceship, launchedTorpedo));
+			Game.AddTorpedoSalvo(_launchedTorpedo);
+			Game.CommittedAttacks.Add(new Tuple<Spaceship, Spaceship>(_launchedTorpedo, this.OwnerSpaceship));
+			Game.CommittedAttacks.Add(new Tuple<Spaceship, Spaceship>(this.OwnerSpaceship, _launchedTorpedo));
 		}
 
 		protected override void AimingOnTarget(object sender, CursorEventArgs e)
 		{
-			var curDir = launchedTorpedo.Position.Location.VectorTo(e.Position);
+			var curDir = _launchedTorpedo.Position.Location.VectorTo(e.Position);
 			if (curDir == new Vector())
 				curDir = new Vector(1, 0);
 			else
 				curDir.Normalize();
 			double dist = GeometryHelper.Distance(curDir.ToRadian() + GeometryHelper.PiDiv4, curDir.ToRadian() - GeometryHelper.PiDiv4, true);
-			Position pos = new Position(launchedTorpedo.Position.Location, curDir);
+			Position pos = new Position(_launchedTorpedo.Position.Location, curDir);
 			//if (Math.Abs(pos.Degree - Owner.Position.Degree) <= 45)
 			//	launchedTorpedo.Position = pos;
 			//else
 			//	launchedTorpedo.Position = new Position(launchedTorpedo.Position.Location, Owner.Position.Direction);
 			if (GeometryHelper.IsBetween(pos.Angle+GeometryHelper.PiDiv4, pos.Angle-GeometryHelper.PiDiv4, OwnerSpaceship.Position.Angle))
-				launchedTorpedo.Position = pos;
+				_launchedTorpedo.Position = pos;
 			else
-				launchedTorpedo.Position = new Position(launchedTorpedo.Position.Location, OwnerSpaceship.Position.Direction);
+				_launchedTorpedo.Position = new Position(_launchedTorpedo.Position.Location, OwnerSpaceship.Position.Direction);
 		}
 
 		protected override void LockOnTarget(object sender, Point2dSelectEventArgs e)
 		{
 			Game.CursorMove -= AimingOnTarget;
 			Game.PointSelected -= LockOnTarget;
-			launchedTorpedo.Launch(this);
+			_launchedTorpedo.Launch(this);
 			IsUsed = true;
 		}
 		public override int Power

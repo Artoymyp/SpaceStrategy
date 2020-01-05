@@ -8,28 +8,28 @@ using System.Threading.Tasks;
 
 namespace SpaceStrategy.Animation
 {
-	internal class ShiledActiveAnimation: AnimationObject
+	internal class ShieldActiveAnimation: AnimationObject
 	{
-		static TimeSpan dur { get { return new TimeSpan(0,0,0,0,1000);} }
-		GothicSpaceshipBase spaceship;
+		static TimeSpan Duration { get { return new TimeSpan(0,0,0,0,1000);} }
+		GothicSpaceshipBase _spaceship;
 		static Color ShieldColorMax { get { return Color.FromArgb(0x50, 0xFF, 0xFF, 0xA0); } }
 		static Color ShieldColorMin { get { return Color.FromArgb(0x20, 0xFF, 0xFF, 0xA0); } }
 		static float SizeFactor { get { return 1.2F; } }
-		public ShiledActiveAnimation(GothicSpaceshipBase spaceship, bool cyclic):base(spaceship.Game, dur, cyclic)
+		public ShieldActiveAnimation(GothicSpaceshipBase spaceship, bool cyclic):base(spaceship.Game, Duration, cyclic)
 		{
-			this.spaceship = spaceship;
+			this._spaceship = spaceship;
 		}
 		internal override void Draw(System.Drawing.Graphics dc)
 		{
 			var oldDc = dc.Save();
-			dc.TranslateTransform((float)spaceship.Position.Location.X, (float)spaceship.Position.Location.Y);
+			dc.TranslateTransform((float)_spaceship.Position.Location.X, (float)_spaceship.Position.Location.Y);
 			Color curColor;
 			if (Phase < 0.5)
 				curColor = AnimationHelper.AnimateColor(Phase * 2, ShieldColorMin, ShieldColorMax);
 			else
 				curColor = AnimationHelper.AnimateColor((Phase - 0.5) * 2, ShieldColorMax, ShieldColorMin);
 
-			float radius = spaceship.Diameter * 0.5F * SizeFactor;
+			float radius = _spaceship.Diameter * 0.5F * SizeFactor;
 			RectangleF rect = new RectangleF(-radius, -radius, radius * 2, radius * 2);
 
 			Brush pthGrBrush = new SolidBrush(curColor);

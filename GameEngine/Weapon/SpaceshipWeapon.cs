@@ -8,7 +8,7 @@ namespace SpaceStrategy
 {
 	public abstract class SpaceshipWeapon
 	{
-		internal int normalPower;
+		internal int NormalPower;
 		protected int power;
 		public SpaceshipWeapon(GothicSpaceship owner, Side side, float minRange, float range, int power, WeaponType type)
 		{
@@ -17,7 +17,7 @@ namespace SpaceStrategy
 			LineColor = GetColor(type);
 			MinRange = minRange;
 			Range = range;
-			normalPower = power;
+			NormalPower = power;
 			Power = power;
 			IsUsed = false;
 			Name = type.ToString();
@@ -43,7 +43,7 @@ namespace SpaceStrategy
 		{
 			switch (weaponTypeName.ToLower()) {
 				case "lance": return WeaponType.Lance;
-				case "cannon": return WeaponType.Battary;
+				case "cannon": return WeaponType.Battery;
 				case "nova": return WeaponType.Nova;
 				case "torpedo": return WeaponType.Torpedo;
 				default:
@@ -56,18 +56,18 @@ namespace SpaceStrategy
 				case "left": return Side.Left;
 				case "right": return Side.Right;
 				case "front": return Side.Front;
-				case "lfr": return Side.LFR;
+				case "lfr": return Side.LeftFrontRight;
 				case "all": return Side.All;
 				default:
 					throw new ArgumentException("Неверный тип стороны корабля.");
 			}
 		}
-		private static Color GetColor(WeaponType Type)
+		private static Color GetColor(WeaponType type)
 		{
-			switch (Type) {
+			switch (type) {
 				case WeaponType.Lance:
 					return Color.Red;
-				case WeaponType.Battary:
+				case WeaponType.Battery:
 					return Color.Orange;
 				case WeaponType.Nova:
 					return Color.Purple;
@@ -87,13 +87,13 @@ namespace SpaceStrategy
 		Front=2,
 		Right=4,
 		Back=8,
-		LFR = Left | Front | Right,
+		LeftFrontRight = Left | Front | Right,
 		All = Left | Front | Right | Back
 	}
 	public enum WeaponType
 	{
 		Lance,
-		Battary,
+		Battery,
 		Nova,
 		Torpedo,
 		Turret

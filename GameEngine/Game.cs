@@ -12,14 +12,14 @@ namespace SpaceStrategy
 {
 	public class Game : INotifyPropertyChanged
 	{
-		GameState gameState;
-		GameState savedState;
-		int PositioningCompletedPlayers = 0;
-		Player currentPlayer;
-		AttackCompass AttackCompass;
-		List<AnimationObject> animations = new List<AnimationObject>();
-		List<GraphicObject> graphicObjects = new List<GraphicObject>();
-		List<GothicSpaceship> destroyedSpaceships = new List<GothicSpaceship>();
+		GameState _gameState;
+		GameState _savedState;
+		int _positioningCompletedPlayersCount = 0;
+		Player _currentPlayer;
+		AttackCompass _attackCompass;
+		List<AnimationObject> _animations = new List<AnimationObject>();
+		List<GraphicObject> _graphicObjects = new List<GraphicObject>();
+		List<GothicSpaceship> _destroyedSpaceships = new List<GothicSpaceship>();
 		public Game()
 		{
 			Size = System.Windows.Forms.Screen.GetWorkingArea(new Point(0,0)).Size;
@@ -35,28 +35,28 @@ namespace SpaceStrategy
 				Players.Insert(0, new Player(this, "Игрок 2", "Chaos", Color.Red));
 
 			CurrentPlayer = Players[0];
-			zones = new List<PositioningZone>();
+			_zones = new List<PositioningZone>();
 
 			int positioningZoneWidth = 90;
 			int positioningZoneHeight = 30;
 			int distanceBetweenZones = 60;
-			int xCenterCoord = 0;
-			int yCenterCoord = 0;
-			zones.Add(new PositioningZone(this, Players[0],
-				new Point2d(xCenterCoord - positioningZoneWidth / 2, yCenterCoord - distanceBetweenZones / 2 - positioningZoneHeight),
-				new Point2d(xCenterCoord + positioningZoneWidth / 2, yCenterCoord - distanceBetweenZones / 2)));
-			zones.Add(new PositioningZone(this, Players[1],
-				new Point2d(xCenterCoord - positioningZoneWidth / 2, yCenterCoord + distanceBetweenZones / 2),
-				new Point2d(xCenterCoord + positioningZoneWidth / 2, yCenterCoord + distanceBetweenZones / 2 + positioningZoneHeight)));
+			int centerX = 0;
+			int centerY = 0;
+			_zones.Add(new PositioningZone(this, Players[0],
+				new Point2d(centerX - positioningZoneWidth / 2, centerY - distanceBetweenZones / 2 - positioningZoneHeight),
+				new Point2d(centerX + positioningZoneWidth / 2, centerY - distanceBetweenZones / 2)));
+			_zones.Add(new PositioningZone(this, Players[1],
+				new Point2d(centerX - positioningZoneWidth / 2, centerY + distanceBetweenZones / 2),
+				new Point2d(centerX + positioningZoneWidth / 2, centerY + distanceBetweenZones / 2 + positioningZoneHeight)));
 
-			foreach (var zone in zones) {
+			foreach (var zone in _zones) {
 				zone.PositioningBegin += zone_PositioningBegin;
 				zone.PositioningComplete += zone_PositioningComplete;
 			}
 
 			Size scenarioNeeds = new Size(90, distanceBetweenZones + positioningZoneHeight * 2);
 			float maxScale = Math.Min(Size.Height / scenarioNeeds.Height, Size.Width / scenarioNeeds.Width);
-			CoordConverter = new CoordConverter(this, maxScale);
+			CoordinateConverter = new CoordinateConverter(this, maxScale);
 			
 			AllShipsStopped += Game_AllShipsStopped;
 
@@ -64,7 +64,7 @@ namespace SpaceStrategy
 			CompletedTurnsCount = 0;
 			GameState = GameState.Menu;
 			Cursor = new GameCursor(this);
-			AttackCompass = new AttackCompass(this);
+			_attackCompass = new AttackCompass(this);
 			Params = new GothicGameParams(this);
 			AnimationHelper.Game = this;
 			MoveDistanceInLastTurn = new Dictionary<GothicSpaceshipBase, double>();
@@ -76,27 +76,27 @@ namespace SpaceStrategy
 		internal ScriptManager ScriptManager { get; private set; }		
 		internal Dictionary<GothicSpaceshipBase, double> MoveDistanceInLastTurn { get; private set; }
 		internal List<GothicSpaceshipBase> PassedBlastMarkerSpaceships { get; private set; }
-		internal IEnumerable<AnimationObject> Animations { get { return animations; } }
-		internal IEnumerable<GothicSpaceship> GothicSpaceships { get { return graphicObjects.OfType<GothicSpaceship>(); } }
-		internal IEnumerable<GothicSpaceshipBase> SpaceBodies { get { return graphicObjects.OfType<GothicSpaceshipBase>(); } }
-		internal IEnumerable<BlastMarker> BlastMarkers { get { return graphicObjects.OfType<BlastMarker>(); } }
-		internal IEnumerable<TorpedoSalvo> TorpedoSalvos { get { return graphicObjects.OfType<TorpedoSalvo>(); } }
-		internal IEnumerable<GraphicObject> GraphicObjects { get { return graphicObjects; } }
+		internal IEnumerable<AnimationObject> Animations { get { return _animations; } }
+		internal IEnumerable<GothicSpaceship> GothicSpaceships { get { return _graphicObjects.OfType<GothicSpaceship>(); } }
+		internal IEnumerable<GothicSpaceshipBase> SpaceBodies { get { return _graphicObjects.OfType<GothicSpaceshipBase>(); } }
+		internal IEnumerable<BlastMarker> BlastMarkers { get { return _graphicObjects.OfType<BlastMarker>(); } }
+		internal IEnumerable<TorpedoSalvo> TorpedoSalvos { get { return _graphicObjects.OfType<TorpedoSalvo>(); } }
+		internal IEnumerable<GraphicObject> GraphicObjects { get { return _graphicObjects; } }
 		internal GothicGameParams Params { get; private set; }
-		public IReadOnlyCollection<GothicSpaceship> DestroyedSpaceships { get { return destroyedSpaceships.AsReadOnly(); } }
+		public IReadOnlyCollection<GothicSpaceship> DestroyedSpaceships { get { return _destroyedSpaceships.AsReadOnly(); } }
 		public PlayerList Players { get; private set; }
 		public Player CurrentPlayer
 		{
-			get { return currentPlayer; }
+			get { return _currentPlayer; }
 			private set
 			{
-				if (currentPlayer != value)
+				if (_currentPlayer != value)
 				{
-					currentPlayer = value;
+					_currentPlayer = value;
 					NotifyPropertyChanged("CurrentPlayer");
-					if (selectedSpaceship != null)
+					if (_selectedSpaceship != null)
 					{
-						selectedSpaceship.NotifyPropertyChanged("AvailableOrders");
+						_selectedSpaceship.NotifyPropertyChanged("AvailableOrders");
 					}
 				}
 			}
@@ -105,11 +105,11 @@ namespace SpaceStrategy
 		public GameDataAdapter GameData { get; private set; }
 		public GameState GameState
 		{
-			get { return gameState; }
+			get { return _gameState; }
 			set
 			{
-				if (gameState != value) {
-					gameState = value;
+				if (_gameState != value) {
+					_gameState = value;
 					NotifyPropertyChanged("GameState");
 				}
 			}
@@ -134,30 +134,30 @@ namespace SpaceStrategy
 		}
 
 		internal void AddSpaceship(Spaceship spaceship) { 
-			graphicObjects.Add(spaceship);
+			_graphicObjects.Add(spaceship);
 		}
 
 		internal void RemoveSpaceship(Spaceship spaceship) { 
-			graphicObjects.Remove(spaceship);
+			_graphicObjects.Remove(spaceship);
 			var gss = spaceship as GothicSpaceship;
 			if (gss != null)
 			{
-				if (!destroyedSpaceships.Contains(gss) && gss.IsDestroyed!=CatastrophycDamage.None)
-					destroyedSpaceships.Add(gss);
+				if (!_destroyedSpaceships.Contains(gss) && gss.IsDestroyed!=CatastrophycDamage.None)
+					_destroyedSpaceships.Add(gss);
 			}
 		}
-		internal void AddTorpedoSalvo(TorpedoSalvo torpedoSalve) { graphicObjects.Add(torpedoSalve); }
-		internal void AddAnimation(AnimationObject animation) { animations.Add(animation); }
-		internal void RemoveAnimation(AnimationObject animation) { animations.Remove(animation); }
-		internal void AddGraphicObject(GraphicObject obj) { graphicObjects.Add(obj); }
+		internal void AddTorpedoSalvo(TorpedoSalvo torpedoSalve) { _graphicObjects.Add(torpedoSalve); }
+		internal void AddAnimation(AnimationObject animation) { _animations.Add(animation); }
+		internal void RemoveAnimation(AnimationObject animation) { _animations.Remove(animation); }
+		internal void AddGraphicObject(GraphicObject obj) { _graphicObjects.Add(obj); }
 		public void SelectPoint()
 		{
-			savedState = GameState;
+			_savedState = GameState;
 			GameState = GameState.SelectingPoint;
 		}
 		private void EndPointSelect(Point2d selectedPoint)
 		{
-			GameState = savedState;
+			GameState = _savedState;
 			OnPointSelected(this, new Point2dSelectEventArgs(selectedPoint));
 		}
 		void Game_AllShipsStopped(object sender, AllShipsStoppedEventArgs e)
@@ -204,8 +204,8 @@ namespace SpaceStrategy
 		}
 		void zone_PositioningComplete(object sender, EventArgs e)
 		{
-			PositioningCompletedPlayers++;
-			if (PositioningCompletedPlayers == Players.Count) {
+			_positioningCompletedPlayersCount++;
+			if (_positioningCompletedPlayersCount == Players.Count) {
 				StartBattle();
 				OnBattleStarted(this, new EventArgs());
 			}
@@ -237,18 +237,18 @@ namespace SpaceStrategy
 				BattleStarted(sender, e);
 		}
 		public TimeSpan TimerStep = new TimeSpan(4 * 10000);//10000 ticks = 1 ms
-		bool AllShipsStand = true;
+		bool _allShipsStand = true;
 		internal List<AnimationObject> DroppedAnimations = new List<AnimationObject>();
-		Stopwatch stopwatch = new Stopwatch();
+		Stopwatch _stopwatch = new Stopwatch();
 		public void OnTimer()
 		{			
-			TimerStep = stopwatch.Elapsed;
-			stopwatch.Reset();
-			stopwatch.Start();
+			TimerStep = _stopwatch.Elapsed;
+			_stopwatch.Reset();
+			_stopwatch.Start();
 			bool debug = true;
 			if (debug)
 			{
-				curBlastMarkersAtBase = SelectedSpaceship != null ? SelectedSpaceship.BlastMarkersAtBase.Count : 0;
+				_curBlastMarkersAtBase = SelectedSpaceship != null ? SelectedSpaceship.BlastMarkersAtBase.Count : 0;
 			}
 			if (!Paused) {
 				bool newAllShipsStand = true;
@@ -292,34 +292,34 @@ namespace SpaceStrategy
 						}
 						if (debug)
 						{
-							curObjectsOnCourseCount = objectsOnCourse.Count;
+							_curObjectsOnCourseCount = objectsOnCourse.Count;
 						}
 						CheckSpaceshipCollision(spaceship, objectsOnCourse);
 					}
 				}
 				ScriptManager.OnTime(TimerStep);
 			 
-				if (!AllShipsStand&&newAllShipsStand) {
-					if (IsAutocompleting)
+				if (!_allShipsStand&&newAllShipsStand) {
+					if (_isAutoCompleting)
 					OnAllShipsStopped(this, new AllShipsStoppedEventArgs(ShipsStopCause.Autocompletion));
 				}
-				AllShipsStand = newAllShipsStand;
+				_allShipsStand = newAllShipsStand;
 
 				foreach (var droppedAnimation in DroppedAnimations)
 				{
 					RemoveAnimation(droppedAnimation);
 				}
 				DroppedAnimations.Clear();
-				for (int i = 0; i < animations.Count(); i++)
+				for (int i = 0; i < _animations.Count(); i++)
 				{
-					animations[i].OnTime(TimerStep);
+					_animations[i].OnTime(TimerStep);
 				}
 			}
 		}
-		double curTorpedoDist;
-		double curAntiTorpedoDist;
-		int curObjectsOnCourseCount;
-		int curBlastMarkersAtBase;
+		double _curTorpedoDist;
+		double _curAntiTorpedoDist;
+		int _curObjectsOnCourseCount;
+		int _curBlastMarkersAtBase;
 		private void CheckSpaceshipCollision(GothicSpaceshipBase spaceship, List<GraphicObject> objectsOnCourse)
 		{
 			foreach (var possibleCollision in objectsOnCourse) {
@@ -336,8 +336,8 @@ namespace SpaceStrategy
 						{
 							GothicSpaceship gss = collisionObject as GothicSpaceship;
 							double antiTorpedoAttackDistance = torpedo.Size + gss.Diameter * 3;
-							curTorpedoDist = distance;
-							curAntiTorpedoDist = antiTorpedoAttackDistance;
+							_curTorpedoDist = distance;
+							_curAntiTorpedoDist = antiTorpedoAttackDistance;
 							if (distance < antiTorpedoAttackDistance)
 							{
 								TurretWeapon turret = gss.Weapons.OfType<TurretWeapon>().FirstOrDefault();
@@ -367,12 +367,12 @@ namespace SpaceStrategy
 		/// Attacker - Defender.
 		/// </summary>
 		internal List<Tuple<Spaceship, Spaceship>> CommittedAttacks = new List<Tuple<Spaceship, Spaceship>>();
-		private List<PositioningZone> zones;
+		private List<PositioningZone> _zones;
 		public void OnDraw(Graphics dc)
 		{
 			DrawBackground(dc);
-			dc.ScaleTransform(CoordConverter.Scale, CoordConverter.Scale);
-			dc.TranslateTransform((float)CoordConverter.Translation.X, (float)CoordConverter.Translation.Y);
+			dc.ScaleTransform(CoordinateConverter.Scale, CoordinateConverter.Scale);
+			dc.TranslateTransform((float)CoordinateConverter.Translation.X, (float)CoordinateConverter.Translation.Y);
 			
 			if (this.GameState == GameState.CreatingSpaceship) {
 				CurrentPlayer.PositioningZone.Draw(dc);
@@ -400,7 +400,7 @@ namespace SpaceStrategy
 							foreach (var weapon in spaceship.Weapons) {
 								if (weapon.IsUsed)
 									continue;
-								AttackCompass.Draw(dc, weapon.LineColor, spaceship.Position, weapon.SpaceshipSide, weapon.Range);
+								_attackCompass.Draw(dc, weapon.LineColor, spaceship.Position, weapon.SpaceshipSide, weapon.Range);
 							}
 						}
 						if (spaceship.IsDestroyed == CatastrophycDamage.None)
@@ -410,9 +410,9 @@ namespace SpaceStrategy
 				}
 				graphicObject.Draw(dc);
 			}
-			for (int i = 0; i < animations.Count(); i++)
+			for (int i = 0; i < _animations.Count(); i++)
 			{
-				animations[i].Draw(dc);
+				_animations[i].Draw(dc);
 			}
 			dc.ResetTransform();
 
@@ -442,15 +442,15 @@ namespace SpaceStrategy
 				//dc.DrawString(curAntiTorpedoDist.ToString() + " anti-torpedo dist", f, b, new PointF(10, 380));
 				//dc.DrawString(curObjectsOnCourseCount.ToString() + " objects on course count", f, b, new PointF(10, 395));
 			 
-				GamePrinter.Draw(dc, curBlastMarkersAtBase.ToString() + " blastMarkers at base", new PointF(10, 410), f, b);
+				GamePrinter.Draw(dc, _curBlastMarkersAtBase.ToString() + " blastMarkers at base", new PointF(10, 410), f, b);
 
 				GamePrinter.Draw(dc);
-				frameCounter = (frameCounter + 1) % 30;
-				if (frameCounter == 0)
+				_frameCounter = (_frameCounter + 1) % 30;
+				if (_frameCounter == 0)
 				{
-					fps = (int)(1000.0 / TimerStep.TotalMilliseconds);
+					_fps = (int)(1000.0 / TimerStep.TotalMilliseconds);
 				}
-				GamePrinter.Draw(dc, "fps: " + fps.ToString(), new PointF(500, 0), f, b);
+				GamePrinter.Draw(dc, "fps: " + _fps.ToString(), new PointF(500, 0), f, b);
 			}
 			
 
@@ -458,27 +458,27 @@ namespace SpaceStrategy
 			if (GameState != GameState.SelectingPoint)
 				Cursor.SetForm(CursorForm.Default);
 		}
-		int fps = 0;
-		int frameCounter = 0;
+		int _fps = 0;
+		int _frameCounter = 0;
 		internal GameCursor Cursor;
-		internal CoordConverter CoordConverter;
-		Bitmap background = Properties.Resources.background;
+		internal CoordinateConverter CoordinateConverter;
+		Bitmap _background = Properties.Resources.background;
 		private void DrawBackground(Graphics dc)
 		{
-			dc.DrawImage(background, 0, 0, background.Width, background.Height);
+			dc.DrawImage(_background, 0, 0, _background.Width, _background.Height);
 			//dc.DrawImageUnscaled(b, 0, 0, b.Width, b.Height);
 			
 		}
-		public void MouseMove(Point2d coord, System.Windows.Forms.MouseButtons button)
+		public void MouseMove(Point2d point, System.Windows.Forms.MouseButtons button)
 		{
-			CoordConverter.CurWinCoord = coord;
+			CoordinateConverter.CurWinCoord = point;
 			if (button == System.Windows.Forms.MouseButtons.None) {
-				var gameCoord = CoordConverter.GetGameCoord(coord);
+				var gameCsPoint = CoordinateConverter.GetGameCoord(point);
 				switch (GameState) {
 					case GameState.Battle:
 						if (SelectedSpaceship != null &&
 							SelectedSpaceship.Trajectory != null) {
-							SelectedSpaceship.Trajectory.OnMouseMove(gameCoord);
+							SelectedSpaceship.Trajectory.OnMouseMove(gameCsPoint);
 						}
 						Cursor.SetForm(CursorForm.Default);
 						break;
@@ -492,18 +492,18 @@ namespace SpaceStrategy
 						Cursor.SetForm(CursorForm.Default);
 						break;
 					case GameState.CreatingSpaceship:
-						CurrentPlayer.PositioningZone.OnMouseMove(gameCoord);
+						CurrentPlayer.PositioningZone.OnMouseMove(gameCsPoint);
 						Cursor.SetForm(CursorForm.Default);
 						break;
 					default:
 						Cursor.SetForm(CursorForm.Default);
 						break;
 				}
-				Cursor.SetLocation(coord);
-				OnCursorMove(this, new CursorEventArgs(gameCoord));
+				Cursor.SetLocation(point);
+				OnCursorMove(this, new CursorEventArgs(gameCsPoint));
 			}
 			else if (button == System.Windows.Forms.MouseButtons.Right) {
-				CoordConverter.FinishFieldDrag(coord);
+				CoordinateConverter.FinishFieldDrag(point);
 			}
 		}
 		public void OnKeyDown(System.Windows.Forms.KeyEventArgs key)
@@ -516,12 +516,12 @@ namespace SpaceStrategy
 		public void OnMouseDown(Point2d coord, System.Windows.Forms.MouseButtons button)
 		{
 			if (button == System.Windows.Forms.MouseButtons.Right) {
-				CoordConverter.StartFieldDrag(coord);
+				CoordinateConverter.StartFieldDrag(coord);
 			}
 		}
 		public void OnMouseClick(Point2d coord, System.Windows.Forms.MouseButtons button)
 		{
-			var gameCoord = CoordConverter.GetGameCoord(coord);
+			var gameCoord = CoordinateConverter.GetGameCoord(coord);
 			switch (GameState) {
 				case GameState.Battle:
 					if (button == System.Windows.Forms.MouseButtons.Left) {
@@ -540,7 +540,7 @@ namespace SpaceStrategy
 									SelectedSpaceship.IsSelected = true;
 								}
 							}
-							CoordConverter.LastSelectedShipGameCoord = SelectedSpaceship.Position.Location;
+							CoordinateConverter.LastSelectedShipGameCoord = SelectedSpaceship.Position.Location;
 						}
 						else {
 							if (SelectedSpaceship != null) {
@@ -553,7 +553,7 @@ namespace SpaceStrategy
 					switch (BattlePhase) {
 						case GamePhase.Movement:
 							if (button == System.Windows.Forms.MouseButtons.Right) {
-								if (CoordConverter.IsDraggingField) {
+								if (CoordinateConverter.IsDraggingField) {
 									if (SelectedSpaceship != null) {
 										if (SelectedSpaceship.State == SpaceshipState.Standing) {
 											if (SelectedSpaceship.Player == CurrentPlayer)
@@ -621,19 +621,19 @@ namespace SpaceStrategy
 			return Players[(currentPlayerIndex + 1) % Players.Count];
 		}
 
-		bool IsAutocompleting = false;
-		GamePhase battlePhase = GamePhase.Ending;
+		bool _isAutoCompleting = false;
+		GamePhase _battlePhase = GamePhase.Ending;
 		internal GamePhase BattlePhase
 		{
-			get { return battlePhase; }
+			get { return _battlePhase; }
 			set
 			{
-				if (battlePhase != value)
+				if (_battlePhase != value)
 				{
-					battlePhase = value;
+					_battlePhase = value;
 					NotifyPropertyChanged("BattlePhase");
-					if (selectedSpaceship != null)
-						selectedSpaceship.NotifyPropertyChanged("AvailableOrders");
+					if (_selectedSpaceship != null)
+						_selectedSpaceship.NotifyPropertyChanged("AvailableOrders");
 				}
 			}
 		}
@@ -645,7 +645,7 @@ namespace SpaceStrategy
 					{
 						if (ss.IsDestroyed== CatastrophycDamage.BlazingHulk)
 						{
-							Point2d bmsPos = new Point2d(ss.Position.Angle + GeometryHelper.Pi, ss.Diameter / 2).ToEuclidCS(ss.Position);
+							Point2d bmsPos = new Point2d(ss.Position.Angle + GeometryHelper.Pi, ss.Diameter / 2).ToEuclidCs(ss.Position);
 							BlastMarker bm = new BlastMarker(this, new Position(bmsPos, GeometryHelper.Pi), new TimeSpan());
 							ss.BlastMarkersAtBase.AddBlastMarker(bm);
 							this.AddGraphicObject(bm);
@@ -784,26 +784,26 @@ namespace SpaceStrategy
 		private void RemoveOldBlastMarkers()
 		{
 			var possiblyRemovedBms = new List<BlastMarker>();
-			foreach (var bm in BlastMarkers)
+			foreach (var blastMarker in BlastMarkers)
 			{
-				bool isSpaceshipBaseBM = false;
+				bool isAtSpaceshipBase = false;
 				foreach (var ss in SpaceBodies.Where(a=>a.State== SpaceshipState.Moving || a.State== SpaceshipState.Standing))
 				{
-					if (ss.BlastMarkersAtBase.Contains(bm))
+					if (ss.BlastMarkersAtBase.Contains(blastMarker))
 					{
-						isSpaceshipBaseBM = true;
+						isAtSpaceshipBase = true;
 						break;
 					}
 				}
-				if (!isSpaceshipBaseBM) { possiblyRemovedBms.Add(bm); }
+				if (!isAtSpaceshipBase) { possiblyRemovedBms.Add(blastMarker); }
 			}
 
 			int removedBmsCount = Dice.RollDices(6, 1, "Максимальное количество удаленных маркеров взрыва.");
 			var bmsToRemove = possiblyRemovedBms.GetRandomItems(removedBmsCount);
-			foreach (var bm in bmsToRemove)
+			foreach (var blastMarker in bmsToRemove)
 			{
-				graphicObjects.Remove(bm);
-				bm.Dispose();
+				_graphicObjects.Remove(blastMarker);
+				blastMarker.Dispose();
 			}
 		}
 
@@ -812,18 +812,18 @@ namespace SpaceStrategy
 
 			if (BattlePhase == GamePhase.Movement) {
 				//Unselect spaceships.
-				IsAutocompleting = false;
+				_isAutoCompleting = false;
 				foreach (var spaceship in CurrentPlayer.Spaceships) {
 					if (spaceship.State == SpaceshipState.Moving){
-						IsAutocompleting = true;
+						_isAutoCompleting = true;
 						spaceship.MovementStarted = true;
 						//break;
 					}
 					else if (spaceship.TryAutoMoveMandatoryDistance()) {
-						IsAutocompleting = true;
+						_isAutoCompleting = true;
 					}
 				}
-				if (!IsAutocompleting) {
+				if (!_isAutoCompleting) {
 					foreach (var spaceship in CurrentPlayer.Spaceships)
 					{
 						spaceship.Trajectory=null;
@@ -833,21 +833,21 @@ namespace SpaceStrategy
 			else if (BattlePhase == GamePhase.Attack) {
 			}
 			else if (BattlePhase == GamePhase.Ordnance) {
-				IsAutocompleting = false;
+				_isAutoCompleting = false;
 				Player curOrdnancePlayer = CurrentPlayer;
 				do {
 					foreach (var ordnance in TorpedoSalvos.Where(a => a.Player == curOrdnancePlayer)) {
 						if (ordnance.State == SpaceshipState.Moving || ordnance.TryAutoMoveMandatoryDistance()) {
-							IsAutocompleting = true;
+							_isAutoCompleting = true;
 							//break;
 						}
 					}
-					if (!IsAutocompleting) {
+					if (!_isAutoCompleting) {
 						curOrdnancePlayer = NextPlayer(curOrdnancePlayer);
 					}
 					else break;
 				} while (curOrdnancePlayer!=CurrentPlayer);
-				if (!IsAutocompleting) {
+				if (!_isAutoCompleting) {
 					foreach (var ordnance in TorpedoSalvos) {
 						ordnance.Trajectory = null;
 					}
@@ -858,7 +858,7 @@ namespace SpaceStrategy
 			else
 				throw new InvalidOperationException("Недопустимое состояние игры");
 			
-			if (!IsAutocompleting) {
+			if (!_isAutoCompleting) {
 				AdvanceGame();
 			}
 		}
@@ -869,7 +869,7 @@ namespace SpaceStrategy
 				NextTurn(sender, e);
 			}
 		}
-		internal static Random rand = new Random(DateTime.Now.Millisecond);
+		internal static Random Rand = new Random(DateTime.Now.Millisecond);
 
 		
 		private bool TrySelectSpaceship(Point2d coord, out GothicSpaceshipBase selectedSpaceship)
@@ -896,15 +896,15 @@ namespace SpaceStrategy
 				return true;
 			}
 		}
-		GothicSpaceship selectedSpaceship;
+		GothicSpaceship _selectedSpaceship;
 		public GothicSpaceship SelectedSpaceship
 		{
-			get { return selectedSpaceship; }
+			get { return _selectedSpaceship; }
 			internal set
 			{
-				if (selectedSpaceship != value)
+				if (_selectedSpaceship != value)
 				{
-					selectedSpaceship = value;
+					_selectedSpaceship = value;
 					NotifyPropertyChanged("SelectedSpaceship");
 				}
 			}
@@ -929,11 +929,11 @@ namespace SpaceStrategy
 			internal int SpaceshipDiameter { get { return 3; } }
 			internal float TorpedoeSize { get { return 2.5F; } }
 			internal int TrajectorycAnchorPointRadius { get { return 4; } }
-			internal float SelectionThickness { get { return 3 / Game.CoordConverter.Scale; } }
-			internal float TrajectoryLineThickness { get { return 3 / Game.CoordConverter.Scale; } }
-			internal float TrajectoryAnchorDistance { get { return 3 / Game.CoordConverter.Scale; } }
-			internal float ActiveTrajectoryThicknes { get { return 3 / Game.CoordConverter.Scale; } }
-			internal float AttackCompassThickness { get { return 2 / Game.CoordConverter.Scale; } }
+			internal float SelectionThickness { get { return 3 / Game.CoordinateConverter.Scale; } }
+			internal float TrajectoryLineThickness { get { return 3 / Game.CoordinateConverter.Scale; } }
+			internal float TrajectoryAnchorDistance { get { return 3 / Game.CoordinateConverter.Scale; } }
+			internal float ActiveTrajectoryThicknes { get { return 3 / Game.CoordinateConverter.Scale; } }
+			internal float AttackCompassThickness { get { return 2 / Game.CoordinateConverter.Scale; } }
 			internal Color AttackCompassColor { get { return Color.Orange; } }
 			internal Color PositioningZoneColor { get { return Color.Lime; } }
 			internal Color ActiveTrajectoryColor { get { return Color.Orange; } }
@@ -944,7 +944,7 @@ namespace SpaceStrategy
 			internal Color SelectedMandatoryTrajectoryColor { get { return Color.Red; } }
 			internal float BlastMarkerDiameter { get { return (float)SpaceshipDiameter * 0.9F; } }
 
-			public Color HPGaugeColor { get { return Color.Red; } }
+			public Color HitPointsGaugeColor { get { return Color.Red; } }
 			public Color ShieldGaugeColor { get { return Color.Cyan; } }
 
 			public bool Debug { get { return false; } }

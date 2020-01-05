@@ -53,43 +53,43 @@ namespace SpaceStrategy
 				columnIndex = 4;
 			return GetDiceCount(firepower, columnIndex);
 		}
-		static Dictionary<int, Row> items = new Dictionary<int, Row>();
+		static Dictionary<int, Row> _Items = new Dictionary<int, Row>();
 		static GunneryTable()
 		{
-			items.Add(1,	new Row() { DamageDiceCount = new int[] { 1, 1, 1, 0, 0 } });
-			items.Add(2,	new Row() { DamageDiceCount = new int[] { 2, 1, 1, 1, 0 } });
-			items.Add(3,	new Row() { DamageDiceCount = new int[] { 3, 2, 2, 1, 1 } });
-			items.Add(4,	new Row() { DamageDiceCount = new int[] { 4, 3, 2, 1, 1 } });
-			items.Add(5,	new Row() { DamageDiceCount = new int[] { 5, 4, 3, 2, 1 } });
-			items.Add(6,	new Row() { DamageDiceCount = new int[] { 5, 4, 3, 2, 1 } });
-			items.Add(7,	new Row() { DamageDiceCount = new int[] { 6, 5, 4, 2, 1 } });
-			items.Add(8,	new Row() { DamageDiceCount = new int[] { 7, 6, 4, 3, 2 } });
-			items.Add(9,	new Row() { DamageDiceCount = new int[] { 8, 6, 5, 3, 2 } });
-			items.Add(10,	new Row() { DamageDiceCount = new int[] { 9, 7, 5, 4, 2 } });
-			items.Add(11,	new Row() { DamageDiceCount = new int[] { 10, 8, 6, 4, 2 } });
-			items.Add(12,	new Row() { DamageDiceCount = new int[] { 11, 8, 6, 4, 2 } });
-			items.Add(13,	new Row() { DamageDiceCount = new int[] { 12, 9, 7, 5, 3 } });
-			items.Add(14,	new Row() { DamageDiceCount = new int[] { 13, 10, 7, 5, 3 } });
-			items.Add(15,	new Row() { DamageDiceCount = new int[] { 14, 11, 8, 5, 3 } });
-			items.Add(16,	new Row() { DamageDiceCount = new int[] { 14, 11, 8, 6, 3 } });
-			items.Add(17,	new Row() { DamageDiceCount = new int[] { 15, 12, 9, 6, 3 } });
-			items.Add(18,	new Row() { DamageDiceCount = new int[] { 16, 13, 9, 6, 4 } });
-			items.Add(19,	new Row() { DamageDiceCount = new int[] { 17, 13, 10, 7, 4 } });
-			items.Add(20,	new Row() { DamageDiceCount = new int[] { 18, 14, 10, 7, 4 } });
+			_Items.Add(1,	new Row() { DamageDiceCount = new int[] { 1, 1, 1, 0, 0 } });
+			_Items.Add(2,	new Row() { DamageDiceCount = new int[] { 2, 1, 1, 1, 0 } });
+			_Items.Add(3,	new Row() { DamageDiceCount = new int[] { 3, 2, 2, 1, 1 } });
+			_Items.Add(4,	new Row() { DamageDiceCount = new int[] { 4, 3, 2, 1, 1 } });
+			_Items.Add(5,	new Row() { DamageDiceCount = new int[] { 5, 4, 3, 2, 1 } });
+			_Items.Add(6,	new Row() { DamageDiceCount = new int[] { 5, 4, 3, 2, 1 } });
+			_Items.Add(7,	new Row() { DamageDiceCount = new int[] { 6, 5, 4, 2, 1 } });
+			_Items.Add(8,	new Row() { DamageDiceCount = new int[] { 7, 6, 4, 3, 2 } });
+			_Items.Add(9,	new Row() { DamageDiceCount = new int[] { 8, 6, 5, 3, 2 } });
+			_Items.Add(10,	new Row() { DamageDiceCount = new int[] { 9, 7, 5, 4, 2 } });
+			_Items.Add(11,	new Row() { DamageDiceCount = new int[] { 10, 8, 6, 4, 2 } });
+			_Items.Add(12,	new Row() { DamageDiceCount = new int[] { 11, 8, 6, 4, 2 } });
+			_Items.Add(13,	new Row() { DamageDiceCount = new int[] { 12, 9, 7, 5, 3 } });
+			_Items.Add(14,	new Row() { DamageDiceCount = new int[] { 13, 10, 7, 5, 3 } });
+			_Items.Add(15,	new Row() { DamageDiceCount = new int[] { 14, 11, 8, 5, 3 } });
+			_Items.Add(16,	new Row() { DamageDiceCount = new int[] { 14, 11, 8, 6, 3 } });
+			_Items.Add(17,	new Row() { DamageDiceCount = new int[] { 15, 12, 9, 6, 3 } });
+			_Items.Add(18,	new Row() { DamageDiceCount = new int[] { 16, 13, 9, 6, 4 } });
+			_Items.Add(19,	new Row() { DamageDiceCount = new int[] { 17, 13, 10, 7, 4 } });
+			_Items.Add(20,	new Row() { DamageDiceCount = new int[] { 18, 14, 10, 7, 4 } });
 			
 		}
 		private static int GetDiceCount(int firepower,int columnIndex)
 		{
 			int result = 0;
-			int maxFirepower = items.Count;
+			int maxFirepower = _Items.Count;
 			int remainingFirepower = firepower;
 			while (remainingFirepower > maxFirepower)
 			{
-				result += items[maxFirepower].DamageDiceCount[columnIndex];
+				result += _Items[maxFirepower].DamageDiceCount[columnIndex];
 				remainingFirepower -= maxFirepower;
 			}
 
-			result += items[remainingFirepower].DamageDiceCount[columnIndex];
+			result += _Items[remainingFirepower].DamageDiceCount[columnIndex];
 			return result;
 		}
 		internal static bool GetBlastMarkersOnLine(IEnumerable<BlastMarker> markers, Point2d startPoint, Point2d endPoint){

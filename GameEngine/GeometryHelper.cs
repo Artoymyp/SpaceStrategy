@@ -52,28 +52,28 @@ namespace SpaceStrategy
 			return Distance(fromRad, toRad, true) > Distance(fromRad, testedRad, true) && Math.Abs(Distance(fromRad, testedRad, true))>0.0001;
 		}
 
-		internal static double PerpendicularDistance(Point2d Point2d, Point2d startPoint, Point2d endPoint)
+		internal static double PerpendicularDistance(Point2d point, Point2d startPoint, Point2d endPoint)
 		{
-			if (TryGetPerpendicular(Point2d, startPoint, endPoint, out var distance))
+			if (TryGetPerpendicular(point, startPoint, endPoint, out var distance))
 				return distance;
 			else return double.PositiveInfinity;
 		}
 
-		private static bool TryGetPerpendicular(Point2d Point2d, Point2d startPoint, Point2d endPoint, out double distance)
+		private static bool TryGetPerpendicular(Point2d point, Point2d startPoint, Point2d endPoint, out double distance)
 		{
-			Vector segmentVectorGCS = startPoint.VectorTo(endPoint);
-			Position pos = new Position(startPoint, segmentVectorGCS);
-			Point2d pLCS = Point2d.UnTransformBy(pos);
-			Point2d sLCS = startPoint.UnTransformBy(pos);
-			Point2d eLCS = endPoint.UnTransformBy(pos);
-			if (pLCS.X < sLCS.X || pLCS.X > eLCS.X)
+			Vector segmentVectorGcs = startPoint.VectorTo(endPoint);
+			Position pos = new Position(startPoint, segmentVectorGcs);
+			Point2d pLcs = point.UnTransformBy(pos);
+			Point2d sLcs = startPoint.UnTransformBy(pos);
+			Point2d eLcs = endPoint.UnTransformBy(pos);
+			if (pLcs.X < sLcs.X || pLcs.X > eLcs.X)
 			{
 				distance = double.NaN;
 				return false;
 			}
 			else
 			{
-				distance = Abs(pLCS.Y);
+				distance = Abs(pLcs.Y);
 				return true;
 			}
 		}
@@ -100,7 +100,7 @@ namespace SpaceStrategy
 			List<T> temp = items.ToList();
 			for (int i = 0; i < items.Count; i++)
 			{
-				int index = Game.rand.Next(temp.Count);
+				int index = Game.Rand.Next(temp.Count);
 				result.Add(items[index]);
 				temp.RemoveAt(index);
 			}

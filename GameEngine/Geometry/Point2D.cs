@@ -9,30 +9,30 @@ namespace SpaceStrategy
 {
 	public struct Point2d
 	{
-		double m_X;
-		double m_Y;
+		double _x;
+		double _y;
 		public Point2d(double x, double y)
 		{
-			m_X = x;
-			m_Y = y;
+			_x = x;
+			_y = y;
 		}
-		public double X { get { return m_X; } set { m_X = value; } }
-		public double Y { get { return m_Y; } set { m_Y = value; } }
-		public double Ro { get { return m_X; } set { m_X = value; } }
-		public double R { get { return m_Y; } set { m_Y = value; } }
+		public double X { get { return _x; } set { _x = value; } }
+		public double Y { get { return _y; } set { _y = value; } }
+		public double Ro { get { return _x; } set { _x = value; } }
+		public double R { get { return _y; } set { _y = value; } }
 
 		public Vector VectorTo(Point2d targetPoint)
 		{
-			return new Vector(targetPoint.m_X - m_X, targetPoint.m_Y - m_Y/*, targetPoint.Z - point.Z*/);
+			return new Vector(targetPoint._x - _x, targetPoint._y - _y/*, targetPoint.Z - point.Z*/);
 		}
 		public Vector ToVector()
 		{
-			return new Vector(m_X, m_Y);
+			return new Vector(_x, _y);
 		}
 		public double DistanceSqrTo(Point2d targetPoint)
 		{
-			double xDist = m_X - targetPoint.m_X;
-			double yDist = m_Y - targetPoint.m_Y;
+			double xDist = _x - targetPoint._x;
+			double yDist = _y - targetPoint._y;
 			//double zDist = point.Z - targetPoint.Z;
 			return (xDist * xDist + yDist * yDist/* + zDist * zDist*/);
 		}
@@ -50,7 +50,7 @@ namespace SpaceStrategy
 		}
 		public static Point2d operator *(Point2d l, double r)
 		{
-			return new Point2d(l.m_X * r, l.m_Y * r);
+			return new Point2d(l._x * r, l._y * r);
 		}
 		public static Point2d operator *(double l, Point2d r)
 		{
@@ -63,31 +63,31 @@ namespace SpaceStrategy
 		
 		public static Point2d operator +(Point2d p, Vector v)
 		{
-			return new Point2d(p.m_X + v.X, p.m_Y + v.Y);
+			return new Point2d(p._x + v.X, p._y + v.Y);
 		}
 		public static Point2d operator -(Point2d p, Vector v)
 		{
-			return new Point2d(p.m_X - v.X, p.m_Y - v.Y);
+			return new Point2d(p._x - v.X, p._y - v.Y);
 		}
 		public static implicit operator PointF(Point2d p){
-			return new PointF((float)p.m_X, (float)p.m_Y);
+			return new PointF((float)p._x, (float)p._y);
 		}
 		public Point2d UnTransformBy(Position p)
 		{
-			Point2d result = new Point2d(m_X - p.Location.m_X, m_Y - p.Location.m_Y);
+			Point2d result = new Point2d(_x - p.Location._x, _y - p.Location._y);
 			result = new Point2d(
-				GeometryHelper.Cos(p.Angle) * result.m_X + GeometryHelper.Sin(p.Angle) * result.m_Y,
-				-GeometryHelper.Sin(p.Angle) * result.m_X + GeometryHelper.Cos(p.Angle) * result.m_Y
+				GeometryHelper.Cos(p.Angle) * result._x + GeometryHelper.Sin(p.Angle) * result._y,
+				-GeometryHelper.Sin(p.Angle) * result._x + GeometryHelper.Cos(p.Angle) * result._y
 				);
 			return result;
 		}
 		public Point2d TransformBy(Position p)
 		{
 			Point2d result = new Point2d(
-				GeometryHelper.Cos(p.Angle) * m_X - GeometryHelper.Sin(p.Angle) * m_Y,
-				GeometryHelper.Sin(p.Angle) * m_X + GeometryHelper.Cos(p.Angle) * m_Y
+				GeometryHelper.Cos(p.Angle) * _x - GeometryHelper.Sin(p.Angle) * _y,
+				GeometryHelper.Sin(p.Angle) * _x + GeometryHelper.Cos(p.Angle) * _y
 				);
-			result = new Point2d(result.m_X + p.Location.m_X, result.m_Y + p.Location.m_Y);
+			result = new Point2d(result._x + p.Location._x, result._y + p.Location._y);
 			return result;
 		}
 		//public override string ToString()
@@ -99,27 +99,27 @@ namespace SpaceStrategy
 		/// </summary>
 		/// <param name="origin"></param>
 		/// <returns></returns>
-		public Point2d ToPolarCS(Point2d origin)
+		public Point2d ToPolarCs(Point2d origin)
 		{
 			double distance = DistanceTo(origin);
 			double ang = origin.VectorTo(this).ToRadian();
 			return new Point2d(ang, distance);
 		}
-		public Point2d ToPolarCS()
+		public Point2d ToPolarCs()
 		{
-			return ToPolarCS(new Point2d());
+			return ToPolarCs(new Point2d());
 		}
-		public Point2d ToEuclidCS(Point2d origin)
+		public Point2d ToEuclidCs(Point2d origin)
 		{
 			return new Point2d(GeometryHelper.Cos(Ro) * R + origin.X, GeometryHelper.Sin(Ro) * R + origin.Y);
 		}
-		public Point2d ToEuclidCS()
+		public Point2d ToEuclidCs()
 		{
-			return ToEuclidCS(new Point2d());
+			return ToEuclidCs(new Point2d());
 		}
 		public override string ToString()
 		{
-			return string.Format("({0}; {1})", m_X, m_Y);
+			return string.Format("({0}; {1})", _x, _y);
 		}
 		
 	}

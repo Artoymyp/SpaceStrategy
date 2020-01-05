@@ -8,6 +8,6 @@ namespace SpaceStrategy.Weapon
 {
 	internal class PlasmaDriveExplosion : DriveExplosionWeapon
 	{
-		public PlasmaDriveExplosion(GothicSpaceship owner, float range) : base(owner, range, GeometryHelper.RoundUp((float)owner.Class.HP / 2.0)) { }
+		public PlasmaDriveExplosion(GothicSpaceship owner, float range) : base(owner, range, GeometryHelper.RoundUp((float)owner.Class.HitPoints / 2.0)) { }
 	}
 }

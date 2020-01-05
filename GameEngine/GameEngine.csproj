@@ -85,7 +85,7 @@
     <Compile Include="Animation\CannonAttackAnimation.cs" />
     <Compile Include="Animation\ExplosionAnimation.cs" />
     <Compile Include="Animation\LaserAttackAnimation.cs" />
-    <Compile Include="Animation\ShiledActiveAnimation.cs" />
+    <Compile Include="Animation\ShieldActiveAnimation.cs" />
     <Compile Include="AttackCompass.cs" />
     <Compile Include="Animation\BlastMarkerAnimation.cs" />
     <Compile Include="Component\ScriptManager.cs" />

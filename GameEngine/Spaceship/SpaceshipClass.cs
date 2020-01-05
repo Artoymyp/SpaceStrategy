@@ -11,14 +11,14 @@ namespace SpaceStrategy
 	public class SpaceshipClass
 	{
 		public SpaceshipClass(string className, string typeName, SpaceshipCategory category, string raceName, 
-			int hp, int turretsCount, int shieldPower, 
+			int hitPoints, int turretsCount, int shieldPower, 
 			int frontArmor, int leftArmor, int rightArmor, int backArmor,
 			double speed, double minTurnRadius, double minRunBeforeTurn, int maxTurnAngle, int points)
 		{
 			ClassName = className;
 			Type = typeName;
 			Category = category;
-			HP = hp;
+			HitPoints = hitPoints;
 			TurretsPower = turretsCount;
 			Shield = shieldPower;
 			FrontArmor = frontArmor;
@@ -38,9 +38,9 @@ namespace SpaceStrategy
 			data.Speed,data.MinTurnRadius, data.MinRunBeforeTurn,data.MaxTurnAngle,data.Points){
 			Id = data.Id;
 			
-			IEnumerable<GothicSpaceshipBonus> Bonuses = GameDataAdapter.GetBonusesByClassName(ClassName);
+			IEnumerable<GothicSpaceshipBonus> bonuses = GameDataAdapter.GetBonusesByClassName(ClassName);
 
-			if (Bonuses.Any(a => a.Name == GothicSpaceshipBonusName.ImprovedThrusters))
+			if (bonuses.Any(a => a.Name == GothicSpaceshipBonusName.ImprovedThrusters))
 				AllAheadFullCoef = 5;
 			else
 				AllAheadFullCoef = 4;
@@ -62,7 +62,7 @@ namespace SpaceStrategy
 		public int Points { get; private set; }
 		public int AllAheadFullCoef { get; private set; }
 		public int TurretsPower { get; private set; }
-		public int HP { get; set; }
+		public int HitPoints { get; set; }
 		public IEnumerable<GothicSpaceshipBonus> Bonuses { get; private set; }
 		private static SpaceshipCategory GetCategory(string categoryName)
 		{

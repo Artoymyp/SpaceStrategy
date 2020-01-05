@@ -11,23 +11,23 @@ namespace SpaceStrategy
 {
 	public class GothicSpaceship : GothicSpaceshipBase
 	{
-		private List<SpaceshipWeapon> weapons;
-		internal Dictionary<SpaceshipWeapon, List<Position>> weaponPlacements = new Dictionary<SpaceshipWeapon, List<Position>>();
+		private List<SpaceshipWeapon> _weapons;
+		internal Dictionary<SpaceshipWeapon, List<Position>> WeaponPlacements = new Dictionary<SpaceshipWeapon, List<Position>>();
 		public GothicSpaceship(Game game, Position position, SpaceshipClass spaceshipClass, Player owner)
 			: base(game, position, spaceshipClass, owner)
 		{
 			CriticalDamage = new CriticalDamageCollection(this);
-			weapons = new List<SpaceshipWeapon>();
-			weapons.Add(new TurretWeapon(this, Class.TurretsPower));
-			var weaponsTA = new GameDataSetTableAdapters.SpaceshipClassWeaponryTableAdapter();
-			var weaponsTable = weaponsTA.GetDataBySpaceshipClassId(Class.ClassName);
+			_weapons = new List<SpaceshipWeapon>();
+			_weapons.Add(new TurretWeapon(this, Class.TurretsPower));
+			var weaponsTableAdapter = new GameDataSetTableAdapters.SpaceshipClassWeaponryTableAdapter();
+			var weaponsTable = weaponsTableAdapter.GetDataBySpaceshipClassId(Class.ClassName);
 			foreach (var weaponDataRow in weaponsTable)
 			{
 				SpaceshipWeapon weapon;
 				switch (SpaceshipWeapon.GetWeaponType(weaponDataRow.WeaponType))
 				{
 					case WeaponType.Torpedo: weapon = new TorpedoWeapon(this, weaponDataRow); break;
-					case WeaponType.Battary: weapon = new CannonWeapon(this, weaponDataRow); break;
+					case WeaponType.Battery: weapon = new CannonWeapon(this, weaponDataRow); break;
 					case WeaponType.Lance: weapon = new LanceWeapon(this, weaponDataRow); break;
 					case WeaponType.Nova: weapon = new NovaWeapon(this, weaponDataRow); break;
 					default:
@@ -35,44 +35,44 @@ namespace SpaceStrategy
 				}
 				
 
-				weapons.Add(weapon);				
+				_weapons.Add(weapon);				
 			}
 
-			foreach (var weapon in weapons)
+			foreach (var weapon in _weapons)
 			{
 				//Weapon placement on ship
-				weaponPlacements[weapon] = new List<SpaceStrategy.Position>();
+				WeaponPlacements[weapon] = new List<SpaceStrategy.Position>();
 				double dx = Diameter / (weapon.Power - 1);
 				switch (weapon.SpaceshipSide)
 				{
 					case Side.Front:
 						if (weapon.Power > 1)
 						{
-							weaponPlacements[weapon].Add(new Position(new Point2d(Diameter / 2 * 1.2, -Diameter / 2)));
+							WeaponPlacements[weapon].Add(new Position(new Point2d(Diameter / 2 * 1.2, -Diameter / 2)));
 							for (int i = 0; i < weapon.Power - 1; i++)
 							{
-								weaponPlacements[weapon].Add(new Position(weaponPlacements[weapon][i].Location + new Vector(0, dx), 0));
+								WeaponPlacements[weapon].Add(new Position(WeaponPlacements[weapon][i].Location + new Vector(0, dx), 0));
 							}
 						}
 						else if (weapon.Power == 1)
 						{
-							weaponPlacements[weapon].Add(new Position(new Point2d(Diameter / 2 * 1.2, 0)));
+							WeaponPlacements[weapon].Add(new Position(new Point2d(Diameter / 2 * 1.2, 0)));
 						}
 						break;
 					case Side.Left:
 					case Side.Right:
 						int sign = weapon.SpaceshipSide == Side.Left ? -1 : 1;
-						weaponPlacements[weapon].Add(new Position(new Point2d(-Diameter / 2, sign * Diameter / 4), sign * GeometryHelper.HalfPi));
+						WeaponPlacements[weapon].Add(new Position(new Point2d(-Diameter / 2, sign * Diameter / 4), sign * GeometryHelper.HalfPi));
 						for (int i = 0; i < weapon.Power - 1; i++)
 						{
-							weaponPlacements[weapon].Add(new Position(weaponPlacements[weapon][i].Location + new Vector(dx, 0), weaponPlacements[weapon][i].Direction));
+							WeaponPlacements[weapon].Add(new Position(WeaponPlacements[weapon][i].Location + new Vector(dx, 0), WeaponPlacements[weapon][i].Direction));
 						}
 						break;
-					case Side.LFR:
-						weaponPlacements[weapon].Add(new Position(new Point2d(-Diameter / 2, 0)));
+					case Side.LeftFrontRight:
+						WeaponPlacements[weapon].Add(new Position(new Point2d(-Diameter / 2, 0)));
 						for (int i = 0; i < weapon.Power - 1; i++)
 						{
-							weaponPlacements[weapon].Add(new Position(weaponPlacements[weapon][i].Location + new Vector(dx, 0), weaponPlacements[weapon][i].Direction));
+							WeaponPlacements[weapon].Add(new Position(WeaponPlacements[weapon][i].Location + new Vector(dx, 0), WeaponPlacements[weapon][i].Direction));
 						}
 						break;
 					case Side.All:
@@ -80,7 +80,7 @@ namespace SpaceStrategy
 						for (int i = 0; i < weapon.Power; i++)
 						{
 							Point2d dir = new Point2d(GeometryHelper.Cos(dr * i), GeometryHelper.Sin(dr * i));
-							weaponPlacements[weapon].Add(new Position(dir, dir.ToVector()));
+							WeaponPlacements[weapon].Add(new Position(dir, dir.ToVector()));
 						}
 						break;
 					default:
@@ -101,27 +101,27 @@ namespace SpaceStrategy
 				return speed;
 			}
 		}
-		public IEnumerable<SpaceshipWeapon> Weapons { get { return IsDestroyed==CatastrophycDamage.None ? weapons : new List<SpaceshipWeapon>(); } }
-		GothicOrder specialOrder;
+		public IEnumerable<SpaceshipWeapon> Weapons { get { return IsDestroyed==CatastrophycDamage.None ? _weapons : new List<SpaceshipWeapon>(); } }
+		GothicOrder _specialOrder;
 		public GothicOrder SpecialOrder
 		{
-			get { return specialOrder; }
+			get { return _specialOrder; }
 			internal set
 			{
-				if (specialOrder != value)
+				if (_specialOrder != value)
 				{
 					{
-						specialOrder = value;
+						_specialOrder = value;
 						NotifyPropertyChanged("SpecialOrder");
 						NotifyPropertyChanged("AvailableOrders");
 					}
 				}
 			}
 		}
-		bool movementStarted;
-		public bool MovementStarted { get { return movementStarted; } set {
-			if (movementStarted != value) {
-				movementStarted = value;
+		bool _movementStarted;
+		public bool MovementStarted { get { return _movementStarted; } set {
+			if (_movementStarted != value) {
+				_movementStarted = value;
 				NotifyPropertyChanged("AvailableOrders");
 			}
 		} 
@@ -180,14 +180,14 @@ namespace SpaceStrategy
 				return result;
 			}
 		}
-		int leadership;
+		int _leadership;
 		public int Leadership
 		{
-			get { return leadership; }
+			get { return _leadership; }
 			internal set
 			{
-				if (leadership != value) {
-					leadership = value;
+				if (_leadership != value) {
+					_leadership = value;
 					NotifyPropertyChanged("Leadership");
 				}
 			}
@@ -279,8 +279,8 @@ namespace SpaceStrategy
 			{
 				case GothicOrder.ReloadOrdnance:
 					SpecialOrder = specialOrder;
-					var torpedosReloaded = weapons.Where(a => a is TorpedoWeapon).Select(a=>a as TorpedoWeapon);
-					foreach (var torpedoReloaded in torpedosReloaded) {
+					var torpedoesReloaded = _weapons.Where(a => a is TorpedoWeapon).Select(a=>a as TorpedoWeapon);
+					foreach (var torpedoReloaded in torpedoesReloaded) {
 						torpedoReloaded.Reload();
 					}
 					break;
@@ -300,7 +300,7 @@ namespace SpaceStrategy
 					}
 					break;
 				case GothicOrder.LaunchOrdnance:
-					TorpedoWeapon torpedoLauncher = (TorpedoWeapon)weapons.FirstOrDefault(a => a is TorpedoWeapon);
+					TorpedoWeapon torpedoLauncher = (TorpedoWeapon)_weapons.FirstOrDefault(a => a is TorpedoWeapon);
 					if (torpedoLauncher != null && torpedoLauncher.LoadedTorpedoCount > 0)
 					{
 						Game.SelectPoint();
@@ -338,11 +338,11 @@ namespace SpaceStrategy
 			Brush shipBrush = new SolidBrush(!IsCrippled ? Player.Color: Color.FromArgb(Player.Color.R/2,Player.Color.G/2,Player.Color.B/2));
 			dc.FillEllipse(shipBrush, -(float)Diameter / 2, -(float)Diameter / 2, (float)Diameter, (float)Diameter);
 
-			float dir45coord = (float)GeometryHelper.Cos(GeometryHelper.PiDiv4) * (float)Diameter / 2;
+			float dir45Point = (float)GeometryHelper.Cos(GeometryHelper.PiDiv4) * (float)Diameter / 2;
 			dc.FillPolygon(shipBrush, new PointF[]{
-				new PointF(dir45coord,dir45coord),
-				new PointF(2*dir45coord,0),
-				new PointF(dir45coord,-dir45coord)
+				new PointF(dir45Point,dir45Point),
+				new PointF(2*dir45Point,0),
+				new PointF(dir45Point,-dir45Point)
 			});
 			//dc.DrawLine(new Pen(Brushes.Purple, 3), 0, 0, (float)Size, 0);
 			foreach (var weapon in Weapons)
@@ -352,7 +352,7 @@ namespace SpaceStrategy
 			dc.Restore(oldDc);
 			oldDc = dc.Save();
 			dc.TranslateTransform((float)Position.Location.X, (float)Position.Location.Y - 1.3F * Diameter);
-			Gauges.Draw(dc, Game.Params.HPGaugeColor, Class.HP, HitPoints, Diameter * 2);
+			Gauges.Draw(dc, Game.Params.HitPointsGaugeColor, Class.HitPoints, HitPoints, Diameter * 2);
 			if (Class.Shield > 0)
 			{
 				dc.TranslateTransform(0, Gauges.Height);
@@ -363,7 +363,7 @@ namespace SpaceStrategy
 		private void DrawWeapon(SpaceshipWeapon weapon, Graphics dc)
 		{
 			Pen fillB = new Pen(weapon.LineColor, Game.Params.AttackCompassThickness / 2);
-			foreach (var weaponPos in weaponPlacements[weapon])
+			foreach (var weaponPos in WeaponPlacements[weapon])
 			{
 				dc.DrawLine(fillB, weaponPos.Location, weaponPos.Location + weaponPos.Direction * 0.5);
 			}
@@ -407,10 +407,10 @@ namespace SpaceStrategy
 		}
 		public override void InflictDamage(int damagePoints)
 		{
-			int oldHP = HitPoints;
+			int oldHitPoints = HitPoints;
 			int damageAfterBrace = BraceDamage(damagePoints);
 			base.InflictDamage(damageAfterBrace);
-			int actualDamage = oldHP - HitPoints;
+			int actualDamage = oldHitPoints - HitPoints;
 			for (int i = 0; i < actualDamage; i++)
 			{
 				if (Dice.RollDices(6, 1, "Проверка шанса критического повреждения.") == 6)
@@ -419,19 +419,19 @@ namespace SpaceStrategy
 				}
 			}
 			OnDamaged(actualDamage);
-			if (hitPoints == 0 && damageAfterBrace > 0)
+			if (HitPoints == 0 && damageAfterBrace > 0)
 			{
 				OnDestroyed();
 			}			
 		}
 		internal void InflictAdditionalCriticalDamage(int damagePoints)
 		{
-			int oldHP = HitPoints;
+			int oldHitPoints = HitPoints;
 			int damageAfterBrace = BraceDamage(damagePoints);
 			base.InflictDamage(damageAfterBrace);
-			int actualDamage = oldHP - HitPoints;
+			int actualDamage = oldHitPoints - HitPoints;
 			OnDamaged(actualDamage);
-			if (hitPoints == 0 && damageAfterBrace > 0)
+			if (HitPoints == 0 && damageAfterBrace > 0)
 			{
 				OnDestroyed();
 			}
@@ -473,7 +473,7 @@ namespace SpaceStrategy
 		internal void RestoreCriticalDamage()
 		{
 			int restoreAttempts;
-			restoreAttempts = !BlastMarkersAtBase.Any()? hitPoints: GeometryHelper.RoundUp((double)hitPoints / 2.0);
+			restoreAttempts = !BlastMarkersAtBase.Any()? HitPoints: GeometryHelper.RoundUp((double)HitPoints / 2.0);
 			CriticalDamage.FixDamage(restoreAttempts);
 		}
 		internal void ApplyCriticalDamageConsequences()
@@ -487,15 +487,15 @@ namespace SpaceStrategy
 	 
 		public class CriticalDamageCollection : IEnumerable<CriticalDamageBase>
 		{
-			List<CriticalDamageBase> items;
-			GothicSpaceship ownerSpaceship;
+			List<CriticalDamageBase> _items;
+			GothicSpaceship _ownerSpaceship;
 			internal CriticalDamageCollection(GothicSpaceship owner)
 			{
-				this.ownerSpaceship = owner; 
-				items = new List<CriticalDamageBase>();
+				this._ownerSpaceship = owner; 
+				_items = new List<CriticalDamageBase>();
 			}
 			#region IEnumerable Implementation
-			public IEnumerator<CriticalDamageBase> GetEnumerator() { return items.GetEnumerator(); }
+			public IEnumerator<CriticalDamageBase> GetEnumerator() { return _items.GetEnumerator(); }
 			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { return this.GetEnumerator(); }
 			public void Add()
 			{
@@ -515,11 +515,11 @@ namespace SpaceStrategy
 					case 11: damageType = new HullBreach(); break;
 					case 12: damageType = new BulkheadCollapse(); break;
 				}
-				damageType = damageType.GetActualDamageType(ownerSpaceship);
-				damageType.ApplyDamage(ownerSpaceship);
+				damageType = damageType.GetActualDamageType(_ownerSpaceship);
+				damageType.ApplyDamage(_ownerSpaceship);
 				GamePrinter.AddLine(string.Format("Получено повреждение типа {0}", damageType.GetType().Name));
-				items.Add(damageType);
-				ownerSpaceship.NotifyPropertyChanged("CriticalDamage");
+				_items.Add(damageType);
+				_ownerSpaceship.NotifyPropertyChanged("CriticalDamage");
 			}
 			#endregion
 
@@ -527,24 +527,24 @@ namespace SpaceStrategy
 			{
 				if (restoreAttempts == 0)
 					return;
-				List<CriticalDamageBase> fixableDamage = items.Where(d => d.IsRepairable).ToList();
+				List<CriticalDamageBase> fixableDamage = _items.Where(d => d.IsRepairable).ToList();
 				if (fixableDamage.Count == 0)
 					return;
 				int fixedDamageCount = Dice.RolledDicesCount(6, restoreAttempts, 6, string.Format("Определение количества восстановленных критических повреждений."));
 
 				for (int i = 0; i < fixedDamageCount; i++)
 				{
-					int currentlyFixedDamageIndex = Game.rand.Next(fixableDamage.Count - 1);
+					int currentlyFixedDamageIndex = Game.Rand.Next(fixableDamage.Count - 1);
 					CriticalDamageBase fixedDamage = fixableDamage[currentlyFixedDamageIndex];
-					fixedDamage.FixDamage(ownerSpaceship);
-					items.Remove(fixedDamage);
+					fixedDamage.FixDamage(_ownerSpaceship);
+					_items.Remove(fixedDamage);
 					fixableDamage.Remove(fixedDamage);
 					GamePrinter.AddLine(string.Format("Восстановлено критическое повреждение {0}.",fixedDamage.GetType().Name));
 					if (fixableDamage.Count == 0)
 						return;
 				}
 				if (fixedDamageCount > 0)
-					ownerSpaceship.NotifyPropertyChanged("CriticalDamage");
+					_ownerSpaceship.NotifyPropertyChanged("CriticalDamage");
 			}
 		}
 
@@ -586,30 +586,30 @@ namespace SpaceStrategy
 	}
 	public class ArmamentDamage : CriticalDamageBase
 	{
-		private Side side;
+		private Side _side;
 
 		public ArmamentDamage(Side side)
 			: base(true)
 		{
-			this.side = side;
+			this._side = side;
 		}
 		public override void ApplyDamage(GothicSpaceship spaceship)
 		{
-			foreach (var weapon in spaceship.Weapons.Where(w => w.SpaceshipSide == side))
+			foreach (var weapon in spaceship.Weapons.Where(w => w.SpaceshipSide == _side))
 			{
 				weapon.Power = 0;
 			}
 		}
 		public override void FixDamage(GothicSpaceship spaceship)
 		{
-			foreach (var weapon in spaceship.Weapons.Where(w => w.SpaceshipSide == side))
+			foreach (var weapon in spaceship.Weapons.Where(w => w.SpaceshipSide == _side))
 			{
-				weapon.Power = weapon.normalPower;
+				weapon.Power = weapon.NormalPower;
 			}
 		}
 		public override CriticalDamageBase GetActualDamageType(GothicSpaceship spaceship)
 		{
-			if (spaceship.Weapons.Any(w => w.SpaceshipSide == side))
+			if (spaceship.Weapons.Any(w => w.SpaceshipSide == _side))
 				return this;
 			else
 			{
@@ -619,7 +619,7 @@ namespace SpaceStrategy
 	}
 	public class DorsalArmamentDamaged : ArmamentDamage
 	{
-		public DorsalArmamentDamaged() : base(Side.LFR) { }
+		public DorsalArmamentDamaged() : base(Side.LeftFrontRight) { }
 		protected override CriticalDamageBase DamageTypeIfNotApplicable { get { return new StarboardArmamentDamaged(); } }
 	}
 	public class StarboardArmamentDamaged : ArmamentDamage

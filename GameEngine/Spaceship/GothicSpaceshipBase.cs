@@ -10,22 +10,22 @@ namespace SpaceStrategy
 {
 	public abstract class GothicSpaceshipBase:Spaceship
 	{
-		BlastMarkersAtBase blastMarkersAtBase;
-		protected int hitPoints;
-		double maxTurnAngle;
+		BlastMarkersAtBase _blastMarkersAtBase;
+		int _hitPoints;
+		double _maxTurnAngle;
 		public GothicSpaceshipBase(Game game, Position position, SpaceshipClass spaceshipClass, Player owner)
 			: base(game, position, spaceshipClass.Speed)
 		{
 			Class = spaceshipClass;
-			hitPoints = spaceshipClass.HP;
+			_hitPoints = spaceshipClass.HitPoints;
 			MinRunBeforeTurn = Class.MinRunBeforeTurn;
-			maxTurnAngle = Class.MaxTurnAngle;
+			_maxTurnAngle = Class.MaxTurnAngle;
 			Trajectory.MinStraightBeforeTurn = Class.MinRunBeforeTurn;
 
 			Player = owner;
 
-			blastMarkersAtBase = new BlastMarkersAtBase(this);
-			blastMarkersAtBase.NewBlastMarkerContact += OnNewBlastMarkerContact;
+			_blastMarkersAtBase = new BlastMarkersAtBase(this);
+			_blastMarkersAtBase.NewBlastMarkerContact += OnNewBlastMarkerContact;
 
 			IsCrippled = false;
 			IsDestroyed = CatastrophycDamage.None;
@@ -50,7 +50,7 @@ namespace SpaceStrategy
 		public SpaceshipClass Class { get; private set; }
 		public CatastrophycDamage IsDestroyed { get; protected set; }
 		//internal int HitPoints { get { return hitPoints; } private set { hitPoints = Math.Max(0, value); } }
-		public int HitPoints { get { return hitPoints; } }//protected set { hitPoints = Math.Max(0, value); } }
+		public int HitPoints { get { return _hitPoints; } }//protected set { hitPoints = Math.Max(0, value); } }
 		public int ShieldPoints
 		{
 			get {
@@ -60,12 +60,12 @@ namespace SpaceStrategy
 				return Math.Max(0, totalSp - BlastMarkersAtBase.Count);
 			}
 		}
-		public double MaxTurnAngle { get { return maxTurnAngle; } internal set{ maxTurnAngle = value;} }
+		public double MaxTurnAngle { get { return _maxTurnAngle; } internal set{ _maxTurnAngle = value;} }
 		public double MinRunBeforeTurn { get; protected set; }
 		//public double MinTurnRadius { get; private set; }
 		public virtual void InflictDamage(int damagePoints)
 		{
-			hitPoints = Math.Max(0, hitPoints - damagePoints);
+			_hitPoints = Math.Max(0, _hitPoints - damagePoints);
 		}
 		internal bool TryAutoMoveMandatoryDistance()
 		{
@@ -87,26 +87,26 @@ namespace SpaceStrategy
 		{
 			get
 			{
-				if (blastMarkersAtBase == null)
-					blastMarkersAtBase = new BlastMarkersAtBase(this);
-				return blastMarkersAtBase;
+				if (_blastMarkersAtBase == null)
+					_blastMarkersAtBase = new BlastMarkersAtBase(this);
+				return _blastMarkersAtBase;
 			}
 		}
 		internal abstract void Attack(GothicSpaceshipBase attackedGothicSpaceship);
 		public class DamageEventArgs:EventArgs{
-			public DamageEventArgs(GothicSpaceshipBase attacked, int totalHp, int oldHp, int newHp)
+			public DamageEventArgs(GothicSpaceshipBase attacked, int totalHitPoints, int oldHitPoints, int newHitPoints)
 			{
-				TotalHp =totalHp;
-				OldHp = oldHp;
-				NewHp = newHp;
+				TotalHitPoints = totalHitPoints;
+				OldHitPoints = oldHitPoints;
+				NewHitPoints = newHitPoints;
 				//Attacker = attacker;
 				Attacked = attacked;
 			}		
-			public int TotalHp { get; set; }
+			public int TotalHitPoints { get; set; }
 
-			public int OldHp { get; set; }
+			public int OldHitPoints { get; set; }
 
-			public int NewHp { get; set; }
+			public int NewHitPoints { get; set; }
 
 			//public GothicSpaceshipBase Attacker { get; set; }
 
@@ -118,14 +118,14 @@ namespace SpaceStrategy
 		{
 			if (damage == 0)
 				return;
-			if (hitPoints <= GeometryHelper.RoundUp((double)Class.HP / 2.0))
+			if (_hitPoints <= GeometryHelper.RoundUp((double)Class.HitPoints / 2.0))
 			{
 				IsCrippled = true;
 			}
 			var handler = Damaged;
 			if (handler != null)
 			{
-				handler(this, new DamageEventArgs(this, Class.HP, HitPoints + damage, HitPoints));
+				handler(this, new DamageEventArgs(this, Class.HitPoints, HitPoints + damage, HitPoints));
 			}
 		}
 		internal virtual void Attacked(SpaceshipWeapon attacker, int damage, TimeSpan timeBeforeAttackImpact)
@@ -154,7 +154,7 @@ namespace SpaceStrategy
 
 				for (int i = 0; i < shieldAbsorbedDamage; i++)
 				{
-					blastMarkersAtBase.CreateBlastMarkerAtBase(preferedBmPosition, timeBeforeAttackImpact);					
+					_blastMarkersAtBase.CreateBlastMarkerAtBase(preferedBmPosition, timeBeforeAttackImpact);					
 				}
 			}
 			else if (attacker is TorpedoWeapon)
@@ -218,21 +218,21 @@ namespace SpaceStrategy
 	}
 	public class BlastMarkersAtBase : IEnumerable<BlastMarker>
 	{
-		List<BlastMarker> items;
-		GothicSpaceshipBase owner;
+		List<BlastMarker> _items;
+		GothicSpaceshipBase _owner;
 		internal BlastMarkersAtBase(GothicSpaceshipBase owner)
 		{
-			this.owner = owner;
-			items = new List<BlastMarker>();
+			this._owner = owner;
+			_items = new List<BlastMarker>();
 		}
-		public IEnumerator<BlastMarker> GetEnumerator() { return items.GetEnumerator(); }
+		public IEnumerator<BlastMarker> GetEnumerator() { return _items.GetEnumerator(); }
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { return this.GetEnumerator(); }
 		public void DestroyShield()
 		{
-			if (shieldAnimation != null)
+			if (_shieldAnimation != null)
 			{
-				shieldAnimation.Cyclic = false;
-				shieldAnimation = null;
+				_shieldAnimation.Cyclic = false;
+				_shieldAnimation = null;
 			}
 		}
 		public void SetCurBlastMarkers(IEnumerable<BlastMarker> curBlastMarkers)
@@ -240,51 +240,51 @@ namespace SpaceStrategy
 			List<BlastMarker> newBMs = new List<BlastMarker>();
 			if (curBlastMarkers != null && curBlastMarkers.Any())
 			{
-				newBMs = curBlastMarkers.Where(a => !items.Contains(a)).ToList();
+				newBMs = curBlastMarkers.Where(a => !_items.Contains(a)).ToList();
 			}
-			items.Clear();
-			items.AddRange(curBlastMarkers);
+			_items.Clear();
+			_items.AddRange(curBlastMarkers);
 
 			if (newBMs.Any())
 				OnNewBlastMarkerContact(newBMs);
 
-			if (owner.IsDestroyed != CatastrophycDamage.None)
+			if (_owner.IsDestroyed != CatastrophycDamage.None)
 				return;
 
-			if (!items.Any())
+			if (!_items.Any())
 			{
 				//owner.ShieldPoints = owner.Class.Shield;
-				if (shieldAnimation != null)
+				if (_shieldAnimation != null)
 				{
-					shieldAnimation.Cyclic = false;
-					shieldAnimation = null;
+					_shieldAnimation.Cyclic = false;
+					_shieldAnimation = null;
 				}
 			}
 		}
 		public void AddBlastMarker(BlastMarker newBlastMarker)
 		{
-			if (items.Contains(newBlastMarker))
+			if (_items.Contains(newBlastMarker))
 				return;
-			List<BlastMarker> bms = items.ToList();
+			List<BlastMarker> bms = _items.ToList();
 			bms.Add(newBlastMarker);
 			SetCurBlastMarkers(bms);
 		}
 
-		private ShiledActiveAnimation shieldAnimation;
+		private ShieldActiveAnimation _shieldAnimation;
 		public EventHandler<NewBlastMarkersContactEventArgs> NewBlastMarkerContact;
 		protected virtual void OnNewBlastMarkerContact(IEnumerable<BlastMarker> newBlastMarkers)
 		{
-			ShiledActiveAnimation newAnimation;
-			if (owner.Class.Shield > 0 && owner.IsDestroyed== CatastrophycDamage.None)
+			ShieldActiveAnimation newAnimation;
+			if (_owner.Class.Shield > 0 && _owner.IsDestroyed== CatastrophycDamage.None)
 			{
-				if (shieldAnimation == null)
+				if (_shieldAnimation == null)
 				{
-					newAnimation = new ShiledActiveAnimation(owner, true);
-					shieldAnimation = newAnimation;
+					newAnimation = new ShieldActiveAnimation(_owner, true);
+					_shieldAnimation = newAnimation;
 				}
 				else
 				{
-					newAnimation = new ShiledActiveAnimation(owner, false);
+					newAnimation = new ShieldActiveAnimation(_owner, false);
 				}
 				AnimationHelper.CreateAnimation(newAnimation);
 			}
@@ -292,11 +292,11 @@ namespace SpaceStrategy
 				NewBlastMarkerContact(this, new NewBlastMarkersContactEventArgs(newBlastMarkers));
 		}
 
-		public int Count { get { return items.Count; } }
+		public int Count { get { return _items.Count; } }
 
-		internal void CreateBlastMarkerAtBase(Point2d preferedBmPosition, TimeSpan showBMAfter)
+		internal void CreateBlastMarkerAtBase(Point2d preferredPosition, TimeSpan delay)
 		{
-			IEnumerable<Point2d> existingBmPolarPositions = items.Select(a => a.Position.Location.ToPolarCS(owner.Position.Location));
+			IEnumerable<Point2d> existingBmPolarPositions = _items.Select(a => a.Position.Location.ToPolarCs(_owner.Position.Location));
 
 			//double bmAngSizeCoef = 2;
 			//double bmAngSize = 2 * Math.Asin(BlastMarker.CollisionRadius / bmRingRadius) * bmAngSizeCoef;				
@@ -344,44 +344,44 @@ namespace SpaceStrategy
 
 			Point2d actualBmPosition;
 			{
-				Point2d preferedBmPositionPolar = preferedBmPosition.ToPolarCS(owner.Position.Location);
-				Tuple<double, double> blastedRangeAroundPreferedPosition = null;
+				Point2d preferedBmPositionPolar = preferredPosition.ToPolarCs(_owner.Position.Location);
+				Tuple<double, double> blastedRangeAroundPreferredPosition = null;
 				foreach (var range in existingBmPolarRanges)
 				{
 					if (GeometryHelper.IsBetween(range.Item2, range.Item1, preferedBmPositionPolar.Ro))
 					{
-						blastedRangeAroundPreferedPosition = range;
+						blastedRangeAroundPreferredPosition = range;
 						break;
 					}
 				}
 
-				if (blastedRangeAroundPreferedPosition != null)
+				if (blastedRangeAroundPreferredPosition != null)
 				{
-					if (GeometryHelper.Distance(blastedRangeAroundPreferedPosition.Item1, preferedBmPositionPolar.Ro, true) > GeometryHelper.Distance(preferedBmPositionPolar.Ro, blastedRangeAroundPreferedPosition.Item2, true))
+					if (GeometryHelper.Distance(blastedRangeAroundPreferredPosition.Item1, preferedBmPositionPolar.Ro, true) > GeometryHelper.Distance(preferedBmPositionPolar.Ro, blastedRangeAroundPreferredPosition.Item2, true))
 					{
-						actualBmPosition = new Point2d(blastedRangeAroundPreferedPosition.Item1, preferedBmPositionPolar.R * 0.9).ToEuclidCS(owner.Position.Location);
+						actualBmPosition = new Point2d(blastedRangeAroundPreferredPosition.Item1, preferedBmPositionPolar.R * 0.9).ToEuclidCs(_owner.Position.Location);
 					}
 					else
 					{
-						actualBmPosition = new Point2d(blastedRangeAroundPreferedPosition.Item2, preferedBmPositionPolar.R * 0.9).ToEuclidCS(owner.Position.Location);
+						actualBmPosition = new Point2d(blastedRangeAroundPreferredPosition.Item2, preferedBmPositionPolar.R * 0.9).ToEuclidCs(_owner.Position.Location);
 					}
 				}
 				else
 				{
-					actualBmPosition = preferedBmPosition;
+					actualBmPosition = preferredPosition;
 				}
 			}
-			double newBmPosDir = actualBmPosition.ToPolarCS(owner.Position.Location).Ro - GeometryHelper.PiDiv3;
-			BlastMarker bm = new BlastMarker(owner.Game, new Position(actualBmPosition, newBmPosDir), showBMAfter);
-			owner.Game.AddGraphicObject(bm);
+			double newBmPosDir = actualBmPosition.ToPolarCs(_owner.Position.Location).Ro - GeometryHelper.PiDiv3;
+			BlastMarker bm = new BlastMarker(_owner.Game, new Position(actualBmPosition, newBmPosDir), delay);
+			_owner.Game.AddGraphicObject(bm);
 			AddBlastMarker(bm);
 		}
 	}
 	public class NewBlastMarkersContactEventArgs:EventArgs{
 		public NewBlastMarkersContactEventArgs(IEnumerable<BlastMarker> newBlastMarkers){
-			this.newBlastMarkers=newBlastMarkers;
+			this.NewBlastMarkers=newBlastMarkers;
 		}	
-		public IEnumerable<BlastMarker> newBlastMarkers { get; set; }
+		public IEnumerable<BlastMarker> NewBlastMarkers { get; set; }
 	}
 
 	public enum Leaderships

@@ -20,11 +20,11 @@ namespace SpaceStrategy
 			if (!isClockwise) Length = andDiff;
 			else Length = GeometryHelper.DoublePi - andDiff;
 
-			this.center = center;
-			this.radius = radius;
-			this.isClockwise = isClockwise;
-			this.startAng = startAng;
-			this.endAng = endAng;
+			this._center = center;
+			this._radius = radius;
+			this._isClockwise = isClockwise;
+			this._startAng = startAng;
+			this._endAng = endAng;
 		}
 
 		private static Point2d GetPointAtAngle(double angle, double radius, Point2d center)
@@ -36,23 +36,23 @@ namespace SpaceStrategy
 		}
 		public override Position GetPositionAt(double distance)
 		{
-			double angleAtDistance = (startAng + distance / radius);
-			Point2d pointAtDistance = GetPointAtAngle(angleAtDistance, radius, center);
+			double angleAtDistance = (_startAng + distance / _radius);
+			Point2d pointAtDistance = GetPointAtAngle(angleAtDistance, _radius, _center);
 
 			return new Position(
 				pointAtDistance,
-				angleAtDistance + (isClockwise ? -GeometryHelper.HalfPi : GeometryHelper.HalfPi)
+				angleAtDistance + (_isClockwise ? -GeometryHelper.HalfPi : GeometryHelper.HalfPi)
 				);
 		}
 		public override void Draw(Graphics dc)
 		{
 			throw new NotImplementedException();
 		}
-		private double startAng;
-		private double endAng;
-		private Point2d center;
-		private double radius;
-		private bool isClockwise;
+		private double _startAng;
+		private double _endAng;
+		private Point2d _center;
+		private double _radius;
+		private bool _isClockwise;
 
 	}
 }

@@ -8,14 +8,14 @@ namespace SpaceStrategy
 {
 	public class Dice
 	{
-		static Random rand { get { return Game.rand; } }
+		static Random Rand { get { return Game.Rand; } }
 		internal static int RollDices(int sides, int count, string description)
 		{
 			int result = 0;
 			string text = string.Format("({0}d{1}: ", count, sides);
 			for (int i = 0; i < count; i++)
 			{
-				int value = rand.Next(sides) + 1;
+				int value = Rand.Next(sides) + 1;
 				result += value;
 				text += value.ToString() + (i == count - 1 ? ")" : ", ");
 			}

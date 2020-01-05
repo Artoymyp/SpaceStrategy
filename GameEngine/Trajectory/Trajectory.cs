@@ -9,31 +9,31 @@ namespace SpaceStrategy
 	internal abstract class Trajectory : GraphicObject
 	{
 		protected double Length { get; set; }
-		protected double distanceFromStart { get; set; }
+		protected double DistanceFromStart { get; set; }
 
 		internal Point2d StartPoint { get; set; }
 		internal Point2d EndPoint { get; set; }
-		protected TrajectoryCollection owner;
+		protected TrajectoryCollection Owner;
 		protected Trajectory(TrajectoryCollection owner, Point2d startPoint, Point2d endPoint)
 		{
 			StartPoint = startPoint;
 			EndPoint = endPoint;
-			this.owner = owner;
+			this.Owner = owner;
 		}
 		internal virtual void AddToCurrentDistance(double distance, out double unusedDistance)
 		{
-			unusedDistance = distance - (Length - distanceFromStart);
+			unusedDistance = distance - (Length - DistanceFromStart);
 			if (unusedDistance < 0) {
 				unusedDistance = 0;
-				distanceFromStart += distance;
+				DistanceFromStart += distance;
 			} 
 			else {
-				distanceFromStart = Length;
+				DistanceFromStart = Length;
 			}
 		}
 		internal Position GetCurrentPosition()
 		{
-			return GetPositionAt(distanceFromStart);
+			return GetPositionAt(DistanceFromStart);
 		}
 		public abstract Position GetPositionAt(double distance);
 		
@@ -42,7 +42,7 @@ namespace SpaceStrategy
 			return GetPositionAt(Length);
 		}
 
-		internal virtual void OnMouseMove(Point2d coord) { }
-		internal virtual bool IsOnCourse(Point2d coord, double maxDistFromCourse) { throw new NotImplementedException(); }
+		internal virtual void OnMouseMove(Point2d point) { }
+		internal virtual bool IsOnCourse(Point2d point, double maxDistFromCourse) { throw new NotImplementedException(); }
 	}
 }

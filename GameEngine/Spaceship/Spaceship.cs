@@ -11,7 +11,7 @@ namespace SpaceStrategy
 {
 	public abstract class Spaceship: GraphicObject
 	{
-		double speed;
+		double _speed;
 		#region Constructors
 		private Spaceship()
 		{
@@ -25,7 +25,7 @@ namespace SpaceStrategy
 		protected Spaceship(Game game, Position position, double speed)
 			: this(game, position)
 		{
-			this.speed = speed;
+			this._speed = speed;
 			Trajectory = new TrajectoryCollection(this);
 		} 
 		internal void FinishSpaceshipCreation(){
@@ -36,7 +36,7 @@ namespace SpaceStrategy
 		internal Game Game { get; private set; }
 		internal TrajectoryCollection Trajectory { get; set; }
 		internal SpaceshipState State { get; set; }
-		public virtual double Speed { get { return speed; } }
+		public virtual double Speed { get { return _speed; } }
 		internal float Diameter { get { return Game.Params.SpaceshipDiameter; } }
 		internal bool IsSelected { get; set; }
 		public virtual void OnTime(TimeSpan dt) { }

@@ -30,9 +30,9 @@ namespace SpaceStrategy.Weapon
 			var bmsFieldRadius = Math.Sqrt(Power)*BlastMarker.CollisionRadius;
 			for (int i = 0; i < Power; i++)
 			{
-				var r = Game.rand.NextDouble() * bmsFieldRadius;
-				var ro = Game.rand.NextDouble() * GeometryHelper.DoublePi;
-				Point2d bmsPos = new Point2d(r, ro).ToEuclidCS(OwnerSpaceship.Position);
+				var r = Game.Rand.NextDouble() * bmsFieldRadius;
+				var ro = Game.Rand.NextDouble() * GeometryHelper.DoublePi;
+				Point2d bmsPos = new Point2d(r, ro).ToEuclidCs(OwnerSpaceship.Position);
 				BlastMarker bm = new BlastMarker(OwnerSpaceship.Game, new Position(bmsPos, ro), new TimeSpan());
 				OwnerSpaceship.Game.AddGraphicObject(bm);
 			}
@@ -53,8 +53,8 @@ namespace SpaceStrategy.Weapon
 			//var attackAnimation = new Animation.LanceAttackAnimation(this, attackedSpaceship);
 			//AnimationHelper.CreateAnimation(attackAnimation);
 			double distance = OwnerSpaceship.Position.DistanceTo(attackedSpaceship.Position);
-			double timeCoef = distance / Range;
-			attackedSpaceship.Attacked(this, damage, new TimeSpan(0,0,0,0,(int)(ExplosionDuration.TotalMilliseconds*timeCoef)));
+			double c = distance / Range;
+			attackedSpaceship.Attacked(this, damage, new TimeSpan(0,0,0,0,(int)(ExplosionDuration.TotalMilliseconds*c)));
 		}
 	}
 }

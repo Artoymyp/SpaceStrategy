@@ -8,10 +8,10 @@ namespace SpaceStrategy
 {
 	public abstract class Scenario
 	{
-		protected Game game { get; private set; }
+		protected Game Game { get; private set; }
 		protected Scenario(Game game)
 		{
-			this.game = game;
+			this.Game = game;
 		}
 		public string Name { get; protected set; }
 		public int TotalPointsLimit { get; protected set; }
@@ -34,20 +34,20 @@ namespace SpaceStrategy
 			MaxPlayerCount = 2;
 			MaxPlayerSpaceshipCount = 4;
 		}
-		int maxTurnCountForEachPlayer = 8;
+		int _maxTurnCountForEachPlayer = 8;
 		public override bool IsComplete()
 		{
-			foreach (var player in game.Players) {
+			foreach (var player in Game.Players) {
 				if (!player.Spaceships.Any(a=>a.IsDestroyed==CatastrophycDamage.None))
 					return true;
 			}
-			if (game.CompletedTurnsCount >= maxTurnCountForEachPlayer * game.Players.Count)
+			if (Game.CompletedTurnsCount >= _maxTurnCountForEachPlayer * Game.Players.Count)
 				return true;
 			return false;
 		}
 		public override IList<SpaceshipClass> GetAvailableSpaceshipClasses(string raceId)
 			{
-				var classRows = game.GameData.GetSpaceshipClassesByRaceId(raceId);
+				var classRows = Game.GameData.GetSpaceshipClassesByRaceId(raceId);
 				IEnumerable<SpaceshipClass> availableClasses = classRows.Select(a => new SpaceshipClass(a));
 
 				return availableClasses.Where(a=>a.Points<=SingleShipMaxPoints && a.Category== SpaceshipCategory.CapitalShip).ToList();

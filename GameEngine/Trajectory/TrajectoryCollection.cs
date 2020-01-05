@@ -14,7 +14,7 @@ namespace SpaceStrategy
 		internal double MinStraightBeforeTurn { get; set; }
 		internal double TotalDistance { get; private set; }
 
-		private List<Trajectory> items = new List<Trajectory>();
+		private List<Trajectory> _items = new List<Trajectory>();
 		internal TrajectoryCollection(Spaceship owner) {
 			this.Spaceship = owner;
 			DistanceAfterLastTurn = 0;
@@ -22,20 +22,20 @@ namespace SpaceStrategy
 			TotalDistance = 0;
 		}
 		internal Point2d StartPoint { get; set; }
-		public IEnumerator<Trajectory> GetEnumerator() { return items.GetEnumerator(); }
-		IEnumerator IEnumerable.GetEnumerator() { return items.GetEnumerator(); }
+		public IEnumerator<Trajectory> GetEnumerator() { return _items.GetEnumerator(); }
+		IEnumerator IEnumerable.GetEnumerator() { return _items.GetEnumerator(); }
 		internal void Add(Trajectory trajectory)
 		{
-			items.Add(trajectory);
+			_items.Add(trajectory);
 		}
 		internal void Add(Point2d targetPoint){
 			Point2d prevPoint;
-			if (items.Count > 0)
-				prevPoint = items.Last().EndPoint;
+			if (_items.Count > 0)
+				prevPoint = _items.Last().EndPoint;
 			else
 				prevPoint = StartPoint;
 			LinearTrajectory newSegment = new LinearTrajectory(this, prevPoint, targetPoint);
-			items.Add(newSegment);
+			_items.Add(newSegment);
 			PrevDir = newSegment.Direction;
 			Spaceship.State = SpaceshipState.Moving;
 		}
@@ -43,14 +43,14 @@ namespace SpaceStrategy
 		internal Spaceship Spaceship { get; private set; }
 		internal void MoveAlong(double distance, out double unusedDistance){
 			unusedDistance = distance;
-			if (items.Count == 0) {
+			if (_items.Count == 0) {
 				return;
 			}
 
 			Position newPosition;
 			do {
-				Trajectory curTrajectory = items[0];
-				double newUnusedDistance = 0;
+				Trajectory curTrajectory = _items[0];
+				double newUnusedDistance;
 				curTrajectory.AddToCurrentDistance(unusedDistance, out newUnusedDistance);
 				double usedDistance = unusedDistance - newUnusedDistance;
 				DistanceAfterLastTurn += usedDistance;
@@ -63,43 +63,43 @@ namespace SpaceStrategy
 					PrevDir = newDir;
 				}
 				if (newUnusedDistance > 0 && Spaceship.State == SpaceshipState.Moving) {
-					items.Remove(curTrajectory);
+					_items.Remove(curTrajectory);
 				}
 				unusedDistance = newUnusedDistance;
-			} while (unusedDistance > 0 && items.Count > 0 && Spaceship.State == SpaceshipState.Moving);
-			if (items.Count == 0)
+			} while (unusedDistance > 0 && _items.Count > 0 && Spaceship.State == SpaceshipState.Moving);
+			if (_items.Count == 0)
 				Spaceship.State = SpaceshipState.Standing;
 			StartPoint = newPosition;
 			Spaceship.Position = newPosition;
 		}
 		private void Prolong()
 		{
-			Position lastPosition = items.Last().GetEndPosition();
-			items.Add(new LinearTrajectory(this, lastPosition.Location, lastPosition.Location + lastPosition.Direction * 10));
+			Position lastPosition = _items.Last().GetEndPosition();
+			_items.Add(new LinearTrajectory(this, lastPosition.Location, lastPosition.Location + lastPosition.Direction * 10));
 		}
 
 		internal void Draw(System.Drawing.Graphics dc)
 		{
-			foreach (var item in items) {
+			foreach (var item in _items) {
 				item.Draw(dc);
 			}
 		}
 
 		internal void OnMouseMove(Point2d coord)
 		{
-			foreach (var item in items) {
+			foreach (var item in _items) {
 				item.OnMouseMove(coord);
 			}
 		}
 
 		internal void Add(int index, Trajectory trajectory)
 		{
-			items.Insert(index, trajectory);
+			_items.Insert(index, trajectory);
 		}
 
 		internal void Remove(Trajectory trajectory)
 		{
-			items.Remove(trajectory);
+			_items.Remove(trajectory);
 		}
 	}
 }

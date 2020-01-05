@@ -24,15 +24,15 @@ namespace SpaceStrategy
 		public Color Color { get; private set; }
 		public string Race { get; private set; }
 		public IEnumerable<GothicSpaceship> Spaceships { get { return Game.GothicSpaceships.Where(a => a.Player == this); } }
-		bool specialOrderFail;
+		bool _specialOrderFail;
 		public bool SpecialOrderFail
 		{
-			get { return specialOrderFail; }
+			get { return _specialOrderFail; }
 			internal set
 			{
-				if (specialOrderFail != value)
+				if (_specialOrderFail != value)
 				{
-					specialOrderFail = value;
+					_specialOrderFail = value;
 					
 					if (Game.SelectedSpaceship != null)
 					{

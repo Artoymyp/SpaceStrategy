@@ -28,18 +28,18 @@ namespace SpaceStrategy.Animation
 			{
 				if (!workingWeapons.Contains(i))
 				{
-					allFireBlobs.Add(null);
+					_allFireBlobs.Add(null);
 					continue;
 				}
-				var weaponPos = source.OwnerSpaceship.weaponPlacements[source][i];
+				var weaponPos = source.OwnerSpaceship.WeaponPlacements[source][i];
 				Point2d globalWeaponPos = weaponPos.Location.TransformBy(source.OwnerSpaceship.Position);
-				double randX=(Game.rand.NextDouble()-0.5) * target.Diameter;
-				double randY=(Game.rand.NextDouble()-0.5) * target.Diameter;
+				double randX=(Game.Rand.NextDouble()-0.5) * target.Diameter;
+				double randY=(Game.Rand.NextDouble()-0.5) * target.Diameter;
 				Vector targetShift = new Vector(randX, randY);
 				Vector attackDir = globalWeaponPos.VectorTo(target.Position.Location + targetShift);
 				double attackDist = attackDir.Length;
 				attackDir.Normalize();
-				allFireBlobs.Add(new FireBlob(new Position(globalWeaponPos, attackDir), attackDist,hitWeapons.Contains(i)));
+				_allFireBlobs.Add(new FireBlob(new Position(globalWeaponPos, attackDir), attackDist,hitWeapons.Contains(i)));
 				
 				//Calculating animation duration;
 				double curBlobLifeTimeMs = attackDist / FireBlob.UnitsPerSecSpeed*1000;
@@ -49,43 +49,43 @@ namespace SpaceStrategy.Animation
 				}
 				blobStartTime += FireSpan;
 			}
-			TimeFromLastFire = FireSpan;
+			_timeFromLastFire = FireSpan;
 			AnimationDuration = maxBlobLifeTime;
 		}
-		List<FireBlob> allFireBlobs = new List<FireBlob>();
-		List<FireBlob> fireBlobs = new List<FireBlob>();
-		TimeSpan TimeFromLastFire;
+		List<FireBlob> _allFireBlobs = new List<FireBlob>();
+		List<FireBlob> _fireBlobs = new List<FireBlob>();
+		TimeSpan _timeFromLastFire;
 		static TimeSpan FireSpan { get { return new TimeSpan(0, 0, 0, 0, 30); } }
 
-		static Color color { get { return Color.DeepSkyBlue; } }
+		static Color Color { get { return Color.DeepSkyBlue; } }
 
 		internal override void OnTime(TimeSpan dt)
 		{
-			fireBlobs.RemoveAll(a => a.Complete);
-			foreach (var blob in fireBlobs)
+			_fireBlobs.RemoveAll(a => a.Complete);
+			foreach (var blob in _fireBlobs)
 			{
 				blob.Move(dt);
 			}
-			if (TimeFromLastFire >= FireSpan)
+			if (_timeFromLastFire >= FireSpan)
 			{
-				if (allFireBlobs.Count > 0)
+				if (_allFireBlobs.Count > 0)
 				{
-					var curBlob = allFireBlobs.First();
-					allFireBlobs.RemoveAt(0);
+					var curBlob = _allFireBlobs.First();
+					_allFireBlobs.RemoveAt(0);
 					if (curBlob != null)
 					{
-						fireBlobs.Add(curBlob);
+						_fireBlobs.Add(curBlob);
 					}
 				}
-				TimeFromLastFire = new TimeSpan();
+				_timeFromLastFire = new TimeSpan();
 			}
-			TimeFromLastFire += dt;
-			if (allFireBlobs.Count == 0 && fireBlobs.Count == 0)
+			_timeFromLastFire += dt;
+			if (_allFireBlobs.Count == 0 && _fireBlobs.Count == 0)
 				Drop();
 		}
 		internal override void Draw(Graphics dc)
 		{
-			foreach (var blob in fireBlobs)
+			foreach (var blob in _fireBlobs)
 			{
 				blob.Draw(dc);
 			}
@@ -96,25 +96,25 @@ namespace SpaceStrategy.Animation
 		{
 			public FireBlob(Position startPos, double maxDistance, bool placeExplosion)
 			{
-				Position = startPos;
-				this.maxDist = maxDistance;
+				_position = startPos;
+				this._maxDistance = maxDistance;
 			}
 
-			Position Position;
-			double distance=0;
-			double maxDist;
+			Position _position;
+			double _distance=0;
+			double _maxDistance;
 			public bool Complete = false;
 			public void Move(TimeSpan dt)
 			{
 				if (Complete)
 					return;
 				var distIncrement = (float)dt.Milliseconds / (float)1000 * UnitsPerSecSpeed;
-				Position.Location = Position.Location + Position.Direction * distIncrement;
-				distance+=distIncrement;
-				if (distance >= maxDist)
+				_position.Location = _position.Location + _position.Direction * distIncrement;
+				_distance+=distIncrement;
+				if (_distance >= _maxDistance)
 				{
 					Complete = true;
-					AnimationHelper.CreateAnimation(new RoundExplosionAnimation(Position, new TimeSpan(0, 0, 0, 0, 1000), 0, 1.5F));
+					AnimationHelper.CreateAnimation(new RoundExplosionAnimation(_position, new TimeSpan(0, 0, 0, 0, 1000), 0, 1.5F));
 				}
 			}
 			public static double UnitsPerSecSpeed { get { return 40; } }
@@ -122,8 +122,8 @@ namespace SpaceStrategy.Animation
 			public void Draw(Graphics dc)
 			{
 
-				RectangleF rect = new RectangleF((float)Position.Location.X - Radius, (float)Position.Location.Y - Radius, Radius * 2, Radius * 2);
-				dc.FillEllipse(new SolidBrush(CannonAttackAnimation.color), rect);
+				RectangleF rect = new RectangleF((float)_position.Location.X - Radius, (float)_position.Location.Y - Radius, Radius * 2, Radius * 2);
+				dc.FillEllipse(new SolidBrush(CannonAttackAnimation.Color), rect);
 			}
 		}
 	}

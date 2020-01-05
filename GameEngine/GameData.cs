@@ -10,14 +10,14 @@ namespace SpaceStrategy
 {
 	public class GameDataAdapter
 	{
-		GameDataSet.RaceDataTable raceTable;
+		GameDataSet.RaceDataTable _raceTable;
 		public GameDataAdapter()
 		{
-			raceTable = new GameDataSet.RaceDataTable();
-			RaceTableAdapter raceTA = new RaceTableAdapter();
-			raceTA.Fill(raceTable);
+			_raceTable = new GameDataSet.RaceDataTable();
+			RaceTableAdapter raceTableAdapter = new RaceTableAdapter();
+			raceTableAdapter.Fill(_raceTable);
 		}
-		public GameDataSet.RaceDataTable Races { get { return raceTable; } }
+		public GameDataSet.RaceDataTable Races { get { return _raceTable; } }
 		public GameDataSet.SpaceshipClassDataTable GetSpaceshipClassesByRaceId(string raceId)
 		{
 			SpaceshipClassTableAdapter ta = new SpaceshipClassTableAdapter();

@@ -55,9 +55,9 @@ namespace SpaceStrategy
 				case AnimationMode.Cos:
 					var val1 = Math.Sqrt(phase);
 					return (float)(startValue + (endValue - startValue) * val1);
-				case AnimationMode.x8:
-					var valx8 = Math.Pow(phase, 8);
-					return (float)(startValue + (endValue - startValue) * valx8);
+				case AnimationMode.Pow8:
+					var pow8 = Math.Pow(phase, 8);
+					return (float)(startValue + (endValue - startValue) * pow8);
 				default:
 					throw new NotImplementedException();
 			}
@@ -68,6 +68,6 @@ namespace SpaceStrategy
 		Linear,
 		Sin,
 		Cos,
-		x8
+		Pow8
 	}
 }

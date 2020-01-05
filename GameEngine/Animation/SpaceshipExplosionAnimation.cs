@@ -10,9 +10,9 @@ namespace SpaceStrategy
 	internal class RoundExplosionAnimation
 	: AnimationObject
 	{
-		private Position explosionPosition;
-		private float StartDiameter;
-		private float EndDiameter;
+		private Position _explosionPosition;
+		private float _startDiameter;
+		private float _endDiameter;
 		internal RoundExplosionAnimation(
 			Position explosionPosition,
 			TimeSpan explosionDuration,
@@ -20,19 +20,19 @@ namespace SpaceStrategy
 			float endDiameter) :
 			base(AnimationHelper.Game, explosionDuration)
 		{
-			this.explosionPosition = explosionPosition;
-			StartDiameter = startDiameter;
-			EndDiameter = endDiameter;
+			this._explosionPosition = explosionPosition;
+			_startDiameter = startDiameter;
+			_endDiameter = endDiameter;
 		}
 		internal override void Draw(Graphics dc)
 		{
 			var oldDc = dc.Save();
-			dc.TranslateTransform((float)explosionPosition.Location.X, (float)explosionPosition.Location.Y);
-			if (explosionPosition.Degree!=0)
-				dc.RotateTransform((float)explosionPosition.Degree);
+			dc.TranslateTransform((float)_explosionPosition.Location.X, (float)_explosionPosition.Location.Y);
+			if (_explosionPosition.Degree!=0)
+				dc.RotateTransform((float)_explosionPosition.Degree);
 
-			float curExplosionRadius = AnimationHelper.AnimateFloat(Phase, StartDiameter, EndDiameter) / 2;
-			Color curColor = AnimationHelper.AnimateColor(Phase, Color.FromArgb(0xFF, 0xFF, 0xD7, 0), Color.FromArgb(0, 0, 0, 0), AnimationMode.x8);
+			float curExplosionRadius = AnimationHelper.AnimateFloat(Phase, _startDiameter, _endDiameter) / 2;
+			Color curColor = AnimationHelper.AnimateColor(Phase, Color.FromArgb(0xFF, 0xFF, 0xD7, 0), Color.FromArgb(0, 0, 0, 0), AnimationMode.Pow8);
 			dc.FillEllipse(new SolidBrush(curColor), -curExplosionRadius, -curExplosionRadius, curExplosionRadius * 2, curExplosionRadius * 2);
 			dc.Restore(oldDc);
 		}
@@ -44,10 +44,10 @@ namespace SpaceStrategy
 	internal class SpaceshipRoundExplosionAnimation
 		: AnimationObject
 	{
-		private Spaceship ExplodedSpaceship;
-		private Position RelativeExplosionPosition;
-		private float StartDiameter;
-		private float EndDiameter;
+		private Spaceship _explodedSpaceship;
+		private Position _relativeExplosionPosition;
+		private float _startDiameter;
+		private float _endDiameter;
 		internal SpaceshipRoundExplosionAnimation(
 			Spaceship explodedSpaceship, 
 			Position relativeExplosionPosition, 
@@ -56,21 +56,21 @@ namespace SpaceStrategy
 			float endDiameter):
 			base(AnimationHelper.Game,explosionDuration)
 		{
-			ExplodedSpaceship = explodedSpaceship;
-			RelativeExplosionPosition = relativeExplosionPosition;
-			StartDiameter = startDiameter;
-			EndDiameter = endDiameter;
+			_explodedSpaceship = explodedSpaceship;
+			_relativeExplosionPosition = relativeExplosionPosition;
+			_startDiameter = startDiameter;
+			_endDiameter = endDiameter;
 		}
 		internal override void Draw(Graphics dc)
 		{
 			var oldDc = dc.Save();
-			dc.TranslateTransform((float)ExplodedSpaceship.Position.Location.X, (float)ExplodedSpaceship.Position.Location.Y);
-			dc.RotateTransform((float)ExplodedSpaceship.Position.Degree);
-			dc.TranslateTransform((float)RelativeExplosionPosition.Location.X, (float)RelativeExplosionPosition.Location.Y);
-			dc.RotateTransform((float)RelativeExplosionPosition.Degree);
+			dc.TranslateTransform((float)_explodedSpaceship.Position.Location.X, (float)_explodedSpaceship.Position.Location.Y);
+			dc.RotateTransform((float)_explodedSpaceship.Position.Degree);
+			dc.TranslateTransform((float)_relativeExplosionPosition.Location.X, (float)_relativeExplosionPosition.Location.Y);
+			dc.RotateTransform((float)_relativeExplosionPosition.Degree);
 			
-			float curExplosionRadius = AnimationHelper.AnimateFloat(Phase, StartDiameter, EndDiameter)/2;
-			Color curColor = AnimationHelper.AnimateColor(Phase, Color.FromArgb(0xFF, 0xFF, 0xD7, 0), Color.FromArgb(0, 0, 0, 0), AnimationMode.x8);
+			float curExplosionRadius = AnimationHelper.AnimateFloat(Phase, _startDiameter, _endDiameter)/2;
+			Color curColor = AnimationHelper.AnimateColor(Phase, Color.FromArgb(0xFF, 0xFF, 0xD7, 0), Color.FromArgb(0, 0, 0, 0), AnimationMode.Pow8);
 			dc.FillEllipse(new SolidBrush(curColor), -curExplosionRadius, -curExplosionRadius, curExplosionRadius * 2, curExplosionRadius*2);
 			dc.Restore(oldDc);
 		}

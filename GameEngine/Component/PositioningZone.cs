@@ -8,52 +8,52 @@ namespace SpaceStrategy
 {
 	public class PositioningZone
 	{
-		private bool creatingSpaceship = false;
+		private bool _creatingSpaceship = false;
 		public SpaceshipClass SelectedSpaceshipClass { get; private set; }
 		public GothicSpaceship CreatedSpaceship { get; private set; }
 
-		private Point2d TopLeftCorner;
-		private Point2d BottomRightCorner;
-		private int MaxPoints = 0;
-		public PositioningZone(Game game, Player player, Point2d topLeftCorner, Point2d bottomRightCorner)
+		private Point2d _topLeftPoint;
+		private Point2d _bottomRightPoint;
+		private int _maxSpaceshipsCount = 0;
+		public PositioningZone(Game game, Player player, Point2d topLeftPoint, Point2d bottomRightPoint)
 		{
 			this.Player = player;
 			Player.PositioningZone = this;
 			Game = game;
-			MaxPoints = 4;// game.Scenario.MaxPlayerSpaceshipCount;
+			_maxSpaceshipsCount = 4;// game.Scenario.MaxPlayerSpaceshipCount;
 			// TODO: Complete member initialization
-			this.TopLeftCorner = topLeftCorner;
-			this.BottomRightCorner = bottomRightCorner;
+			this._topLeftPoint = topLeftPoint;
+			this._bottomRightPoint = bottomRightPoint;
 		}
 		internal Game Game { get; private set; }
 		internal Player Player { get; private set; }
 		internal void Draw(System.Drawing.Graphics dc)
 		{
-			int width = (int)Math.Abs(BottomRightCorner.X - TopLeftCorner.X);
-			int height = (int)Math.Abs(BottomRightCorner.Y - TopLeftCorner.Y);
+			int width = (int)Math.Abs(_bottomRightPoint.X - _topLeftPoint.X);
+			int height = (int)Math.Abs(_bottomRightPoint.Y - _topLeftPoint.Y);
 
 			//width = (int)(width * Game.DistanceCoef);
 			//height = (int)(height * Game.DistanceCoef);
 
 			//Rectangle rect = new Rectangle((int)(TopLeftCorner.X * Game.DistanceCoef), (int)(TopLeftCorner.Y * Game.DistanceCoef), width, height);
-			Rectangle rect = new Rectangle((int)(TopLeftCorner.X), (int)(TopLeftCorner.Y), width, height);
+			Rectangle rect = new Rectangle((int)(_topLeftPoint.X), (int)(_topLeftPoint.Y), width, height);
 			Pen pen = new Pen(Game.Params.PositioningZoneColor);
 			SolidBrush brush = new SolidBrush(Color.FromArgb(128, Game.Params.PositioningZoneColor));
 			dc.FillRectangle(brush, rect);
 			dc.DrawRectangle(pen, rect); 
 		}
-		private bool CanCreateMoreShips
+		private bool CanCreateMoreSpaceships
 		{
 			get
 			{
-				return MaxPoints > 0;
+				return _maxSpaceshipsCount > 0;
 			}
 		}
-		internal void OnMouseMove(Point2d coord)
+		internal void OnMouseMove(Point2d point)
 		{
 			if (SelectedSpaceshipClass != null) {
 				if (CreatedSpaceship.State == SpaceshipState.DeterminingPosition) {
-					CreatedSpaceship.Position = new Position(coord);
+					CreatedSpaceship.Position = new Position(point);
 				}
 				
 				if (!Game.GothicSpaceships.Contains(CreatedSpaceship))
@@ -61,7 +61,7 @@ namespace SpaceStrategy
 			
 				else if (CreatedSpaceship.State == SpaceshipState.DeterminingDirection) {
 					Point2d curPos = CreatedSpaceship.Position;
-					Vector newDir = new Vector(coord.X - curPos.X, coord.Y - curPos.Y);
+					Vector newDir = new Vector(point.X - curPos.X, point.Y - curPos.Y);
 					if (newDir == new Vector(0, 0))
 						newDir = new Vector(1, 0);
 					newDir.Normalize();
@@ -69,7 +69,7 @@ namespace SpaceStrategy
 				}
 			}
 		}
-		internal void OnMouseClick(Point2d coord)
+		internal void OnMouseClick(Point2d point)
 		{
 			if (CreatedSpaceship != null && IsInside(CreatedSpaceship.Position.Location)) {
 				if (CreatedSpaceship.State == SpaceshipState.DeterminingPosition)
@@ -82,13 +82,13 @@ namespace SpaceStrategy
 		private bool IsInside(Point2d point){
 			//if (point.X < (int)(TopLeftCorner.X * Game.DistanceCoef) || point.X > (int)(BottomRightCorner.X * Game.DistanceCoef)) return false;
 			//if (point.Y < (int)(TopLeftCorner.Y * Game.DistanceCoef) || point.Y > (int)(BottomRightCorner.Y * Game.DistanceCoef)) return false;
-			if (point.X < (int)(TopLeftCorner.X) || point.X > (int)(BottomRightCorner.X)) return false;
-			if (point.Y < (int)(TopLeftCorner.Y) || point.Y > (int)(BottomRightCorner.Y)) return false;
+			if (point.X < (int)(_topLeftPoint.X) || point.X > (int)(_bottomRightPoint.X)) return false;
+			if (point.Y < (int)(_topLeftPoint.Y) || point.Y > (int)(_bottomRightPoint.Y)) return false;
 			return true;
 		}
 		public void BeginSpaceshipCreation(SpaceshipClass spaceshipClass)
 		{
-			if (CanCreateMoreShips){// && SelectedSpaceshipClass.Id != spaceshipClass.Id) {
+			if (CanCreateMoreSpaceships){// && SelectedSpaceshipClass.Id != spaceshipClass.Id) {
 				SelectedSpaceshipClass = spaceshipClass;
 				Game.RemoveSpaceship(CreatedSpaceship);
 				CreatedSpaceship = new GothicSpaceship(Game, new Position(), SelectedSpaceshipClass, Player);
@@ -102,11 +102,11 @@ namespace SpaceStrategy
 			CreatedSpaceship.State = SpaceshipState.Standing;
 			CreatedSpaceship.GenerateLeadership();
 
-			if (SelectedSpaceshipClass!=null && CanCreateMoreShips)
+			if (SelectedSpaceshipClass!=null && CanCreateMoreSpaceships)
 				CreatedSpaceship = new GothicSpaceship(Game, new Position(), SelectedSpaceshipClass, Player);
-			MaxPoints--;
-			if (!CanCreateMoreShips) {
-				creatingSpaceship = false;
+			_maxSpaceshipsCount--;
+			if (!CanCreateMoreSpaceships) {
+				_creatingSpaceship = false;
 				OnPositioningComplete(this, new EventArgs());
 			}
 		}
@@ -128,8 +128,8 @@ namespace SpaceStrategy
 
 		internal void StartPositioning()
 		{
-			if (CanCreateMoreShips) {
-				creatingSpaceship = true;
+			if (CanCreateMoreSpaceships) {
+				_creatingSpaceship = true;
 				OnPositioningBegin(this, new EventArgs());
 			}
 		}
