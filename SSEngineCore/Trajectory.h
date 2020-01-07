@@ -6,20 +6,21 @@
 #include "Interfaces.h"
 #include "MovementDescriptor.h"
 #include <vector>
-namespace SpaceStrategy{	
-	class Trajectory: public ITrajectory
+
+namespace SpaceStrategy
+{
+	class Trajectory : public ITrajectory
 	{
 	private:
 		std::vector<Point2d> m_segments;
 		IMovementManager& m_movementManager;
 	public:
-		PROPERTY(float, DistanceAfterLastTurn);
+	PROPERTY(float, DistanceAfterLastTurn);
 		Trajectory(IMovementManager& movementManager);
 		~Trajectory();
 
-		void AddSegment(const Point2d& target);
-		bool IsEmpty()const{ return m_segments.empty(); }
-		void MovePosition(Position2d& position, float distance);
+		void AddSegment(const Point2d& target) override;
+		bool IsEmpty() const { return m_segments.empty(); }
+		void MovePosition(Position2d& position, float distance) override;
 	};
 }
-

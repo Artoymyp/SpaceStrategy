@@ -7,10 +7,12 @@
 #include "Common.h"
 #include "MoveArea.h"
 
-namespace SpaceStrategy{
-	
+namespace SpaceStrategy
+{
 	class MovementDescriptor;
-	class ITrajectory{
+
+	class ITrajectory
+	{
 	public:
 		virtual void MovePosition(Position2d& position, float distance) = 0;
 		virtual void AddSegment(const Point2d& target) = 0;

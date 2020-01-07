@@ -2,7 +2,8 @@
 #include "Common.h"
 #include "Point2D.h"
 
-namespace SpaceStrategy{
+namespace SpaceStrategy
+{
 	class CircArc
 	{
 	public:
@@ -12,13 +13,12 @@ namespace SpaceStrategy{
 
 		Point2d GetStartPoint() const;
 		Point2d GetEndPoint() const;
-		PROPERTY(Point2d, Center);
-		PROPERTY(Direction, StartDir);
-		PROPERTY(Direction, EndDir);
-		PROPERTY(float, Radius);
+	PROPERTY(Point2d, Center);
+	PROPERTY(Direction, StartDir);
+	PROPERTY(Direction, EndDir);
+	PROPERTY(float, Radius);
 
 		bool operator==(const CircArc& right) const;
 		bool operator!=(const CircArc& right) const;
 	};
 }
-

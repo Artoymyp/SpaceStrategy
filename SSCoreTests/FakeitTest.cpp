@@ -10,21 +10,29 @@ namespace SSCoreTests
 {
 	TEST_CLASS(FakeitTest)
 	{
-		class Product{};
-		class IFactory{
-		public:
-			virtual std::unique_ptr<Product>Create() = 0;
+		class Product
+		{
 		};
 
-		class IFactoryMock : public IFactory{
+		class IFactory
+		{
+		public:
+			virtual std::unique_ptr<Product> Create() = 0;
+		};
+
+		class IFactoryMock : public IFactory
+		{
 		public:
 			virtual Product* CreateRaw() { return nullptr; };
-			std::unique_ptr<Product> Create(){
+
+			std::unique_ptr<Product> Create() override
+			{
 				return std::unique_ptr<Product>(CreateRaw());
 			}
 		};
+
 	public:
-		
+
 		TEST_METHOD(TestMethod1)
 		{
 			IFactoryMock factory;

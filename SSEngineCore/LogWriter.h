@@ -5,4 +5,3 @@ public:
 	LogWriter();
 	~LogWriter();
 };
-

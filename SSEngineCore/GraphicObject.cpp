@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "GraphicObject.h"
 
-namespace SpaceStrategy{
+namespace SpaceStrategy
+{
 	//GraphicObject::GraphicObject()
 	//{
 	//}
-
 
 	//GraphicObject::~GraphicObject()
 	//{

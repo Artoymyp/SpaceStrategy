@@ -11,10 +11,13 @@ namespace SSCoreTests
 	TEST_CLASS(Point2dTests)
 	{
 	public:
-		TEST_METHOD(PointDistanceToPointTest){
-			Assert::AreEqual(Point2d(1,1).DistanceTo(Point2d(4,5)), 5.0f);
+		TEST_METHOD(PointDistanceToPointTest)
+		{
+			Assert::AreEqual(Point2d(1, 1).DistanceTo(Point2d(4, 5)), 5.0f);
 		}
-		TEST_METHOD(PointComponentsTest){
+
+		TEST_METHOD(PointComponentsTest)
+		{
 			float y = 12.5;
 			float x = 10.5;
 			Point2d v = Point2d(x, y);
@@ -23,7 +26,6 @@ namespace SSCoreTests
 			Assert::AreEqual(y, v.Y(), L"Y component is wrong.");
 		}
 
-		
 		TEST_METHOD(PointsEqualUnequalTest)
 		{
 			float x = 10;
@@ -37,18 +39,20 @@ namespace SSCoreTests
 			Point2d p22 = Point2d(x, y1);
 			Point2d p23 = Point2d(x1, y1);
 
-			Assert::IsTrue (p11 == p12);
+			Assert::IsTrue(p11 == p12);
 			Assert::IsFalse(p11 == p21);
 			Assert::IsFalse(p11 == p22);
 			Assert::IsFalse(p11 == p23);
-							
+
 			Assert::IsFalse(p11 != p12);
-			Assert::IsTrue (p11 != p21);
-			Assert::IsTrue (p11 != p22);
-			Assert::IsTrue (p11 != p23);
+			Assert::IsTrue(p11 != p21);
+			Assert::IsTrue(p11 != p22);
+			Assert::IsTrue(p11 != p23);
 		}
-		TEST_METHOD(PointAddVector){
-			Assert::IsTrue(Point2d(1,2)+Vector2d(1,2)==Point2d(2,4));
+
+		TEST_METHOD(PointAddVector)
+		{
+			Assert::IsTrue(Point2d(1, 2) + Vector2d(1, 2) == Point2d(2, 4));
 		}
 	};
 }

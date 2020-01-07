@@ -1,24 +1,28 @@
 #include "stdafx.h"
 #include "MoveArea.h"
 
-namespace SpaceStrategy{
+namespace SpaceStrategy
+{
 	MoveArea::MoveArea()
 	{
 	}
-
 
 	MoveArea::~MoveArea()
 	{
 	}
 
-	void MoveArea::Add(const MovePoint & p){
+	void MoveArea::Add(const MovePoint& p)
+	{
 		m_anchorPoints.push_back(p);
 	}
-	
-	void MoveArea::Add(const MoveSeg & s){
+
+	void MoveArea::Add(const MoveSeg& s)
+	{
 		m_lineSegs.push_back(s);
 	}
-	void MoveArea::Add(const MoveArc & a){
+
+	void MoveArea::Add(const MoveArc& a)
+	{
 		m_circArcs.push_back(a);
 	}
 }

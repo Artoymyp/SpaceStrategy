@@ -4,21 +4,22 @@
 #include "Vector2d.h"
 #include "Direction.h"
 
-namespace SpaceStrategy{
+namespace SpaceStrategy
+{
 	struct Point2d
 	{
 	public:
 		Point2d();
 		Point2d(float x, float y);
-			
-		~Point2d();
-		
-		PROPERTY(float, X);
-		PROPERTY(float, Y);
 
-		PROPERTY_ALIAS(float, Ro, X);
-		PROPERTY_ALIAS(float, R, Y);
-		
+		~Point2d();
+
+	PROPERTY(float, X);
+	PROPERTY(float, Y);
+
+	PROPERTY_ALIAS(float, Ro, X);
+	PROPERTY_ALIAS(float, R, Y);
+
 		Vector2d VectorTo(const Point2d& targetPoint) const;
 		Vector2d ToVector() const;
 		float DistanceSqrTo(const Point2d& targetPoint) const;
@@ -26,7 +27,7 @@ namespace SpaceStrategy{
 		Direction DirectionTo(const Point2d& targetPoint) const;
 		bool operator==(const Point2d& r) const;
 		bool operator!=(const Point2d& r) const;
-		
+
 		Point2d operator +(Vector2d v) const
 		{
 			return Point2d(m_X + v.X(), m_Y + v.Y());
@@ -103,4 +104,3 @@ namespace SpaceStrategy{
 		//}
 	};
 }
-

@@ -15,7 +15,6 @@ public:\
 	virtual TYPE NAME() const = 0;\
 	virtual void NAME(TYPE value) = 0;
 
-
 #define PROPERTY_DEFAULT_VAL(TYPE, NAME, DEFAULT_VAL)\
 private:\
 	TYPE m_##NAME = DEFAULT_VAL; \

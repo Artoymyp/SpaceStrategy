@@ -16,11 +16,11 @@
 
 using namespace fakeit;
 
-
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace SpaceStrategy;
 
-namespace SpaceStrategy{
+namespace SpaceStrategy
+{
 	//class IMovementManagerMock : public IMovementManager {
 	//private:
 	//	Trajectory* m_createdTrajectory;
@@ -32,28 +32,23 @@ namespace SpaceStrategy{
 	//	Trajectory& CreatedTrajectory(){ return *m_createdTrajectory; }
 	//};
 }
+
 namespace SSCoreTests
 {
-	
 	TEST_CLASS(SpaceshipTests)
 	{
 	private:
 	public:
-		SpaceshipTests() 
+		SpaceshipTests()
 		{
-
-		}
-		TEST_METHOD_INITIALIZE(InitializeTest)
-		{			
 		}
 
-		TEST_METHOD_CLEANUP(CleanupTest)
+	TEST_METHOD_INITIALIZE(InitializeTest)
 		{
-
 		}
 
-
-
+	TEST_METHOD_CLEANUP(CleanupTest)
+		{
+		}
 	};
-
 }

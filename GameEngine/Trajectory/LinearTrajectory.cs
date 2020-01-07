@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
 namespace SpaceStrategy
 {
-	internal class LinearTrajectory : Trajectory
+	class LinearTrajectory : Trajectory
 	{
 		internal LinearTrajectory(TrajectoryCollection owner, Point2d startPoint, Point2d endPoint)
 			: base(owner, startPoint, endPoint)
@@ -18,20 +13,22 @@ namespace SpaceStrategy
 			Direction = dirVector;
 			Position = new Position(startPoint, Direction);
 		}
-		public override Position GetPositionAt(double distance)
-		{
-			double completedPart = distance / Length;
-			Point2d pointAtDistance = new Point2d(
-			(EndPoint.X - StartPoint.X) * completedPart + StartPoint.X,
-			(EndPoint.Y - StartPoint.Y) * completedPart + StartPoint.Y/*,
-			0*/);
-			return new Position(pointAtDistance, Direction);
-		}
+
+		public Vector Direction { get; set; }
 
 		public override void Draw(Graphics dc)
 		{
 			//throw new NotImplementedException();
 		}
-		public Vector Direction { get; set; }
+
+		public override Position GetPositionAt(double distance)
+		{
+			double completedPart = distance / Length;
+			var pointAtDistance = new Point2d(
+				(EndPoint.X - StartPoint.X) * completedPart + StartPoint.X,
+				(EndPoint.Y - StartPoint.Y) * completedPart + StartPoint.Y /*,
+			0*/);
+			return new Position(pointAtDistance, Direction);
+		}
 	}
 }

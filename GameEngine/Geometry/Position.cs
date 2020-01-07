@@ -1,55 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace SpaceStrategy
+﻿namespace SpaceStrategy
 {
 	public struct Position
 	{
-		public Point2d Location;
-		private Vector _direction;
-		public Vector Direction
-		{
-			get { return _direction;}
-			set {
-			_direction = value;
-			Angle = _direction.ToRadian();
-		} }
 		/// <summary>
-		/// Radian angle.
+		///     Radian angle.
 		/// </summary>
 		public double Angle;
+
+		public Point2d Location;
+		Vector _direction;
+
+		public Position(Point2d location)
+		{
+			Location = location;
+			_direction = new Vector(1, 0);
+			Angle = 0;
+		}
+
+		//public Position(Point location) : this(new Point(location.X, location.Y, 0)) { }
+		public Position(Point2d location, Vector direction)
+		{
+			Location = location;
+			_direction = direction;
+			Angle = direction.ToRadian();
+		}
+
+		public Position(Point2d location, double angle)
+		{
+			Location = location;
+			_direction = new Vector(GeometryHelper.Cos(angle), GeometryHelper.Sin(angle) /*,0*/);
+			Angle = angle;
+		}
+
 		public double Degree
 		{
 			get
 			{
 				double result = Angle * 180 / GeometryHelper.Pi;
-				if (double.IsNaN(result))
+				if (double.IsNaN(result)) {
 					return 0;
-				else
-					return result;
+				}
 
+				return result;
 			}
 		}
-		public Position(Point2d location){
-			Location = location;
-			_direction = new Vector(1,0);
-			Angle = 0;
-		}
-		public static implicit operator Point2d(Position p) { return new Point2d(p.Location.X, p.Location.Y); }
-		//public Position(Point location) : this(new Point(location.X, location.Y, 0)) { }
-		public Position(Point2d location, Vector direction)
+
+		public Vector Direction
 		{
-			Location = location;
-			this._direction = direction;
-			Angle = direction.ToRadian();
+			get { return _direction; }
+			set
+			{
+				_direction = value;
+				Angle = _direction.ToRadian();
+			}
 		}
-		public Position(Point2d location, double angle)
+
+		public static implicit operator Point2d(Position p)
 		{
-			Location = location;
-			_direction = new Vector(GeometryHelper.Cos(angle),GeometryHelper.Sin(angle)/*,0*/);
-			Angle = angle;
+			return new Point2d(p.Location.X, p.Location.Y);
 		}
 
 		internal double DistanceTo(Position position)

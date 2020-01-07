@@ -1,36 +1,52 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpaceStrategy.Animation
 {
-	internal class ShieldActiveAnimation: AnimationObject
+	class ShieldActiveAnimation : AnimationObject
 	{
-		static TimeSpan Duration { get { return new TimeSpan(0,0,0,0,1000);} }
-		GothicSpaceshipBase _spaceship;
-		static Color ShieldColorMax { get { return Color.FromArgb(0x50, 0xFF, 0xFF, 0xA0); } }
-		static Color ShieldColorMin { get { return Color.FromArgb(0x20, 0xFF, 0xFF, 0xA0); } }
-		static float SizeFactor { get { return 1.2F; } }
-		public ShieldActiveAnimation(GothicSpaceshipBase spaceship, bool cyclic):base(spaceship.Game, Duration, cyclic)
+		readonly GothicSpaceshipBase _spaceship;
+
+		public ShieldActiveAnimation(GothicSpaceshipBase spaceship, bool cyclic) : base(spaceship.Game, Duration, cyclic)
 		{
-			this._spaceship = spaceship;
+			_spaceship = spaceship;
 		}
-		internal override void Draw(System.Drawing.Graphics dc)
+
+		static TimeSpan Duration
 		{
-			var oldDc = dc.Save();
+			get { return new TimeSpan(0, 0, 0, 0, 1000); }
+		}
+
+		static Color ShieldColorMax
+		{
+			get { return Color.FromArgb(0x50, 0xFF, 0xFF, 0xA0); }
+		}
+
+		static Color ShieldColorMin
+		{
+			get { return Color.FromArgb(0x20, 0xFF, 0xFF, 0xA0); }
+		}
+
+		static float SizeFactor
+		{
+			get { return 1.2F; }
+		}
+
+		public override void Draw(Graphics dc)
+		{
+			GraphicsState oldDc = dc.Save();
 			dc.TranslateTransform((float)_spaceship.Position.Location.X, (float)_spaceship.Position.Location.Y);
 			Color curColor;
-			if (Phase < 0.5)
+			if (Phase < 0.5) {
 				curColor = AnimationHelper.AnimateColor(Phase * 2, ShieldColorMin, ShieldColorMax);
-			else
+			}
+			else {
 				curColor = AnimationHelper.AnimateColor((Phase - 0.5) * 2, ShieldColorMax, ShieldColorMin);
+			}
 
 			float radius = _spaceship.Diameter * 0.5F * SizeFactor;
-			RectangleF rect = new RectangleF(-radius, -radius, radius * 2, radius * 2);
+			var rect = new RectangleF(-radius, -radius, radius * 2, radius * 2);
 
 			Brush pthGrBrush = new SolidBrush(curColor);
 

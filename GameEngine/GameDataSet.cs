@@ -1,15 +1,9 @@
 ﻿namespace SpaceStrategy
 {
-
-
-	public partial class GameDataSet
-	{
-	}
+	public partial class GameDataSet { }
 }
 
-namespace SpaceStrategy.GameDataSetTableAdapters {
-	
-	
-	public partial class SpaceshipClassTableAdapter {
-	}
+namespace SpaceStrategy.GameDataSetTableAdapters
+{
+	public partial class SpaceshipClassTableAdapter { }
 }

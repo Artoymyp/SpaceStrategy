@@ -79,7 +79,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AllShipsStoppedEventArgs.cs" />
     <Compile Include="Animation\AnimationHelper.cs" />
+    <Compile Include="Animation\AnimationMode.cs" />
     <Compile Include="Animation\AnimationObject.cs" />
     <Compile Include="Animation\BlastMarker.cs" />
     <Compile Include="Animation\CannonAttackAnimation.cs" />
@@ -88,9 +90,13 @@
     <Compile Include="Animation\ShieldActiveAnimation.cs" />
     <Compile Include="AttackCompass.cs" />
     <Compile Include="Animation\BlastMarkerAnimation.cs" />
+    <Compile Include="Component\CursorForm.cs" />
     <Compile Include="Component\ScriptManager.cs" />
     <Compile Include="Dice.cs" />
+    <Compile Include="GamePhase.cs" />
+    <Compile Include="GameState.cs" />
     <Compile Include="Scenario.cs" />
+    <Compile Include="ShipsStopCause.cs" />
     <Compile Include="Spaceship\GothicSpaceship.cs" />
     <Compile Include="Weapon\AimedWeapon.cs" />
     <Compile Include="Weapon\DirectFireWeapon.cs" />

@@ -4,7 +4,7 @@
         xmlns:ui="clr-namespace:UI"
         SizeToContent="WidthAndHeight"
         Title="EndDialog" Height="300" Width="300">
-    <Grid>
-        <ui:CruiserCrashEndScreen/>
-    </Grid>
+	<Grid>
+		<ui:CruiserCrashEndScreen />
+	</Grid>
 </Window>

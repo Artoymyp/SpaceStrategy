@@ -16,11 +16,12 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace SpaceStrategy;
 using namespace fakeit;
 using namespace std;
+
 namespace SSCoreTests
 {
 	TEST_CLASS(EventReaderTests)
 	{
-	private: 
+	private:
 		class EventSource
 		{
 			class EventGeneratorApplication
@@ -34,6 +35,7 @@ namespace SSCoreTests
 					myfile.close();
 				}
 			};
+
 		public:
 			void GenerateEvent()
 			{
@@ -43,6 +45,7 @@ namespace SSCoreTests
 		};
 
 		typedef string LogEvent;
+
 		class LogEventReader
 		{
 		public:
@@ -69,17 +72,19 @@ namespace SSCoreTests
 		EventSource eventSource;
 
 		void EventReaderHasReadEvent()
-		{			
-			try{
+		{
+			try
+			{
 				auto s = eventReader.GetEvent("log.txt", 20);
-				Assert::IsTrue(s.length()>0, L"No log event was read.");
+				Assert::IsTrue(s.length() > 0, L"No log event was read.");
 			}
 			catch (exception ex)
 			{
 				Assert::Fail(GetWC(ex.what()));
 			}
 		}
-		const wchar_t *GetWC(const char *c)
+
+		const wchar_t* GetWC(const char* c)
 		{
 			const size_t cSize = strlen(c) + 1;
 			wchar_t* wc = new wchar_t[cSize];
@@ -87,15 +92,18 @@ namespace SSCoreTests
 
 			return wc;
 		}
+
 	public:
-		TEST_METHOD_INITIALIZE(InitializeTest)
-		{
-		}
-		TEST_METHOD_CLEANUP(CleanupTest)
+	TEST_METHOD_INITIALIZE(InitializeTest)
 		{
 		}
 
-		TEST_METHOD(EventReaderGetsEvent){
+	TEST_METHOD_CLEANUP(CleanupTest)
+		{
+		}
+
+		TEST_METHOD(EventReaderGetsEvent)
+		{
 			eventSource.GenerateEvent();
 			EventReaderHasReadEvent();
 		}

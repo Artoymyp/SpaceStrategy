@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "MovementDescriptor.h"
 
-namespace SpaceStrategy{
+namespace SpaceStrategy
+{
 	MovementDescriptor::MovementDescriptor()
 	{
 		m_Distance = 0;
@@ -9,7 +10,6 @@ namespace SpaceStrategy{
 		m_TurnAngle = 0;
 		m_TurnCount = 0;
 	}
-
 
 	MovementDescriptor::~MovementDescriptor()
 	{

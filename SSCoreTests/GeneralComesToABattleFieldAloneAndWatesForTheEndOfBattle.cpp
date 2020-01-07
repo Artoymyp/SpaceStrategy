@@ -12,18 +12,17 @@ namespace SSCoreTests
 		virtual void EndMatch() = 0;
 		virtual void AddPlayer() = 0;
 	};
+
 	class IGameDriver
 	{
-		
 	};
+
 	TEST_CLASS(EndToEndTests)
 	{
 	public:
-		
+
 		TEST_METHOD(GeneralComesToABattleFieldAloneAndWaitsForTheEndOfBattle)
 		{
-			
 		}
-
 	};
 }

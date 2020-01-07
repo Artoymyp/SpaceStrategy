@@ -11,7 +11,5 @@ namespace SpaceStrategy
 		MoveAreaCalculator();
 		~MoveAreaCalculator();
 		MoveArea GetMoveArea(double m_DistanceAfterLastTurn, const MovementDescriptor&, const Position2d&);
-
 	};
 }
-

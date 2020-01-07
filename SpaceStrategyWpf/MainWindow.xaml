@@ -4,17 +4,16 @@
         xmlns:ui="clr-namespace:UI;assembly=UI"
         xmlns:engine="clr-namespace:SpaceStrategy;assembly=GameEngine"
         Title="MainWindow" Height="350" Width="525">
-    <Window.Resources>
-        <ResourceDictionary>
-            <engine:Game x:Key="Game"/>
-        </ResourceDictionary>
-    </Window.Resources>
-    <Grid>
-        <WindowsFormsHost 
-            HorizontalAlignment="Stretch"             
-            VerticalAlignment="Stretch">
-            <ui:StarfieldControl GameEngine="{StaticResource Game}"/>
-        </WindowsFormsHost>
-
-    </Grid>
+	<Window.Resources>
+		<ResourceDictionary>
+			<engine:Game x:Key="Game" />
+		</ResourceDictionary>
+	</Window.Resources>
+	<Grid>
+		<WindowsFormsHost
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch">
+			<ui:StarfieldControl GameEngine="{StaticResource Game}" />
+		</WindowsFormsHost>
+	</Grid>
 </Window>

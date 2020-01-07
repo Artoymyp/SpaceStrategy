@@ -1,15 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 
 namespace SpaceStrategy
 {
+	[Flags]
+	public enum Side
+	{
+		Left = 1,
+		Front = 2,
+		Right = 4,
+		Back = 8,
+		LeftFrontRight = Left | Front | Right,
+		All = Left | Front | Right | Back
+	}
+
+
+	public enum WeaponType
+	{
+		Lance,
+		Battery,
+		Nova,
+		Torpedo,
+		Turret
+	}
+
+
 	public abstract class SpaceshipWeapon
 	{
 		internal int NormalPower;
 		protected int power;
+
 		public SpaceshipWeapon(GothicSpaceship owner, Side side, float minRange, float range, int power, WeaponType type)
 		{
 			OwnerSpaceship = owner;
@@ -22,23 +43,35 @@ namespace SpaceStrategy
 			IsUsed = false;
 			Name = type.ToString();
 		}
+
 		public SpaceshipWeapon(GothicSpaceship owner, GameDataSet.SpaceshipClassWeaponryRow data) :
-			this(owner, GetSide(data.SpaceshipSide), data.MinRange, data.Range, data.Power, GetWeaponType(data.WeaponType))
-		{ }
-		public string Name { get; private set; }
-		public Game Game { get { return OwnerSpaceship.Game; } }		
+			this(owner, GetSide(data.SpaceshipSide), data.MinRange, data.Range, data.Power, GetWeaponType(data.WeaponType)) { }
+
+		public Game Game
+		{
+			get { return OwnerSpaceship.Game; }
+		}
+
 		public bool IsUsed { get; set; }
-		public GothicSpaceship OwnerSpaceship { get; private set; }
-		public Color LineColor { get; private set; }
-		public Side SpaceshipSide { get; private set; }
+
+		public Color LineColor { get; }
+
+		public float MinRange { get; }
+
+		public string Name { get; }
+
+		public GothicSpaceship OwnerSpaceship { get; }
+
 		public virtual int Power
 		{
-			get { return !OwnerSpaceship.IsCrippled ? power : GeometryHelper.RoundUp((double)power / 2.0); }
+			get { return !OwnerSpaceship.IsCrippled ? power : GeometryHelper.RoundUp(power / 2.0); }
 			set { power = value; }
 		}
-		public float Range { get; private set; }
-		public float MinRange { get; private set; }
-		internal abstract void Attack(GothicSpaceshipBase attackedSpaceship, IEnumerable<SpaceshipWeapon> allAttackingWeapons);
+
+		public float Range { get; }
+
+		public Side SpaceshipSide { get; }
+
 		public static WeaponType GetWeaponType(string weaponTypeName)
 		{
 			switch (weaponTypeName.ToLower()) {
@@ -50,7 +83,33 @@ namespace SpaceStrategy
 					throw new ArgumentException("Неверный тип оружия.");
 			}
 		}
-		private static Side GetSide(string sideName)
+
+		internal abstract void Attack(GothicSpaceshipBase attackedSpaceship, IEnumerable<SpaceshipWeapon> allAttackingWeapons);
+
+		static Color GetColor(WeaponType type)
+		{
+			switch (type) {
+				case WeaponType.Lance:
+					return Color.Red;
+
+				case WeaponType.Battery:
+					return Color.Orange;
+
+				case WeaponType.Nova:
+					return Color.Purple;
+
+				case WeaponType.Torpedo:
+					return Color.Green;
+
+				case WeaponType.Turret:
+					return Color.Yellow;
+
+				default:
+					return Color.White;
+			}
+		}
+
+		static Side GetSide(string sideName)
 		{
 			switch (sideName.ToLower()) {
 				case "left": return Side.Left;
@@ -62,40 +121,5 @@ namespace SpaceStrategy
 					throw new ArgumentException("Неверный тип стороны корабля.");
 			}
 		}
-		private static Color GetColor(WeaponType type)
-		{
-			switch (type) {
-				case WeaponType.Lance:
-					return Color.Red;
-				case WeaponType.Battery:
-					return Color.Orange;
-				case WeaponType.Nova:
-					return Color.Purple;
-				case WeaponType.Torpedo:
-					return Color.Green;
-				case WeaponType.Turret:
-					return Color.Yellow;
-				default:
-					return Color.White;
-			}
-		}
-	}
-	[Flags]
-	public enum Side
-	{
-		Left=1,
-		Front=2,
-		Right=4,
-		Back=8,
-		LeftFrontRight = Left | Front | Right,
-		All = Left | Front | Right | Back
-	}
-	public enum WeaponType
-	{
-		Lance,
-		Battery,
-		Nova,
-		Torpedo,
-		Turret
 	}
 }

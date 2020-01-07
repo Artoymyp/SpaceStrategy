@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SpaceStrategy
@@ -11,38 +9,49 @@ namespace SpaceStrategy
 	public static class GamePrinter
 	{
 		static List<string> _Lines = new List<string>();
-		static GamePrinter() {
+
+		static GamePrinter()
+		{
 			TopLeftCorner = new Point2d(0, 50);
 			MaxRowsCount = 10;
 			Font = new Font("CurierNew", 8, FontStyle.Regular);
 			Color = Color.Lime;
 			Brush = new SolidBrush(Color);
 		}
-		static public void AddLine(string newLine)
+
+		public static Brush Brush { get; set; }
+
+		public static Color Color { get; set; }
+
+		public static Font Font { get; set; }
+
+		public static int MaxRowsCount { get; set; }
+
+		public static Point2d TopLeftCorner { get; set; }
+
+		public static void AddLine(string newLine)
 		{
 			_Lines.Insert(0, newLine);
 			_Lines = _Lines.Take(MaxRowsCount).ToList();
 		}
-		static public Point2d TopLeftCorner { get; set; }
-		static public int MaxRowsCount {get; set;}
-		static public Font Font { get; set; }
-		static public Color Color { get; set; }
-		static public Brush Brush { get; set; }
-		static public void Draw(Graphics dc)
+
+		public static void Draw(Graphics dc)
 		{
 			for (int i = 0; i < Math.Min(MaxRowsCount, _Lines.Count); i++) {
-				var p = TopLeftCorner + new Vector(0, (float)(Font.SizeInPoints * i) * 1.5);
-				Point linePosition = new Point((int)p.X, (int)p.Y);
+				Point2d p = TopLeftCorner + new Vector(0, Font.SizeInPoints * i * 1.5);
+				var linePosition = new Point((int)p.X, (int)p.Y);
 				TextRenderer.DrawText(dc, _Lines[i], Font, linePosition, Color);
+
 				//PointF linePosition = TopLeftCorner + new Vector(0, (float)(Font.SizeInPoints * i) * 1.5);
 				//dc.DrawString(lines[i], Font, Brush, linePosition);
 			}
 		}
-		static public void Draw(Graphics dc, string text, PointF position, Font f, Brush b)
+
+		public static void Draw(Graphics dc, string text, PointF position, Font f, Brush b)
 		{
 			//dc.DrawString(text, f, b, position);
-			Point linePosition = new Point((int)position.X, (int)position.Y);
-			TextRenderer.DrawText(dc, text, Font, linePosition, Color);				
+			var linePosition = new Point((int)position.X, (int)position.Y);
+			TextRenderer.DrawText(dc, text, Font, linePosition, Color);
 		}
 	}
 }

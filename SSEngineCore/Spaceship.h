@@ -6,7 +6,7 @@
 #include "MovementDescriptor.h"
 #include "Interfaces.h"
 
-namespace SpaceStrategy 
+namespace SpaceStrategy
 {
 	enum class SpaceshipState
 	{
@@ -16,14 +16,15 @@ namespace SpaceStrategy
 		Standing,
 		Removed
 	};
+
 	class Spaceship
 	{
 	public:
 		Position2d& Position() { return m_Position; }
 		void Position(Position2d value) { m_Position = value; }
-		
+
 		float GetDistanceAfterLastTurn() const;
-		PROPERTY(MovementDescriptor, MoveType);
+	PROPERTY(MovementDescriptor, MoveType);
 
 		Spaceship(IMovementManager& movementManager);
 		MoveArea GetMoveArea() const;
@@ -32,34 +33,34 @@ namespace SpaceStrategy
 	private:
 		std::unique_ptr<ITrajectory> m_trajectory;
 		Position2d m_Position;
-	//	Spaceship(Game game, const Position2d position)
-	//	{
-	//		m_State = SpaceshipState::DeterminingPosition;
-	//		
-	//		this->Position(position);
-	//		//Game = game;
-	//	}
-	//	SpaceshipState m_State;
-	//	double m_speed;
-	//protected:
-	//	Spaceship(Game game, Position2d position, double speed)
-	//	{
-	//		m_State = SpaceshipState::DeterminingPosition;
-	//		
-	//		this->Position(position);
-	//		//Game = game;
+		//	Spaceship(Game game, const Position2d position)
+		//	{
+		//		m_State = SpaceshipState::DeterminingPosition;
+		//
+		//		this->Position(position);
+		//		//Game = game;
+		//	}
+		//	SpaceshipState m_State;
+		//	double m_speed;
+		//protected:
+		//	Spaceship(Game game, Position2d position, double speed)
+		//	{
+		//		m_State = SpaceshipState::DeterminingPosition;
+		//
+		//		this->Position(position);
+		//		//Game = game;
 
-	//		this->m_speed=speed;
-	//		//Trajectory(new TrajectoryCollection(this));
-	//	}
-	//public:
-	//	~Spaceship();
+		//		this->m_speed=speed;
+		//		//Trajectory(new TrajectoryCollection(this));
+		//	}
+		//public:
+		//	~Spaceship();
 
-	//	
-	//	void FinishSpaceshipCreation(){
-	//		m_State = SpaceshipState::Moving;
-	//		//Trajectory.StartPoint = Position;
-	//	}
+		//
+		//	void FinishSpaceshipCreation(){
+		//		m_State = SpaceshipState::Moving;
+		//		//Trajectory.StartPoint = Position;
+		//	}
 
 		//internal Game Game{ get; private set; }
 		//internal TrajectoryCollection Trajectory{ get; set; }
@@ -87,4 +88,3 @@ namespace SpaceStrategy
 		}*/
 	};
 }
-
