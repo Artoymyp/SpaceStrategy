@@ -18,7 +18,7 @@ namespace SpaceStrategy
 
 	void MoveArea::Add(const MoveSeg& s)
 	{
-		m_lineSegs.push_back(s);
+		m_lineSegments.push_back(s);
 	}
 
 	void MoveArea::Add(const MoveArc& a)

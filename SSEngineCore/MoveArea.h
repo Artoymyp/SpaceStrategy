@@ -23,11 +23,11 @@ namespace SpaceStrategy
 		void Add(const MoveSeg& p);
 		void Add(const MoveArc& p);
 		AnchorPointCollection AnchorPoints() const { return m_anchorPoints; }
-		LineSegCollection LineSegments() const { return m_lineSegs; }
+		LineSegCollection LineSegments() const { return m_lineSegments; }
 		CircArcCollection CircleArcs() const { return m_circArcs; }
 	private:
 		AnchorPointCollection m_anchorPoints;
-		LineSegCollection m_lineSegs;
+		LineSegCollection m_lineSegments;
 		CircArcCollection m_circArcs;
 	};
 }

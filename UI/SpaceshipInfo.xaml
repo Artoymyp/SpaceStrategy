@@ -39,7 +39,7 @@
 						<DataGridTextColumn Header="Type" Binding="{Binding Name}" />
 						<DataGridTextColumn Header="Power" Binding="{Binding Power}" />
 						<DataGridTextColumn Header="Range" Binding="{Binding Range}" />
-						<DataGridTemplateColumn Header="Side" CellTemplate="{StaticResource SpaceshipSideCellTemlate}" />
+						<DataGridTemplateColumn Header="Side" CellTemplate="{StaticResource SpaceshipSideCellTemplate}" />
 					</DataGrid.Columns>
 				</DataGrid>
 			</StackPanel>

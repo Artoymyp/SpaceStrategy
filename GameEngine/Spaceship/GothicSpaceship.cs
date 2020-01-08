@@ -10,7 +10,7 @@ using SpaceStrategy.Weapon;
 
 namespace SpaceStrategy
 {
-	public enum CatastrophycDamage
+	public enum CatastrophicDamage
 	{
 		None,
 		DriftingHulk,
@@ -53,7 +53,9 @@ namespace SpaceStrategy
 
 	public class BridgeSmashed : CriticalDamageBase
 	{
-		public BridgeSmashed() : base(false) { }
+		public BridgeSmashed() : base(false)
+		{
+		}
 
 		protected override CriticalDamageBase DamageTypeIfNotApplicable
 		{
@@ -83,7 +85,9 @@ namespace SpaceStrategy
 
 	public class BulkheadCollapse : CriticalDamageBase
 	{
-		public BulkheadCollapse() : base(false) { }
+		public BulkheadCollapse() : base(false)
+		{
+		}
 
 		public override void ApplyDamage(GothicSpaceship spaceship)
 		{
@@ -121,13 +125,17 @@ namespace SpaceStrategy
 			return this;
 		}
 
-		public virtual void OnNextTurnAction(GothicSpaceship spaceship) { }
+		public virtual void OnNextTurnAction(GothicSpaceship spaceship)
+		{
+		}
 	}
 
 
 	public class DorsalArmamentDamaged : ArmamentDamage
 	{
-		public DorsalArmamentDamaged() : base(Side.LeftFrontRight) { }
+		public DorsalArmamentDamaged() : base(Side.LeftFrontRight)
+		{
+		}
 
 		protected override CriticalDamageBase DamageTypeIfNotApplicable
 		{
@@ -138,7 +146,9 @@ namespace SpaceStrategy
 
 	public class EngineRoomDamaged : CriticalDamageBase
 	{
-		public EngineRoomDamaged() : base(true) { }
+		public EngineRoomDamaged() : base(true)
+		{
+		}
 
 		public override void ApplyDamage(GothicSpaceship spaceship)
 		{
@@ -157,11 +167,17 @@ namespace SpaceStrategy
 
 	public class FireDamage : CriticalDamageBase
 	{
-		public FireDamage() : base(true) { }
+		public FireDamage() : base(true)
+		{
+		}
 
-		public override void ApplyDamage(GothicSpaceship spaceship) { }
+		public override void ApplyDamage(GothicSpaceship spaceship)
+		{
+		}
 
-		public override void FixDamage(GothicSpaceship spaceship) { }
+		public override void FixDamage(GothicSpaceship spaceship)
+		{
+		}
 
 		public override void OnNextTurnAction(GothicSpaceship spaceship)
 		{
@@ -173,11 +189,11 @@ namespace SpaceStrategy
 
 	public class GothicSpaceship : GothicSpaceshipBase
 	{
+		internal Dictionary<SpaceshipWeapon, List<Position>> WeaponPlacements = new Dictionary<SpaceshipWeapon, List<Position>>();
 		readonly List<SpaceshipWeapon> _weapons;
 		int _leadership;
 		bool _movementStarted;
 		GothicOrder _specialOrder;
-		internal Dictionary<SpaceshipWeapon, List<Position>> WeaponPlacements = new Dictionary<SpaceshipWeapon, List<Position>>();
 
 		public GothicSpaceship(Game game, Position position, SpaceshipClass spaceshipClass, Player owner)
 			: base(game, position, spaceshipClass, owner)
@@ -193,15 +209,19 @@ namespace SpaceStrategy
 					case WeaponType.Torpedo:
 						weapon = new TorpedoWeapon(this, weaponDataRow);
 						break;
+
 					case WeaponType.Battery:
 						weapon = new CannonWeapon(this, weaponDataRow);
 						break;
+
 					case WeaponType.Lance:
 						weapon = new LanceWeapon(this, weaponDataRow);
 						break;
+
 					case WeaponType.Nova:
 						weapon = new NovaWeapon(this, weaponDataRow);
 						break;
+
 					default:
 						throw new NotImplementedException("Неподдерживаемый вид оружия " + weaponDataRow.WeaponType);
 				}
@@ -251,11 +271,13 @@ namespace SpaceStrategy
 			Leadership = 0;
 		}
 
+		public event PropertyChangedEventHandler PropertyChanged;
+
 		public List<GothicOrder> AvailableOrders
 		{
 			get
 			{
-				var result = new List<GothicOrder> {GothicOrder.None};
+				var result = new List<GothicOrder> { GothicOrder.None };
 				if (Player != Game.CurrentPlayer) {
 					return result;
 				}
@@ -363,10 +385,8 @@ namespace SpaceStrategy
 
 		public IEnumerable<SpaceshipWeapon> Weapons
 		{
-			get { return IsDestroyed == CatastrophycDamage.None ? _weapons : new List<SpaceshipWeapon>(); }
+			get { return IsDestroyed == CatastrophicDamage.None ? _weapons : new List<SpaceshipWeapon>(); }
 		}
-
-		public event PropertyChangedEventHandler PropertyChanged;
 
 		public override void Draw(Graphics dc)
 		{
@@ -545,14 +565,17 @@ namespace SpaceStrategy
 				case 1:
 					Leadership = (int)Leaderships.Untried;
 					break;
+
 				case 2:
 				case 3:
 					Leadership = (int)Leaderships.Experienced;
 					break;
+
 				case 4:
 				case 5:
 					Leadership = (int)Leaderships.Veteran;
 					break;
+
 				case 6:
 					Leadership = (int)Leaderships.Crack;
 					break;
@@ -571,9 +594,9 @@ namespace SpaceStrategy
 			}
 		}
 
-		internal override bool MoveTo(Point2d coord)
+		internal override bool MoveTo(Point2d point)
 		{
-			if (base.MoveTo(coord)) {
+			if (base.MoveTo(point)) {
 				MovementStarted = true;
 				return true;
 			}
@@ -598,54 +621,54 @@ namespace SpaceStrategy
 
 		protected override void OnDestroyed()
 		{
-			int catastrophycDamageType = Dice.RollDices(6, 2, "Определение типа катастрофических повреждений.");
+			int catastrophicDamageType = Dice.RollDices(6, 2, "Определение типа катастрофических повреждений.");
 			string result = string.Empty;
-			var newState = CatastrophycDamage.None;
-			switch (catastrophycDamageType) {
+			var newState = CatastrophicDamage.None;
+			switch (catastrophicDamageType) {
 				case 2:
 				case 3:
 				case 4:
 				case 5:
 				case 6:
 					GamePrinter.AddLine("Дрейфующий корпус");
-					newState = CatastrophycDamage.DriftingHulk;
+					newState = CatastrophicDamage.DriftingHulk;
 					break;
 
 				case 7:
 				case 8:
 					GamePrinter.AddLine("Пылающий корпус");
-					newState = CatastrophycDamage.BlazingHulk;
+					newState = CatastrophicDamage.BlazingHulk;
 					break;
 
 				case 9:
 				case 10:
 				case 11:
 					GamePrinter.AddLine("Перегрузка плазменных двигателей");
-					newState = CatastrophycDamage.PlasmaDriveOverload;
+					newState = CatastrophicDamage.PlasmaDriveOverload;
 					break;
 
 				case 12:
 					GamePrinter.AddLine("Взрыв Warp-двигателя");
-					newState = CatastrophycDamage.WarpDriveImplosion;
+					newState = CatastrophicDamage.WarpDriveImplosion;
 					break;
 			}
 
-			if (IsDestroyed == CatastrophycDamage.None || IsDestroyed == CatastrophycDamage.DriftingHulk) {
+			if (IsDestroyed == CatastrophicDamage.None || IsDestroyed == CatastrophicDamage.DriftingHulk) {
 				IsDestroyed = newState;
 			}
-			else if (IsDestroyed == CatastrophycDamage.BlazingHulk) {
-				if (newState == CatastrophycDamage.DriftingHulk) {
+			else if (IsDestroyed == CatastrophicDamage.BlazingHulk) {
+				if (newState == CatastrophicDamage.DriftingHulk) {
 					return;
 				}
 
 				IsDestroyed = newState;
 			}
 
-			if (IsDestroyed == CatastrophycDamage.PlasmaDriveOverload ||
-			    IsDestroyed == CatastrophycDamage.WarpDriveImplosion) {
+			if (IsDestroyed == CatastrophicDamage.PlasmaDriveOverload ||
+				IsDestroyed == CatastrophicDamage.WarpDriveImplosion) {
 				float explosionRadius = Dice.RollDices(6, 3, "Определение радиуса поражения взрыва");
 				DriveExplosionWeapon explosion;
-				if (IsDestroyed == CatastrophycDamage.PlasmaDriveOverload) {
+				if (IsDestroyed == CatastrophicDamage.PlasmaDriveOverload) {
 					explosion = new PlasmaDriveExplosion(this, explosionRadius);
 				}
 				else {
@@ -661,7 +684,7 @@ namespace SpaceStrategy
 
 		protected override void PassingBlastMarkerEffect()
 		{
-			if (Class.Shield == 0 || CriticalDamage.Any(d => d is ShieldsCollapse) || IsDestroyed != CatastrophycDamage.None) {
+			if (Class.Shield == 0 || CriticalDamage.Any(d => d is ShieldsCollapse) || IsDestroyed != CatastrophicDamage.None) {
 				if (Dice.RollDices(6, 1, string.Format("Пролет {0} через маркеры взрыва.", ToString())) >= 6) {
 					InflictDamage(1);
 				}
@@ -746,33 +769,43 @@ namespace SpaceStrategy
 					case 2:
 						damageType = new DorsalArmamentDamaged();
 						break;
+
 					case 3:
 						damageType = new StarboardArmamentDamaged();
 						break;
+
 					case 4:
 						damageType = new PortArmamentDamaged();
 						break;
+
 					case 5:
 						damageType = new ProwArmamentDamaged();
 						break;
+
 					case 6:
 						damageType = new EngineRoomDamaged();
 						break;
+
 					case 7:
 						damageType = new FireDamage();
 						break;
+
 					case 8:
 						damageType = new ThrustersDamaged();
 						break;
+
 					case 9:
 						damageType = new BridgeSmashed();
 						break;
+
 					case 10:
 						damageType = new ShieldsCollapse();
 						break;
+
 					case 11:
 						damageType = new HullBreach();
 						break;
+
 					case 12:
 						damageType = new BulkheadCollapse();
 						break;
@@ -802,7 +835,9 @@ namespace SpaceStrategy
 
 	public class HullBreach : CriticalDamageBase
 	{
-		public HullBreach() : base(false) { }
+		public HullBreach() : base(false)
+		{
+		}
 
 		public override void ApplyDamage(GothicSpaceship spaceship)
 		{
@@ -819,7 +854,9 @@ namespace SpaceStrategy
 
 	public class PortArmamentDamaged : ArmamentDamage
 	{
-		public PortArmamentDamaged() : base(Side.Left) { }
+		public PortArmamentDamaged() : base(Side.Left)
+		{
+		}
 
 		protected override CriticalDamageBase DamageTypeIfNotApplicable
 		{
@@ -830,7 +867,9 @@ namespace SpaceStrategy
 
 	public class ProwArmamentDamaged : ArmamentDamage
 	{
-		public ProwArmamentDamaged() : base(Side.Front) { }
+		public ProwArmamentDamaged() : base(Side.Front)
+		{
+		}
 
 		protected override CriticalDamageBase DamageTypeIfNotApplicable
 		{
@@ -841,7 +880,9 @@ namespace SpaceStrategy
 
 	public class ShieldsCollapse : CriticalDamageBase
 	{
-		public ShieldsCollapse() : base(false) { }
+		public ShieldsCollapse() : base(false)
+		{
+		}
 
 		protected override CriticalDamageBase DamageTypeIfNotApplicable
 		{
@@ -871,7 +912,9 @@ namespace SpaceStrategy
 
 	public class StarboardArmamentDamaged : ArmamentDamage
 	{
-		public StarboardArmamentDamaged() : base(Side.Right) { }
+		public StarboardArmamentDamaged() : base(Side.Right)
+		{
+		}
 
 		protected override CriticalDamageBase DamageTypeIfNotApplicable
 		{
@@ -882,7 +925,9 @@ namespace SpaceStrategy
 
 	public class ThrustersDamaged : CriticalDamageBase
 	{
-		public ThrustersDamaged() : base(true) { }
+		public ThrustersDamaged() : base(true)
+		{
+		}
 
 		public override void ApplyDamage(GothicSpaceship spaceship)
 		{

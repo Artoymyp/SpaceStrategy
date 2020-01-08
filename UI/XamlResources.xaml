@@ -15,7 +15,7 @@
 
 	<VM:SpaceshipSideToImageSourceConverter x:Key="SideToImageSourceConverter" />
 	<VM:DamageTypeToViewModelConverter x:Key="DamageTypeToViewModelConverter" />
-	<DataTemplate x:Key="SpaceshipSideCellTemlate">
+	<DataTemplate x:Key="SpaceshipSideCellTemplate">
 		<Image
 			Source="{Binding SpaceshipSide, Converter={StaticResource SideToImageSourceConverter}}"
 			Width="24" />

@@ -108,9 +108,9 @@ namespace SpaceStrategy
 			Spaceship.Position = newPosition;
 		}
 
-		internal void OnMouseMove(Point2d coord)
+		internal void OnMouseMove(Point2d point)
 		{
-			foreach (Trajectory item in _items) item.OnMouseMove(coord);
+			foreach (Trajectory item in _items) item.OnMouseMove(point);
 		}
 
 		internal void Remove(Trajectory trajectory)

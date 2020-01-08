@@ -18,7 +18,7 @@ namespace SSCoreTests
 	{
 	public:
 		unique_ptr<MoveAreaCalculator> moveAreaCalculator;
-	TEST_METHOD_INITIALIZE(InitializeTest)
+		TEST_METHOD_INITIALIZE(InitializeTest)
 		{
 			moveAreaCalculator = make_unique<MoveAreaCalculator>();
 		}
@@ -26,9 +26,9 @@ namespace SSCoreTests
 		TEST_METHOD(Spaceship_GetMoveArea_NoAvailableMovement)
 		{
 			Position2d position(Point2d(3, 4), 0);
-			MovementDescriptor moveDescr;
+			MovementDescriptor movement_descriptor;
 
-			auto area = moveAreaCalculator->GetMoveArea(0, moveDescr, position);
+			auto area = moveAreaCalculator->GetMoveArea(0, movement_descriptor, position);
 			Assert::AreEqual(size_t(0), area.AnchorPoints().size());
 			Assert::AreEqual(size_t(0), area.LineSegments().size());
 			Assert::AreEqual(size_t(0), area.CircleArcs().size());
@@ -41,21 +41,21 @@ namespace SSCoreTests
 
 			//Setup
 			Position2d position(Point2d(3, 4), 0);
-			MovementDescriptor moveDescr;
+			MovementDescriptor movement_descriptor;
 			{
-				moveDescr.Distance(maxDist);
-				moveDescr.StraightBeforeTurn(straightDist);
+				movement_descriptor.Distance(maxDist);
+				movement_descriptor.StraightBeforeTurn(straightDist);
 			}
 
 			//Assert
-			auto area = moveAreaCalculator->GetMoveArea(0, moveDescr, position);
+			auto area = moveAreaCalculator->GetMoveArea(0, movement_descriptor, position);
 			Assert::AreEqual(size_t(1), area.AnchorPoints().size());
 			Assert::AreEqual(size_t(1), area.LineSegments().size());
 			Assert::AreEqual(size_t(0), area.CircleArcs().size());
 
 			Point2d endOfStraightSegment = position.GetTranslated(
-				                                       std::fmin(moveDescr.StraightBeforeTurn(), moveDescr.Distance()))
-			                                       .Location();
+				std::fmin(movement_descriptor.StraightBeforeTurn(), movement_descriptor.Distance()))
+				.Location();
 			Assert::AreEqual(endOfStraightSegment, area.AnchorPoints()[0]);
 
 			Assert::AreEqual(LineSeg(position.Location(), endOfStraightSegment), area.LineSegments()[0]);
@@ -71,16 +71,16 @@ namespace SSCoreTests
 			//Setup
 			Point2d location = Point2d(3, 4);
 			Position2d position(location, 0);
-			MovementDescriptor moveDescr;
+			MovementDescriptor movement_descriptor;
 			{
-				moveDescr.Distance(maxDist);
-				moveDescr.StraightBeforeTurn(straightDist);
-				moveDescr.TurnAngle(maxTurnAngle);
-				moveDescr.TurnCount(maxTurnCount);
+				movement_descriptor.Distance(maxDist);
+				movement_descriptor.StraightBeforeTurn(straightDist);
+				movement_descriptor.TurnAngle(maxTurnAngle);
+				movement_descriptor.TurnCount(maxTurnCount);
 			}
 
 			//Assert
-			auto area = moveAreaCalculator->GetMoveArea(0, moveDescr, position);
+			auto area = moveAreaCalculator->GetMoveArea(0, movement_descriptor, position);
 			Assert::AreEqual(size_t(2), area.AnchorPoints().size(), L"Wrong anchor points count.");
 			Assert::AreEqual(size_t(1), area.LineSegments().size(), L"Wrong line segments count.");
 			Assert::AreEqual(size_t(1), area.CircleArcs().size(), L"Wrong circ arcs count.");
@@ -94,7 +94,7 @@ namespace SSCoreTests
 			Assert::AreEqual(LineSeg(leftCorner, rightCorner), area.LineSegments()[0]);
 
 			Assert::AreEqual(CircArc(location, maxDist, Direction(-maxTurnAngle), Direction(maxTurnAngle)),
-			                 area.CircleArcs()[0]);
+				area.CircleArcs()[0]);
 		}
 
 		TEST_METHOD(Spaceship_GetMoveArea_StraightWithTurnMovement)
@@ -107,16 +107,16 @@ namespace SSCoreTests
 			//Setup
 			Point2d location = Point2d(3, 4);
 			Position2d position(location, 0);
-			MovementDescriptor moveDescr;
+			MovementDescriptor movement_descriptor;
 			{
-				moveDescr.Distance(maxDist);
-				moveDescr.StraightBeforeTurn(straightDist);
-				moveDescr.TurnAngle(maxTurnAngle);
-				moveDescr.TurnCount(maxTurnCount);
+				movement_descriptor.Distance(maxDist);
+				movement_descriptor.StraightBeforeTurn(straightDist);
+				movement_descriptor.TurnAngle(maxTurnAngle);
+				movement_descriptor.TurnCount(maxTurnCount);
 			}
 
 			//Assert
-			auto area = moveAreaCalculator->GetMoveArea(0, moveDescr, position);
+			auto area = moveAreaCalculator->GetMoveArea(0, movement_descriptor, position);
 			Assert::AreEqual(size_t(3), area.AnchorPoints().size(), L"Wrong anchor points count.");
 			Assert::AreEqual(size_t(2), area.LineSegments().size(), L"Wrong line segments count.");
 			Assert::AreEqual(size_t(1), area.CircleArcs().size(), L"Wrong circ arcs count.");
@@ -145,16 +145,16 @@ namespace SSCoreTests
 
 			//Setup
 			Position2d position(Point2d(4, 4), 0);
-			MovementDescriptor moveDescr;
+			MovementDescriptor movement_descriptor;
 			{
-				moveDescr.Distance(maxDist);
-				moveDescr.StraightBeforeTurn(straightDist);
-				moveDescr.TurnAngle(maxTurnAngle);
-				moveDescr.TurnCount(maxTurnCount);
+				movement_descriptor.Distance(maxDist);
+				movement_descriptor.StraightBeforeTurn(straightDist);
+				movement_descriptor.TurnAngle(maxTurnAngle);
+				movement_descriptor.TurnCount(maxTurnCount);
 			}
 
 			//Assert
-			auto area = moveAreaCalculator->GetMoveArea(straightDist, moveDescr, position);
+			auto area = moveAreaCalculator->GetMoveArea(straightDist, movement_descriptor, position);
 
 			Assert::AreEqual(size_t(4), area.AnchorPoints().size(), L"Wrong anchor points count.");
 			Assert::AreEqual(size_t(3), area.LineSegments().size(), L"Wrong line segments count.");
@@ -175,11 +175,11 @@ namespace SSCoreTests
 			Assert::AreEqual(LineSeg(rightTurnCorner, maxRightMovePoint), area.LineSegments()[2]);
 
 			Assert::AreEqual(CircArc(turnStart, maxDist, Direction(-maxTurnAngle), Direction(maxTurnAngle)),
-			                 area.CircleArcs()[0]);
+				area.CircleArcs()[0]);
 			Assert::AreEqual(CircArc(leftTurnCorner, maxDist - straightDist, Direction(maxTurnAngle),
-			                         Direction(2 * maxTurnAngle)), area.CircleArcs()[1]);
+				Direction(2 * maxTurnAngle)), area.CircleArcs()[1]);
 			Assert::AreEqual(CircArc(rightTurnCorner, maxDist - straightDist, Direction(-maxTurnAngle),
-			                         Direction(-2 * maxTurnAngle)), area.CircleArcs()[2]);
+				Direction(-2 * maxTurnAngle)), area.CircleArcs()[2]);
 		}
 
 		TEST_METHOD(Spaceship_GetMoveArea_StraightWithDoubleTurnMovement)
@@ -192,16 +192,16 @@ namespace SSCoreTests
 			//Setup
 			Point2d location = Point2d(3, 4);
 			Position2d position(location, 0);
-			MovementDescriptor moveDescr;
+			MovementDescriptor movement_descriptor;
 			{
-				moveDescr.Distance(maxDist);
-				moveDescr.StraightBeforeTurn(straightDist);
-				moveDescr.TurnAngle(maxTurnAngle);
-				moveDescr.TurnCount(maxTurnCount);
+				movement_descriptor.Distance(maxDist);
+				movement_descriptor.StraightBeforeTurn(straightDist);
+				movement_descriptor.TurnAngle(maxTurnAngle);
+				movement_descriptor.TurnCount(maxTurnCount);
 			}
 
 			//Assert
-			auto area = moveAreaCalculator->GetMoveArea(0, moveDescr, position);
+			auto area = moveAreaCalculator->GetMoveArea(0, movement_descriptor, position);
 
 			Assert::AreEqual(size_t(5), area.AnchorPoints().size(), L"Wrong anchor points count.");
 			Assert::AreEqual(size_t(4), area.LineSegments().size(), L"Wrong line segments count.");
@@ -224,12 +224,12 @@ namespace SSCoreTests
 			Assert::AreEqual(LineSeg(rightTurnCorner, maxRightMovePoint), area.LineSegments()[3]);
 
 			Assert::AreEqual(area.CircleArcs()[0],
-			                 CircArc(turnStart, maxDist - straightDist, Direction(-maxTurnAngle),
-			                         Direction(maxTurnAngle)));
+				CircArc(turnStart, maxDist - straightDist, Direction(-maxTurnAngle),
+					Direction(maxTurnAngle)));
 			Assert::AreEqual(area.CircleArcs()[1], CircArc(leftTurnCorner, maxDist - 2 * straightDist,
-			                                               Direction(maxTurnAngle), Direction(2 * maxTurnAngle)));
+				Direction(maxTurnAngle), Direction(2 * maxTurnAngle)));
 			Assert::AreEqual(area.CircleArcs()[2], CircArc(rightTurnCorner, maxDist - 2 * straightDist,
-			                                               Direction(-maxTurnAngle), Direction(-2 * maxTurnAngle)));
+				Direction(-maxTurnAngle), Direction(-2 * maxTurnAngle)));
 		}
 	};
 }

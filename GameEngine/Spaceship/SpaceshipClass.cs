@@ -48,14 +48,14 @@ namespace SpaceStrategy
 			IEnumerable<GothicSpaceshipBonus> bonuses = GameDataAdapter.GetBonusesByClassName(ClassName);
 
 			if (bonuses.Any(a => a.Name == GothicSpaceshipBonusName.ImprovedThrusters)) {
-				AllAheadFullCoef = 5;
+				AllAheadFullMultiplier = 5;
 			}
 			else {
-				AllAheadFullCoef = 4;
+				AllAheadFullMultiplier = 4;
 			}
 		}
 
-		public int AllAheadFullCoef { get; }
+		public int AllAheadFullMultiplier { get; }
 
 		public int BackArmor { get; }
 

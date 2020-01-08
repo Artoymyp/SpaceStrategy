@@ -29,7 +29,7 @@ namespace SpaceStrategy
 		public override bool IsComplete()
 		{
 			foreach (Player player in Game.Players)
-				if (!player.Spaceships.Any(a => a.IsDestroyed == CatastrophycDamage.None)) {
+				if (!player.Spaceships.Any(a => a.IsDestroyed == CatastrophicDamage.None)) {
 					return true;
 				}
 

@@ -23,6 +23,10 @@ namespace SpaceStrategy
 			_bottomRightPoint = bottomRightPoint;
 		}
 
+		public event EventHandler PositioningBegin;
+
+		public event EventHandler PositioningComplete;
+
 		public GothicSpaceship CreatedSpaceship { get; private set; }
 
 		public SpaceshipClass SelectedSpaceshipClass { get; private set; }
@@ -35,10 +39,6 @@ namespace SpaceStrategy
 		{
 			get { return _maxSpaceshipsCount > 0; }
 		}
-
-		public event EventHandler PositioningBegin;
-
-		public event EventHandler PositioningComplete;
 
 		public void BeginSpaceshipCreation(SpaceshipClass spaceshipClass)
 		{
@@ -56,10 +56,6 @@ namespace SpaceStrategy
 			int width = (int)Math.Abs(_bottomRightPoint.X - _topLeftPoint.X);
 			int height = (int)Math.Abs(_bottomRightPoint.Y - _topLeftPoint.Y);
 
-			//width = (int)(width * Game.DistanceCoef);
-			//height = (int)(height * Game.DistanceCoef);
-
-			//Rectangle rect = new Rectangle((int)(TopLeftCorner.X * Game.DistanceCoef), (int)(TopLeftCorner.Y * Game.DistanceCoef), width, height);
 			var rect = new Rectangle((int)_topLeftPoint.X, (int)_topLeftPoint.Y, width, height);
 			var pen = new Pen(Game.Params.PositioningZoneColor);
 			var brush = new SolidBrush(Color.FromArgb(128, Game.Params.PositioningZoneColor));
@@ -143,8 +139,6 @@ namespace SpaceStrategy
 
 		bool IsInside(Point2d point)
 		{
-			//if (point.X < (int)(TopLeftCorner.X * Game.DistanceCoef) || point.X > (int)(BottomRightCorner.X * Game.DistanceCoef)) return false;
-			//if (point.Y < (int)(TopLeftCorner.Y * Game.DistanceCoef) || point.Y > (int)(BottomRightCorner.Y * Game.DistanceCoef)) return false;
 			if (point.X < (int)_topLeftPoint.X || point.X > (int)_bottomRightPoint.X) {
 				return false;
 			}

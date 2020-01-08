@@ -70,13 +70,13 @@ namespace SpaceStrategy
 
 		internal static bool IsBetween(double fromRad, double toRad, double testedRad)
 		{
-			fromRad = Modul(fromRad, DoublePi);
-			toRad = Modul(toRad, DoublePi);
-			testedRad = Modul(testedRad, DoublePi);
+			fromRad = GetNonNegativeRemainder(fromRad, DoublePi);
+			toRad = GetNonNegativeRemainder(toRad, DoublePi);
+			testedRad = GetNonNegativeRemainder(testedRad, DoublePi);
 			return Distance(fromRad, toRad, true) > Distance(fromRad, testedRad, true) && Math.Abs(Distance(fromRad, testedRad, true)) > 0.0001;
 		}
 
-		internal static double Modul(double angTemp, double p)
+		internal static double GetNonNegativeRemainder(double angTemp, double p)
 		{
 			double curVal = angTemp;
 			while (curVal < 0) curVal += p;

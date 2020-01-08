@@ -107,7 +107,7 @@
     <Compile Include="Weapon\PlasmaDriveExplosion.cs" />
     <Compile Include="Weapon\TurretWeapon.cs" />
     <Compile Include="Trajectory\CircularTrajectory.cs" />
-    <Compile Include="Geometry\CorrdConverter.cs" />
+    <Compile Include="Geometry\CoordinateConverter.cs" />
     <Compile Include="CursorEventArgs.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Component\GameCursor.cs" />
@@ -210,6 +210,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

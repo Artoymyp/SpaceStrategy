@@ -55,7 +55,7 @@ namespace SpaceStrategy
 
 		internal double Size
 		{
-			get { return Game.Params.TorpedoeSize; }
+			get { return Game.Params.TorpedoSize; }
 		}
 
 		protected TimeSpan DefaultDestructionMaxDelay

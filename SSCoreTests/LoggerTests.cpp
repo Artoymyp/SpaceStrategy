@@ -29,10 +29,10 @@ namespace SSCoreTests
 			public:
 				void main()
 				{
-					std::ofstream myfile;
-					myfile.open("log.txt");
-					myfile << "Writing this to a file.\n";
-					myfile.close();
+					std::ofstream my_file;
+					my_file.open("log.txt");
+					my_file << "Writing this to a file.\n";
+					my_file.close();
 				}
 			};
 
@@ -94,11 +94,11 @@ namespace SSCoreTests
 		}
 
 	public:
-	TEST_METHOD_INITIALIZE(InitializeTest)
+		TEST_METHOD_INITIALIZE(InitializeTest)
 		{
 		}
 
-	TEST_METHOD_CLEANUP(CleanupTest)
+		TEST_METHOD_CLEANUP(CleanupTest)
 		{
 		}
 

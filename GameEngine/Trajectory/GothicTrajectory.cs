@@ -145,13 +145,13 @@ namespace SpaceStrategy
 						Game.Cursor.SetForm(CursorForm.TrajectoryOptional);
 					}
 
-					Game.Cursor.SetLocation(Game.CoordinateConverter.GetWinCoord(globalCsPoint));
+					Game.Cursor.SetLocation(Game.CoordinateConverter.GetWinCsPoint(globalCsPoint));
 				}
 
 				dc.Restore(oldDc);
 			}
 			else if (Owner.Spaceship.State == SpaceshipState.Moving) {
-				var pen = new Pen(Game.Params.ActiveTrajectoryColor, Game.Params.ActiveTrajectoryThicknes);
+				var pen = new Pen(Game.Params.ActiveTrajectoryColor, Game.Params.ActiveTrajectoryThickness);
 				for (int i = 0; i < _trajectoryPoints.Count - 1; i++) {
 					var startP = new PointF((float)_trajectoryPoints[i].X, (float)_trajectoryPoints[i].Y);
 					var endP = new PointF((float)_trajectoryPoints[i + 1].X, (float)_trajectoryPoints[i + 1].Y);
@@ -210,8 +210,7 @@ namespace SpaceStrategy
 				case GothicOrder.AllAheadFull:
 					var ownerSpaceship = Owner.Spaceship as GothicSpaceship;
 
-					//MaxDistance = (float)(MaxDistance + (float)Game.DistanceCoef * Game.RollDices(6, ownerSpaceship.Class.AllAheadFullCoef, "Дополнительная дальность"));
-					MaxDistance = (float)(MaxDistance + Dice.RollDices(6, ownerSpaceship.Class.AllAheadFullCoef, "Дополнительная дальность"));
+					MaxDistance = (float)(MaxDistance + Dice.RollDices(6, ownerSpaceship.Class.AllAheadFullMultiplier, "Дополнительная дальность"));
 					MaxTurnCount = 0;
 					MandatoryDistance = MaxDistance;
 					break;
@@ -284,9 +283,9 @@ namespace SpaceStrategy
 			return false;
 		}
 
-		internal bool MoveTo(Point2d coord)
+		internal bool MoveTo(Point2d point)
 		{
-			HitTestResult hitResult = HitTest(coord);
+			HitTestResult hitResult = HitTest(point);
 			if (hitResult.AnchoredPoint.HasValue) {
 				SpecialOrderIsPossible = false;
 				_trajectoryPoints.Clear();
@@ -423,12 +422,12 @@ namespace SpaceStrategy
 			return new GothicTrajectoryParams(mandatoryDistance, distanceToMove, optionalDistance, randomDistance, turnIsPossibleAtDistance);
 		}
 
-		HitTestResult HitTest(Point2d coord)
+		HitTestResult HitTest(Point2d point)
 		{
 			var highlightedParts = GothicTrajectoryParts.None;
 
 			GothicTrajectoryParams p = GetTrajectoryParams();
-			Point2d spaceshipCsPoint = coord.UnTransformBy(Position);
+			Point2d spaceshipCsPoint = point.UnTransformBy(Position);
 
 			//Center line
 			if (Math.Abs(spaceshipCsPoint.Y) <= Game.Params.TrajectoryAnchorDistance && spaceshipCsPoint.X >= 0 && spaceshipCsPoint.X <= p.DistanceToMove) {
@@ -438,7 +437,7 @@ namespace SpaceStrategy
 			//Mandatory distance end
 			if (p.MandatoryDistance <= p.TurnIsPossibleAtDistance) {
 				if (Math.Abs(spaceshipCsPoint.X - p.MandatoryDistance) < Game.Params.TrajectoryAnchorDistance &&
-				    Math.Abs(spaceshipCsPoint.Y) < Game.Params.TrajectoryAnchorDistance) {
+					Math.Abs(spaceshipCsPoint.Y) < Game.Params.TrajectoryAnchorDistance) {
 					highlightedParts |= GothicTrajectoryParts.MandatoryPartEnd;
 				}
 			}
@@ -457,7 +456,7 @@ namespace SpaceStrategy
 			if (p.TurnIsPossibleAtDistance <= p.DistanceToMove) {
 				//First turn distance
 				if (Math.Abs(spaceshipCsPoint.X) < Game.Params.TrajectoryAnchorDistance &&
-				    Math.Abs(spaceshipCsPoint.Y) < Game.Params.TrajectoryAnchorDistance) {
+					Math.Abs(spaceshipCsPoint.Y) < Game.Params.TrajectoryAnchorDistance) {
 					highlightedParts |= GothicTrajectoryParts.FirstTurnDistance;
 				}
 
@@ -484,7 +483,7 @@ namespace SpaceStrategy
 
 				//SideLines
 				if (0 <= turnOriginCsPoint.X && turnOriginCsPoint.X <= xMax ||
-				    Math.Abs(turnOriginCsPoint.X) < Game.Params.TrajectoryAnchorDistance) {
+					Math.Abs(turnOriginCsPoint.X) < Game.Params.TrajectoryAnchorDistance) {
 					if (MaxTurnAngle != 90) {
 						double k = Math.Sign(turnOriginCsPoint.Y) * Math.Tan(maxAngleRadian);
 						double y = k * turnOriginCsPoint.X;
@@ -513,19 +512,19 @@ namespace SpaceStrategy
 
 			if (!highlightedParts.HasFlag(GothicTrajectoryParts.Area)) {
 				if (highlightedParts.HasFlag(GothicTrajectoryParts.AreaLeftSide) ||
-				    highlightedParts.HasFlag(GothicTrajectoryParts.AreaRightSide)) {
+					highlightedParts.HasFlag(GothicTrajectoryParts.AreaRightSide)) {
 					highlightedParts |= GothicTrajectoryParts.Area;
 				}
 
 				if (highlightedParts.HasFlag(GothicTrajectoryParts.MaxDistance) &&
-				    distanceAfterTurn > 0) {
+					distanceAfterTurn > 0) {
 					highlightedParts |= GothicTrajectoryParts.Area;
 				}
 			}
 
 			//Mandatory part
 			if (p.MandatoryDistance > 0 &&
-			    0 < spaceshipCsPoint.X && spaceshipCsPoint.X < p.MandatoryDistance + Game.Params.TrajectoryAnchorDistance) {
+				0 < spaceshipCsPoint.X && spaceshipCsPoint.X < p.MandatoryDistance + Game.Params.TrajectoryAnchorDistance) {
 				if (highlightedParts.HasFlag(GothicTrajectoryParts.CenterLine)) {
 					highlightedParts |= GothicTrajectoryParts.MandatoryPart;
 				}
@@ -554,7 +553,7 @@ namespace SpaceStrategy
 			}
 			else if (highlightedParts.HasFlag(GothicTrajectoryParts.MaxDistance)) {
 				if (highlightedParts.HasFlag(GothicTrajectoryParts.AreaLeftSide) ||
-				    highlightedParts.HasFlag(GothicTrajectoryParts.AreaRightSide)) {
+					highlightedParts.HasFlag(GothicTrajectoryParts.AreaRightSide)) {
 					anchoredPoint = new Point2d(p.TurnIsPossibleAtDistance + xMax, Math.Sign(spaceshipCsPoint.Y) * yMax);
 				}
 				else {
@@ -575,7 +574,7 @@ namespace SpaceStrategy
 				}
 			}
 			else if (highlightedParts.HasFlag(GothicTrajectoryParts.AreaLeftSide) ||
-			         highlightedParts.HasFlag(GothicTrajectoryParts.AreaRightSide)
+					 highlightedParts.HasFlag(GothicTrajectoryParts.AreaRightSide)
 			) {
 				if (MaxTurnAngle != 90) {
 					double k = Math.Sign(turnOriginCsPoint.Y) * Math.Tan(maxAngleRadian);
@@ -617,8 +616,8 @@ namespace SpaceStrategy
 
 		struct HitTestResult
 		{
-			public Point2d? AnchoredPoint;
 			public readonly GothicTrajectoryParts HighlightedParts;
+			public Point2d? AnchoredPoint;
 
 			public HitTestResult(Point2d? anchoredPoint, GothicTrajectoryParts highlightedParts)
 			{

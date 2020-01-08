@@ -17,11 +17,11 @@ namespace SpaceStrategy
 
 	public class BlastMarkersAtBase : IEnumerable<BlastMarker>
 	{
+		public EventHandler<NewBlastMarkersContactEventArgs> NewBlastMarkerContact;
 		readonly List<BlastMarker> _items;
 		readonly GothicSpaceshipBase _owner;
 
 		ShieldActiveAnimation _shieldAnimation;
-		public EventHandler<NewBlastMarkersContactEventArgs> NewBlastMarkerContact;
 
 		internal BlastMarkersAtBase(GothicSpaceshipBase owner)
 		{
@@ -37,11 +37,6 @@ namespace SpaceStrategy
 		public IEnumerator<BlastMarker> GetEnumerator()
 		{
 			return _items.GetEnumerator();
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
 		}
 
 		public void AddBlastMarker(BlastMarker newBlastMarker)
@@ -77,7 +72,7 @@ namespace SpaceStrategy
 				OnNewBlastMarkerContact(newBMs);
 			}
 
-			if (_owner.IsDestroyed != CatastrophycDamage.None) {
+			if (_owner.IsDestroyed != CatastrophicDamage.None) {
 				return;
 			}
 
@@ -90,12 +85,15 @@ namespace SpaceStrategy
 			}
 		}
 
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
 		internal void CreateBlastMarkerAtBase(Point2d preferredPosition, TimeSpan delay)
 		{
 			IEnumerable<Point2d> existingBmPolarPositions = _items.Select(a => a.Position.Location.ToPolarCs(_owner.Position.Location));
 
-			//double bmAngSizeCoef = 2;
-			//double bmAngSize = 2 * Math.Asin(BlastMarker.CollisionRadius / bmRingRadius) * bmAngSizeCoef;
 			double bmTemp = GeometryHelper.DoublePi / 3.5;
 			double bmAngSize = bmTemp;
 
@@ -135,20 +133,20 @@ namespace SpaceStrategy
 
 			Point2d actualBmPosition;
 			{
-				Point2d preferedBmPositionPolar = preferredPosition.ToPolarCs(_owner.Position.Location);
+				Point2d preferredBmPositionPolar = preferredPosition.ToPolarCs(_owner.Position.Location);
 				Tuple<double, double> blastedRangeAroundPreferredPosition = null;
 				foreach (Tuple<double, double> range in existingBmPolarRanges)
-					if (GeometryHelper.IsBetween(range.Item2, range.Item1, preferedBmPositionPolar.Ro)) {
+					if (GeometryHelper.IsBetween(range.Item2, range.Item1, preferredBmPositionPolar.Ro)) {
 						blastedRangeAroundPreferredPosition = range;
 						break;
 					}
 
 				if (blastedRangeAroundPreferredPosition != null) {
-					if (GeometryHelper.Distance(blastedRangeAroundPreferredPosition.Item1, preferedBmPositionPolar.Ro, true) > GeometryHelper.Distance(preferedBmPositionPolar.Ro, blastedRangeAroundPreferredPosition.Item2, true)) {
-						actualBmPosition = new Point2d(blastedRangeAroundPreferredPosition.Item1, preferedBmPositionPolar.R * 0.9).ToEuclidCs(_owner.Position.Location);
+					if (GeometryHelper.Distance(blastedRangeAroundPreferredPosition.Item1, preferredBmPositionPolar.Ro, true) > GeometryHelper.Distance(preferredBmPositionPolar.Ro, blastedRangeAroundPreferredPosition.Item2, true)) {
+						actualBmPosition = new Point2d(blastedRangeAroundPreferredPosition.Item1, preferredBmPositionPolar.R * 0.9).ToEuclidCs(_owner.Position.Location);
 					}
 					else {
-						actualBmPosition = new Point2d(blastedRangeAroundPreferredPosition.Item2, preferedBmPositionPolar.R * 0.9).ToEuclidCs(_owner.Position.Location);
+						actualBmPosition = new Point2d(blastedRangeAroundPreferredPosition.Item2, preferredBmPositionPolar.R * 0.9).ToEuclidCs(_owner.Position.Location);
 					}
 				}
 				else {
@@ -164,7 +162,7 @@ namespace SpaceStrategy
 		protected virtual void OnNewBlastMarkerContact(IEnumerable<BlastMarker> newBlastMarkers)
 		{
 			ShieldActiveAnimation newAnimation;
-			if (_owner.Class.Shield > 0 && _owner.IsDestroyed == CatastrophycDamage.None) {
+			if (_owner.Class.Shield > 0 && _owner.IsDestroyed == CatastrophicDamage.None) {
 				if (_shieldAnimation == null) {
 					newAnimation = new ShieldActiveAnimation(_owner, true);
 					_shieldAnimation = newAnimation;
@@ -202,8 +200,10 @@ namespace SpaceStrategy
 			_blastMarkersAtBase.NewBlastMarkerContact += OnNewBlastMarkerContact;
 
 			IsCrippled = false;
-			IsDestroyed = CatastrophycDamage.None;
+			IsDestroyed = CatastrophicDamage.None;
 		}
+
+		internal event EventHandler<DamageEventArgs> Damaged;
 
 		public SpaceshipClass Class { get; }
 
@@ -212,7 +212,7 @@ namespace SpaceStrategy
 
 		public bool IsCrippled { get; protected set; }
 
-		public CatastrophycDamage IsDestroyed { get; protected set; }
+		public CatastrophicDamage IsDestroyed { get; protected set; }
 
 		public double MaxTurnAngle { get; internal set; }
 
@@ -224,7 +224,7 @@ namespace SpaceStrategy
 		{
 			get
 			{
-				if (IsDestroyed != CatastrophycDamage.None) {
+				if (IsDestroyed != CatastrophicDamage.None) {
 					return 0;
 				}
 
@@ -245,8 +245,6 @@ namespace SpaceStrategy
 			}
 		}
 
-		internal event EventHandler<DamageEventArgs> Damaged;
-
 		//protected set { hitPoints = Math.Max(0, value); } }
 		//public double MinTurnRadius { get; private set; }
 		public virtual void InflictDamage(int damagePoints)
@@ -263,7 +261,7 @@ namespace SpaceStrategy
 				double globalAng = attackDir.ToRadian();
 				double ang = globalAng - attacked.Position.Angle;
 				ang = ang + GeometryHelper.PiDiv4;
-				ang = GeometryHelper.Modul(ang, GeometryHelper.DoublePi);
+				ang = GeometryHelper.GetNonNegativeRemainder(ang, GeometryHelper.DoublePi);
 				if (0 <= ang && ang < GeometryHelper.HalfPi) {
 					attackedSide = Side.Front;
 				}
@@ -309,14 +307,14 @@ namespace SpaceStrategy
 				Point2d attackerLocation = attacker.OwnerSpaceship.Position.Location;
 
 				Vector attackDir = attackerLocation.VectorTo(Position.Location);
-				Point2d preferedBmPosition;
+				Point2d preferredBmPosition;
 				double bmRingRadius = (Diameter / 2 + BlastMarker.CollisionRadius) * 0.9;
 				{
 					attackDir.Normalize();
-					preferedBmPosition = attackerLocation + attackDir * (attackerLocation.DistanceTo(Position) - bmRingRadius);
+					preferredBmPosition = attackerLocation + attackDir * (attackerLocation.DistanceTo(Position) - bmRingRadius);
 				}
 
-				for (int i = 0; i < shieldAbsorbedDamage; i++) _blastMarkersAtBase.CreateBlastMarkerAtBase(preferedBmPosition, timeBeforeAttackImpact);
+				for (int i = 0; i < shieldAbsorbedDamage; i++) _blastMarkersAtBase.CreateBlastMarkerAtBase(preferredBmPosition, timeBeforeAttackImpact);
 			}
 			else if (attacker is TorpedoWeapon) {
 				Game.ScriptManager.AddEvent(new InflictDamage(this, attacker, damage, timeBeforeAttackImpact));
@@ -333,12 +331,15 @@ namespace SpaceStrategy
 					case Side.Front:
 						armor = Class.FrontArmor;
 						break;
+
 					case Side.Left:
 						armor = Class.LeftArmor;
 						break;
+
 					case Side.Right:
 						armor = Class.RightArmor;
 						break;
+
 					case Side.Back:
 						armor = Class.BackArmor;
 						break;
@@ -347,10 +348,10 @@ namespace SpaceStrategy
 			return armor;
 		}
 
-		internal virtual bool MoveTo(Point2d coord)
+		internal virtual bool MoveTo(Point2d point)
 		{
 			if (Trajectory.FirstOrDefault() is GothicTrajectory) {
-				if ((Trajectory.First() as GothicTrajectory).MoveTo(coord)) {
+				if ((Trajectory.First() as GothicTrajectory).MoveTo(point)) {
 					State = SpaceshipState.Moving;
 					return true;
 				}
@@ -389,7 +390,9 @@ namespace SpaceStrategy
 			}
 		}
 
-		protected virtual void OnDestroyed() { }
+		protected virtual void OnDestroyed()
+		{
+		}
 
 		protected void OnNewBlastMarkerContact(object sender, NewBlastMarkersContactEventArgs e)
 		{

@@ -26,10 +26,10 @@ namespace SpaceStrategy
 					}
 
 					dc.DrawEllipse(new Pen(pointColor),
-						(float)(_location.X - Game.Params.TrajectorycAnchorPointRadius),
-						(float)(_location.Y - Game.Params.TrajectorycAnchorPointRadius),
-						Game.Params.TrajectorycAnchorPointRadius * 2,
-						Game.Params.TrajectorycAnchorPointRadius * 2);
+						(float)(_location.X - Game.Params.TrajectoryAnchorPointRadius),
+						(float)(_location.Y - Game.Params.TrajectoryAnchorPointRadius),
+						Game.Params.TrajectoryAnchorPointRadius * 2,
+						Game.Params.TrajectoryAnchorPointRadius * 2);
 					break;
 
 				case CursorForm.Default:
