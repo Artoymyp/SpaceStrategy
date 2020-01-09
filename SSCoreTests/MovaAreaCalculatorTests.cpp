@@ -102,7 +102,7 @@ namespace SSCoreTests
 			const float straightDist = 1;
 			const float maxDist = 2;
 			const float maxTurnAngle = M_PI_2;
-			const float maxTurnCount = 1;
+			const int maxTurnCount = 1;
 
 			//Setup
 			const Point2d location = Point2d(3, 4);

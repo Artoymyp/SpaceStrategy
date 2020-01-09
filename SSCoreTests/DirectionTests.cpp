@@ -26,7 +26,7 @@ namespace SSCoreTests
 
 		TEST_METHOD(DirectionEqualTest)
 		{
-			const double angle = 1;
+			const float angle = 1;
 			const Direction dir1 = Direction(angle);
 			const Direction dir2 = Direction(angle);
 			Assert::IsTrue(dir1 == dir2);
@@ -34,12 +34,12 @@ namespace SSCoreTests
 
 		TEST_METHOD(DirectionEqualToDoubleTest)
 		{
-			const double dir = 1;
-			const Direction direction = Direction(dir + 2 * M_PI);
+			const float dir = 1;
+			const Direction direction = Direction(dir + static_cast<float>(2 * M_PI));
 			Assert::IsTrue(direction == dir);
-			Assert::IsTrue(direction == dir + 2 * M_PI);
-			Assert::IsTrue(direction == dir + 4 * M_PI);
-			Assert::IsTrue(direction == dir - 2 * M_PI);
+			Assert::IsTrue(direction == dir + static_cast<float>(2 * M_PI));
+			Assert::IsTrue(direction == dir + static_cast<float>(4 * M_PI));
+			Assert::IsTrue(direction == dir - static_cast<float>(2 * M_PI));
 		}
 
 		TEST_METHOD(DirectionToVectorTest)

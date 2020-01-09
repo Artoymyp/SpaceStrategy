@@ -32,8 +32,8 @@ namespace SpaceStrategy
 
 	float Point2d::DistanceSqrTo(const Point2d& targetPoint) const
 	{
-		const double xDist = m_X - targetPoint.m_X;
-		const double yDist = m_Y - targetPoint.m_Y;
+		const float xDist = m_X - targetPoint.m_X;
+		const float yDist = m_Y - targetPoint.m_Y;
 		//double zDist = point.Z - targetPoint.Z;
 		return (xDist * xDist + yDist * yDist/* + zDist * zDist*/);
 	}
