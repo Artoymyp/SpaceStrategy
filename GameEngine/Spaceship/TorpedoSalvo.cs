@@ -231,13 +231,13 @@ namespace SpaceStrategy
 		class Torpedo
 		{
 			readonly Spaceship _torpedoSalvo;
-			public readonly Point2d Position;
-			public TimeSpan ExplodeAfter;
+			readonly Point2d _position;
+			TimeSpan _explodeAfter;
 			public TorpedoState State;
 
 			public Torpedo(TorpedoSalvo torpedoSalvo, Point2d position, float length, float width)
 			{
-				Position = position;
+				_position = position;
 				State = TorpedoState.Normal;
 				Length = length;
 				Width = width;
@@ -251,20 +251,20 @@ namespace SpaceStrategy
 			public void Destroy(TimeSpan explodeAfter)
 			{
 				State = TorpedoState.MarkedForDestruction;
-				ExplodeAfter = explodeAfter;
+				_explodeAfter = explodeAfter;
 			}
 
 			public bool TryDestruction(TimeSpan dt)
 			{
 				if (State == TorpedoState.MarkedForDestruction) {
-					if (ExplodeAfter > dt) {
-						ExplodeAfter -= dt;
+					if (_explodeAfter > dt) {
+						_explodeAfter -= dt;
 						return false;
 					}
 
-					ExplodeAfter = new TimeSpan();
+					_explodeAfter = new TimeSpan();
 					State = TorpedoState.Destroyed;
-					AnimationHelper.CreateAnimation(new RoundExplosionAnimation(new Position(Position + _torpedoSalvo.Position.Location.ToVector() + new Vector(-Length / 2, 0)), new TimeSpan(0, 0, 0, 1), Length / 2, Length * 4));
+					AnimationHelper.CreateAnimation(new RoundExplosionAnimation(new Position(_position + _torpedoSalvo.Position.Location.ToVector() + new Vector(-Length / 2, 0)), new TimeSpan(0, 0, 0, 1), Length / 2, Length * 4));
 
 					//AnimationHelper.CreateAnimation(new SpaceshipRoundExplosionAnimation(this.torpedoSalvo, new Position(this.position+new Vector(-Length/2,0)), new TimeSpan(0, 0, 0, 1), Length / 2, Length * 4));
 					return true;
@@ -280,9 +280,9 @@ namespace SpaceStrategy
 					case TorpedoState.MarkedForDestruction:
 						var path = new GraphicsPath(new PointF[]
 							{
-								Position,
-								Position + new Vector(-Length, +Width / 2),
-								Position + new Vector(-Length, -Width / 2)
+								_position,
+								_position + new Vector(-Length, +Width / 2),
+								_position + new Vector(-Length, -Width / 2)
 							},
 							new[]
 							{

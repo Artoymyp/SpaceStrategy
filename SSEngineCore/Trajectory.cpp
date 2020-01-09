@@ -38,7 +38,7 @@ namespace SpaceStrategy
 					m_DistanceAfterLastTurn = 0;
 				}
 				float usedDistance = 0;
-				float segmentLength = position.Location().DistanceTo(curPoint);
+				const float segmentLength = position.Location().DistanceTo(curPoint);
 				if (distance >= segmentLength)
 				{
 					position.Location(curPoint);

@@ -18,9 +18,9 @@ namespace SSCoreTests
 
 		TEST_METHOD(PointComponentsTest)
 		{
-			float y = 12.5;
-			float x = 10.5;
-			Point2d v = Point2d(x, y);
+			const float y = 12.5;
+			const float x = 10.5;
+			const Point2d v = Point2d(x, y);
 
 			Assert::AreEqual(x, v.X(), L"X component is wrong.");
 			Assert::AreEqual(y, v.Y(), L"Y component is wrong.");
@@ -28,16 +28,16 @@ namespace SSCoreTests
 
 		TEST_METHOD(PointsEqualUnequalTest)
 		{
-			float x = 10;
-			float y = 11.5;
-			float y1 = 12.5;
-			float x1 = 10.5;
+			const float x = 10;
+			const float y = 11.5;
+			const float y1 = 12.5;
+			const float x1 = 10.5;
 
-			Point2d p11 = Point2d(x, y);
-			Point2d p12 = Point2d(x, y);
-			Point2d p21 = Point2d(x1, y);
-			Point2d p22 = Point2d(x, y1);
-			Point2d p23 = Point2d(x1, y1);
+			const Point2d p11 = Point2d(x, y);
+			const Point2d p12 = Point2d(x, y);
+			const Point2d p21 = Point2d(x1, y);
+			const Point2d p22 = Point2d(x, y1);
+			const Point2d p23 = Point2d(x1, y1);
 
 			Assert::IsTrue(p11 == p12);
 			Assert::IsFalse(p11 == p21);

@@ -104,7 +104,7 @@ namespace SpaceStrategy
 
 	public abstract class CriticalDamageBase
 	{
-		public CriticalDamageBase(bool isRepairable)
+		protected CriticalDamageBase(bool isRepairable)
 		{
 			IsRepairable = isRepairable;
 		}
@@ -494,7 +494,7 @@ namespace SpaceStrategy
 			switch (specialOrder) {
 				case GothicOrder.ReloadOrdnance:
 					SpecialOrder = specialOrder;
-					IEnumerable<TorpedoWeapon> torpedoesReloaded = _weapons.Where(a => a is TorpedoWeapon).Select(a => a as TorpedoWeapon);
+					IEnumerable<TorpedoWeapon> torpedoesReloaded = _weapons.OfType<TorpedoWeapon>();
 					foreach (TorpedoWeapon torpedoReloaded in torpedoesReloaded) torpedoReloaded.Reload();
 					break;
 
@@ -614,8 +614,7 @@ namespace SpaceStrategy
 
 		internal void RestoreCriticalDamage()
 		{
-			int restoreAttempts;
-			restoreAttempts = !BlastMarkersAtBase.Any() ? HitPoints : GeometryHelper.RoundUp(HitPoints / 2.0);
+			int restoreAttempts = !BlastMarkersAtBase.Any() ? HitPoints : GeometryHelper.RoundUp(HitPoints / 2.0);
 			CriticalDamage.FixDamage(restoreAttempts);
 		}
 

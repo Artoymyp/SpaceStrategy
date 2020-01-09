@@ -161,8 +161,8 @@ namespace SpaceStrategy
 
 		protected virtual void OnNewBlastMarkerContact(IEnumerable<BlastMarker> newBlastMarkers)
 		{
-			ShieldActiveAnimation newAnimation;
 			if (_owner.Class.Shield > 0 && _owner.IsDestroyed == CatastrophicDamage.None) {
+				ShieldActiveAnimation newAnimation;
 				if (_shieldAnimation == null) {
 					newAnimation = new ShieldActiveAnimation(_owner, true);
 					_shieldAnimation = newAnimation;
@@ -174,9 +174,7 @@ namespace SpaceStrategy
 				AnimationHelper.CreateAnimation(newAnimation);
 			}
 
-			if (NewBlastMarkerContact != null) {
-				NewBlastMarkerContact(this, new NewBlastMarkersContactEventArgs(newBlastMarkers));
-			}
+			NewBlastMarkerContact?.Invoke(this, new NewBlastMarkersContactEventArgs(newBlastMarkers));
 		}
 	}
 
@@ -185,7 +183,7 @@ namespace SpaceStrategy
 	{
 		BlastMarkersAtBase _blastMarkersAtBase;
 
-		public GothicSpaceshipBase(Game game, Position position, SpaceshipClass spaceshipClass, Player owner)
+		protected GothicSpaceshipBase(Game game, Position position, SpaceshipClass spaceshipClass, Player owner)
 			: base(game, position, spaceshipClass.Speed)
 		{
 			Class = spaceshipClass;

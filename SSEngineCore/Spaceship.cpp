@@ -11,7 +11,7 @@ namespace SpaceStrategy
 	Spaceship::Spaceship(IMovementManager& movementManager) :
 		m_trajectory(movementManager.CreateTrajectory())
 	{
-		int i = 1;
+		const int i = 1;
 		int j = i + 1;
 	}
 
@@ -21,7 +21,7 @@ namespace SpaceStrategy
 		return navigator.GetMoveArea(0, m_MoveType, m_Position);
 	}
 
-	void Spaceship::SetCourseTo(const Point2d& target)
+	void Spaceship::SetCourseTo(const Point2d& target) const
 	{
 		m_trajectory->AddSegment(target);
 	}

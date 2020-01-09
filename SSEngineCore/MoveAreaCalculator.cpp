@@ -22,7 +22,7 @@ namespace SpaceStrategy
 		}
 		Point2d endOfStraightSegment;
 		{
-			Vector2d straightVector = m_Position.RadianDirection().ToVector2d() * min(
+			const Vector2d straightVector = m_Position.RadianDirection().ToVector2d() * min(
 				m_MoveType.Distance(), m_MoveType.StraightBeforeTurn() - m_DistanceAfterLastTurn);
 			endOfStraightSegment = m_Position.Location() + straightVector;
 
@@ -32,11 +32,11 @@ namespace SpaceStrategy
 				area.Add(LineSeg(m_Position.Location(), endOfStraightSegment));
 			}
 		}
-		float distanceAfterFirstTurn = max(
+		const float distanceAfterFirstTurn = max(
 			0, m_MoveType.Distance() - m_MoveType.StraightBeforeTurn() + m_DistanceAfterLastTurn);
 		if (m_MoveType.TurnCount() == 2)
 		{
-			float distanceAfterSecondTurn = max(
+			const float distanceAfterSecondTurn = max(
 				0, m_MoveType.Distance() - m_MoveType.StraightBeforeTurn() * 2 + m_DistanceAfterLastTurn);
 			if (distanceAfterFirstTurn > 0)
 			{
@@ -45,16 +45,16 @@ namespace SpaceStrategy
 			}
 			if (distanceAfterSecondTurn > 0)
 			{
-				Point2d leftTurnPoint = Point2d(
+				const Point2d leftTurnPoint = Point2d(
 					endOfStraightSegment + (m_Position.RadianDirection() + m_MoveType.TurnAngle()).ToVector2d() *
 					m_MoveType.StraightBeforeTurn());
-				Point2d rightTurnPoint = Point2d(
+				const Point2d rightTurnPoint = Point2d(
 					endOfStraightSegment + (m_Position.RadianDirection() - m_MoveType.TurnAngle()).ToVector2d() *
 					m_MoveType.StraightBeforeTurn());
-				Point2d maxLeftTurnPoint = Point2d(
+				const Point2d maxLeftTurnPoint = Point2d(
 					leftTurnPoint + (m_Position.RadianDirection() + 2 * m_MoveType.TurnAngle()).ToVector2d() *
 					distanceAfterSecondTurn);
-				Point2d maxRightTurnPoint = Point2d(
+				const Point2d maxRightTurnPoint = Point2d(
 					rightTurnPoint + (m_Position.RadianDirection() - 2 * m_MoveType.TurnAngle()).ToVector2d() *
 					distanceAfterSecondTurn);
 				area.Add(leftTurnPoint);
@@ -73,10 +73,10 @@ namespace SpaceStrategy
 			}
 			else
 			{
-				Point2d leftCorner = Point2d(
+				const Point2d leftCorner = Point2d(
 					endOfStraightSegment + (m_Position.RadianDirection() + m_MoveType.TurnAngle()).ToVector2d() *
 					distanceAfterFirstTurn);
-				Point2d rightCorner = Point2d(
+				const Point2d rightCorner = Point2d(
 					endOfStraightSegment + (m_Position.RadianDirection() - m_MoveType.TurnAngle()).ToVector2d() *
 					distanceAfterFirstTurn);
 				area.Add(leftCorner);
@@ -88,10 +88,10 @@ namespace SpaceStrategy
 		}
 		if (distanceAfterFirstTurn > 0)
 		{
-			Point2d leftCorner = Point2d(
+			const Point2d leftCorner = Point2d(
 				endOfStraightSegment + (m_Position.RadianDirection() + m_MoveType.TurnAngle()).ToVector2d() *
 				distanceAfterFirstTurn);
-			Point2d rightCorner = Point2d(
+			const Point2d rightCorner = Point2d(
 				endOfStraightSegment + (m_Position.RadianDirection() - m_MoveType.TurnAngle()).ToVector2d() *
 				distanceAfterFirstTurn);
 			area.Add(leftCorner);

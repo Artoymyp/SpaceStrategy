@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using SpaceStrategy.Animation;
 
@@ -66,7 +67,7 @@ namespace SpaceStrategy
 					OwnerSpaceship,
 					attackedSide.ToString(),
 					attackedSpaceship,
-					distance.ToString(),
+					distance.ToString(CultureInfo.InvariantCulture),
 					targetOrientation.ToString()));
 				if (OwnerSpaceship.SpecialOrder == GothicOrder.LockOn && damage < diceCount) {
 					damage += Dice.RolledDicesCount(6, diceCount - damage, 6, "Корректировка прицела.");

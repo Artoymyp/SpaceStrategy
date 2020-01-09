@@ -34,7 +34,7 @@ namespace SSCoreTests
 		{
 			//Setup
 			AssertThatTrajectoryHasNoPoints();
-			Position2d correctPosition;
+			const Position2d correctPosition;
 			Position2d position = correctPosition;
 
 			//Affect
@@ -47,7 +47,7 @@ namespace SSCoreTests
 		TEST_METHOD(Trajectory_UpdatesDistanceAfterLastTurn_UpdatesPosition_AfterMoving)
 		{
 			//Setup
-			float distance = 1;
+			const float distance = 1;
 			trajectory->AddSegment(Point2d(0, distance * 2));
 
 			//Affect
@@ -77,7 +77,7 @@ namespace SSCoreTests
 		TEST_METHOD(TrajectoryMovesPositionNoFartherThanPossible)
 		{
 			//Setup
-			float maxDistance = 1;
+			const float maxDistance = 1;
 			trajectory->AddSegment(Point2d(0, maxDistance));
 
 			//Affect
@@ -92,7 +92,7 @@ namespace SSCoreTests
 			//Assert::AreEqual(ship->Position(), correctPosition);
 		}
 
-		void AssertThatTrajectoryHasNoPoints()
+		void AssertThatTrajectoryHasNoPoints() const
 		{
 			Assert::IsTrue(trajectory->IsEmpty());
 		}

@@ -29,7 +29,7 @@ namespace SpaceStrategy
 		Spaceship(IMovementManager& movementManager);
 		MoveArea GetMoveArea() const;
 		void Move(float distance);
-		void SetCourseTo(const Point2d& target);
+		void SetCourseTo(const Point2d& target) const;
 	private:
 		std::unique_ptr<ITrajectory> m_trajectory;
 		Position2d m_Position;

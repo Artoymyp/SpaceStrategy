@@ -14,7 +14,7 @@ namespace SSCoreTests
 	TEST_CLASS(DirectionTests)
 	{
 	public:
-		TEST_METHOD(DirectionPlusFloat)
+		TEST_METHOD(DirectionPlusDouble)
 		{
 			Assert::AreEqual(Direction(M_PI / 4.0), Direction(M_PI / 4.0 * 7.0) + M_PI_2);
 		}
@@ -26,16 +26,16 @@ namespace SSCoreTests
 
 		TEST_METHOD(DirectionEqualTest)
 		{
-			float angle = 1;
-			Direction dir1 = Direction(angle);
-			Direction dir2 = Direction(angle);
+			const double angle = 1;
+			const Direction dir1 = Direction(angle);
+			const Direction dir2 = Direction(angle);
 			Assert::IsTrue(dir1 == dir2);
 		}
 
-		TEST_METHOD(DirectionEqualToFloatTest)
+		TEST_METHOD(DirectionEqualToDoubleTest)
 		{
-			float dir = 1;
-			Direction direction = Direction(dir + 2 * M_PI);
+			const double dir = 1;
+			const Direction direction = Direction(dir + 2 * M_PI);
 			Assert::IsTrue(direction == dir);
 			Assert::IsTrue(direction == dir + 2 * M_PI);
 			Assert::IsTrue(direction == dir + 4 * M_PI);

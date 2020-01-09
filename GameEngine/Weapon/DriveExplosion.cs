@@ -6,7 +6,7 @@ namespace SpaceStrategy.Weapon
 {
 	abstract class DriveExplosionWeapon : LanceWeapon
 	{
-		public DriveExplosionWeapon(GothicSpaceship owner, float range, int power)
+		protected DriveExplosionWeapon(GothicSpaceship owner, float range, int power)
 			: base(owner, range, power, Side.All) { }
 
 		public override int Power

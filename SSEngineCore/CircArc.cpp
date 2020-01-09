@@ -22,13 +22,13 @@ namespace SpaceStrategy
 
 	Point2d CircArc::GetStartPoint() const
 	{
-		auto v = m_StartDir.ToVector2d();
+		const auto v = m_StartDir.ToVector2d();
 		return m_Center + v * m_Radius;
 	}
 
 	Point2d CircArc::GetEndPoint() const
 	{
-		auto v = m_EndDir.ToVector2d();
+		const auto v = m_EndDir.ToVector2d();
 		return m_Center + v * m_Radius;
 	}
 

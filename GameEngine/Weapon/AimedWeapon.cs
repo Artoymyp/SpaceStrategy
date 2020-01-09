@@ -5,7 +5,9 @@ namespace SpaceStrategy
 {
 	public abstract class AimedWeapon : SpaceshipWeapon
 	{
-		public AimedWeapon(GothicSpaceship owner, GameDataSet.SpaceshipClassWeaponryRow data) : base(owner, data) { }
+		protected AimedWeapon(GothicSpaceship owner, GameDataSet.SpaceshipClassWeaponryRow data) 
+			: base(owner, data)
+		{ }
 
 		internal sealed override void Attack(GothicSpaceshipBase attackedSpaceship, IEnumerable<SpaceshipWeapon> allAttackingWeapons)
 		{

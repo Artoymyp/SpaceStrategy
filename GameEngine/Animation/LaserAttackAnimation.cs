@@ -48,11 +48,10 @@ namespace SpaceStrategy.Animation
 		public override void Draw(Graphics dc)
 		{
 			float startDiam = 0;
-			float curDiam;
 			float endDiam = 0.7F;
 			float blobPhase = 0.7F;
 			float explosionPhase = 0.8F;
-			curDiam = AnimationHelper.AnimateFloat(Phase < blobPhase ? Phase * 2 : 0, startDiam, endDiam);
+			float curDiam = AnimationHelper.AnimateFloat(Phase < blobPhase ? Phase * 2 : 0, startDiam, endDiam);
 			var rectTopLeftPoint = new Point2d(-curDiam / 2, -curDiam / 2);
 			var rectSize = new SizeF(curDiam, curDiam);
 

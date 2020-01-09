@@ -31,7 +31,7 @@ namespace SpaceStrategy
 		internal int NormalPower;
 		protected int power;
 
-		public SpaceshipWeapon(GothicSpaceship owner, Side side, float minRange, float range, int power, WeaponType type)
+		protected SpaceshipWeapon(GothicSpaceship owner, Side side, float minRange, float range, int power, WeaponType type)
 		{
 			OwnerSpaceship = owner;
 			SpaceshipSide = side;
@@ -44,7 +44,7 @@ namespace SpaceStrategy
 			Name = type.ToString();
 		}
 
-		public SpaceshipWeapon(GothicSpaceship owner, GameDataSet.SpaceshipClassWeaponryRow data) :
+		protected SpaceshipWeapon(GothicSpaceship owner, GameDataSet.SpaceshipClassWeaponryRow data) :
 			this(owner, GetSide(data.SpaceshipSide), data.MinRange, data.Range, data.Power, GetWeaponType(data.WeaponType)) { }
 
 		public Game Game

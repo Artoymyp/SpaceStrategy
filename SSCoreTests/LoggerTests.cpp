@@ -27,7 +27,7 @@ namespace SSCoreTests
 			class EventGeneratorApplication
 			{
 			public:
-				void main()
+				static void main()
 				{
 					std::ofstream my_file;
 					my_file.open("log.txt");
@@ -37,7 +37,7 @@ namespace SSCoreTests
 			};
 
 		public:
-			void GenerateEvent()
+			static void GenerateEvent()
 			{
 				std::thread t(&EventGeneratorApplication::main, EventGeneratorApplication());
 				t.join();
@@ -49,7 +49,7 @@ namespace SSCoreTests
 		class LogEventReader
 		{
 		public:
-			LogEvent GetEvent(string logFilename, int timeout_in_ms)
+			LogEvent GetEvent(const string& logFilename, int timeout_in_ms) const
 			{
 				ifstream logFile(logFilename);
 				if (!logFile.is_open())
@@ -71,20 +71,20 @@ namespace SSCoreTests
 		LogEventReader eventReader;
 		EventSource eventSource;
 
-		void EventReaderHasReadEvent()
+		void EventReaderHasReadEvent() const
 		{
 			try
 			{
-				auto s = eventReader.GetEvent("log.txt", 20);
+				const auto s = eventReader.GetEvent("log.txt", 20);
 				Assert::IsTrue(s.length() > 0, L"No log event was read.");
 			}
-			catch (exception ex)
+			catch (exception& ex)
 			{
 				Assert::Fail(GetWC(ex.what()));
 			}
 		}
 
-		const wchar_t* GetWC(const char* c)
+		static const wchar_t* GetWC(const char* c)
 		{
 			const size_t cSize = strlen(c) + 1;
 			wchar_t* wc = new wchar_t[cSize];

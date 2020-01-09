@@ -344,7 +344,7 @@ namespace SpaceshipStrategy.ViewModels
 	{
 		string _name;
 
-		public SpaceshipStatusViewModel(string name, Bitmap image)
+		protected SpaceshipStatusViewModel(string name, Bitmap image)
 		{
 			Image = image.ToBitmapImage();
 			_name = name;

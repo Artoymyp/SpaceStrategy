@@ -21,7 +21,7 @@ namespace SpaceStrategy
 
 	Vector2d Vector2d::Normalize() const
 	{
-		float length = Length();
+		const float length = Length();
 		if (length == 0)
 		{
 			throw EXCEPTION_FLT_INVALID_OPERATION;
@@ -36,7 +36,7 @@ namespace SpaceStrategy
 
 	bool Vector2d::operator==(const Vector2d& right) const
 	{
-		float precision = 0.0001f;
+		const float precision = 0.0001f;
 		if (abs(X() - right.X()) < precision &&
 			abs(Y() - right.Y()) < precision)
 			return true;
