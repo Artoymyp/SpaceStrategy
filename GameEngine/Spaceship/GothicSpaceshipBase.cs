@@ -304,13 +304,9 @@ namespace SpaceStrategy
 				//Place blast markers.
 				Point2d attackerLocation = attacker.OwnerSpaceship.Position.Location;
 
-				Vector attackDir = attackerLocation.VectorTo(Position.Location);
-				Point2d preferredBmPosition;
+				Vector attackDir = attackerLocation.VectorTo(Position.Location).GetNormalized();
 				double bmRingRadius = (Diameter / 2 + BlastMarker.CollisionRadius) * 0.9;
-				{
-					attackDir.Normalize();
-					preferredBmPosition = attackerLocation + attackDir * (attackerLocation.DistanceTo(Position) - bmRingRadius);
-				}
+				Point2d preferredBmPosition = attackerLocation + attackDir * (attackerLocation.DistanceTo(Position) - bmRingRadius);
 
 				for (int i = 0; i < shieldAbsorbedDamage; i++) _blastMarkersAtBase.CreateBlastMarkerAtBase(preferredBmPosition, timeBeforeAttackImpact);
 			}

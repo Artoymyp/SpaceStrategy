@@ -57,7 +57,7 @@ namespace SpaceStrategy
 				curDir = new Vector(1, 0);
 			}
 			else {
-				curDir.Normalize();
+				curDir = curDir.GetNormalized();
 			}
 
 			double dist = GeometryHelper.Distance(curDir.ToRadian() + GeometryHelper.PiDiv4, curDir.ToRadian() - GeometryHelper.PiDiv4, true);

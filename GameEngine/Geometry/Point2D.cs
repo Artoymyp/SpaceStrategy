@@ -11,20 +11,18 @@ namespace SpaceStrategy
 			R = y;
 		}
 
-		public double R { get; set; }
+		public double R { get; }
 
-		public double Ro { get; set; }
+		public double Ro { get; }
 
 		public double X
 		{
 			get { return Ro; }
-			set { Ro = value; }
 		}
 
 		public double Y
 		{
 			get { return R; }
-			set { R = value; }
 		}
 
 		public static implicit operator PointF(Point2d p)
@@ -35,11 +33,6 @@ namespace SpaceStrategy
 		public static Point2d operator -(Point2d p, Vector v)
 		{
 			return new Point2d(p.Ro - v.X, p.R - v.Y);
-		}
-
-		public static bool operator !=(Point2d l, Point2d r)
-		{
-			return !(l == r);
 		}
 
 		public static Point2d operator *(Point2d l, double r)
@@ -65,6 +58,28 @@ namespace SpaceStrategy
 		public static bool operator ==(Point2d l, Point2d r)
 		{
 			return l.ToVector() == r.ToVector();
+		}
+
+		public static bool operator !=(Point2d l, Point2d r)
+		{
+			return !(l == r);
+		}
+
+		public bool Equals(Point2d other)
+		{
+			return R.Equals(other.R) && Ro.Equals(other.Ro);
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is Point2d other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked {
+				return (R.GetHashCode() * 397) ^ Ro.GetHashCode();
+			}
 		}
 
 		public double DistanceSqrTo(Point2d targetPoint)

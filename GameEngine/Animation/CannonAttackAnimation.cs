@@ -42,7 +42,7 @@ namespace SpaceStrategy.Animation
 				var targetShift = new Vector(randX, randY);
 				Vector attackDir = globalWeaponPos.VectorTo(target.Position.Location + targetShift);
 				double attackDist = attackDir.Length;
-				attackDir.Normalize();
+				attackDir = attackDir.GetNormalized();
 				_allFireBlobs.Add(new FireBlob(new Position(globalWeaponPos, attackDir), attackDist, hitWeapons.Contains(i)));
 
 				//Calculating animation duration;

@@ -56,8 +56,7 @@ namespace SpaceStrategy.Animation
 			var rectSize = new SizeF(curDiam, curDiam);
 
 			Vector dir = _source.OwnerSpaceship.Position.Location.VectorTo(_target.Position);
-			Vector dirNorm = dir;
-			dirNorm.Normalize();
+			Vector dirNorm = dir.GetNormalized();
 			for (int i = 0; i < _workingWeapons.Count; i++) {
 				Position weaponPos;
 				if (_source.OwnerSpaceship.WeaponPlacements.TryGetValue(_source, out List<Position> weaponPoses)) {

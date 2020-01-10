@@ -92,7 +92,7 @@ namespace SpaceStrategy
 						newDir = new Vector(1, 0);
 					}
 
-					newDir.Normalize();
+					newDir = newDir.GetNormalized();
 					CreatedSpaceship.Position = new Position(curPos, newDir);
 				}
 			}

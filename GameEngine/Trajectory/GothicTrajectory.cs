@@ -168,8 +168,7 @@ namespace SpaceStrategy
 			for (int i = 0; i < _trajectoryPoints.Count - 1; i++) {
 				curDist += _trajectoryPoints[i].DistanceTo(_trajectoryPoints[i + 1]);
 				if (curDist > distance) {
-					Vector curDir = _trajectoryPoints[i].VectorTo(_trajectoryPoints[i + 1]);
-					curDir.Normalize();
+					Vector curDir = _trajectoryPoints[i].VectorTo(_trajectoryPoints[i + 1]).GetNormalized();
 					Point2d resultPoint = _trajectoryPoints[i + 1] - curDir * (curDist - distance);
 					return new Position(resultPoint, curDir);
 				}
@@ -179,8 +178,7 @@ namespace SpaceStrategy
 				return Position;
 			}
 
-			Vector lasDir = _trajectoryPoints[_trajectoryPoints.Count - 2].VectorTo(_trajectoryPoints[_trajectoryPoints.Count - 1]);
-			lasDir.Normalize();
+			Vector lasDir = _trajectoryPoints[_trajectoryPoints.Count - 2].VectorTo(_trajectoryPoints[_trajectoryPoints.Count - 1]).GetNormalized();
 			return new Position(_trajectoryPoints.Last(), lasDir);
 		}
 
@@ -301,17 +299,14 @@ namespace SpaceStrategy
 						Point2d startOfAfterTurnPart = new Point2d(p.TurnIsPossibleAtDistance, 0).TransformBy(Position);
 						if (startOfAfterTurnPart != StartPoint && startOfAfterTurnPart != endPoint) {
 							_trajectoryPoints.Insert(1, startOfAfterTurnPart);
-							Vector part1Dir = _trajectoryPoints[0].VectorTo(_trajectoryPoints[1]);
-							Vector part2Dir = _trajectoryPoints[1].VectorTo(_trajectoryPoints[2]);
-							part1Dir.Normalize();
-							part2Dir.Normalize();
+							Vector part1Dir = _trajectoryPoints[0].VectorTo(_trajectoryPoints[1]).GetNormalized();
+							Vector part2Dir = _trajectoryPoints[1].VectorTo(_trajectoryPoints[2]).GetNormalized();
 							if (part1Dir != part2Dir) {
 								MaxTurnCount--;
 							}
 						}
 						else {
-							Vector part1Dir = _trajectoryPoints[0].VectorTo(_trajectoryPoints[1]);
-							part1Dir.Normalize();
+							Vector part1Dir = _trajectoryPoints[0].VectorTo(_trajectoryPoints[1]).GetNormalized();
 							if (part1Dir != Position.Direction) {
 								MaxTurnCount--;
 							}

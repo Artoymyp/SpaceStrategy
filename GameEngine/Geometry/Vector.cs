@@ -4,8 +4,8 @@ namespace SpaceStrategy
 {
 	public struct Vector
 	{
-		public double X;
-		public double Y;
+		public readonly double X;
+		public readonly double Y;
 
 		public Vector(double x, double y)
 		{
@@ -21,11 +21,6 @@ namespace SpaceStrategy
 		public static Vector operator -(Vector l, Vector r)
 		{
 			return new Vector(l.X - r.X, l.Y - r.Y);
-		}
-
-		public static bool operator !=(Vector left, Vector right)
-		{
-			return !(left == right);
 		}
 
 		public static Vector operator *(Vector l, double r)
@@ -58,12 +53,33 @@ namespace SpaceStrategy
 			return false;
 		}
 
-		public void Normalize()
+		public static bool operator !=(Vector left, Vector right)
+		{
+			return !(left == right);
+		}
+
+		public bool Equals(Vector other)
+		{
+			return X.Equals(other.X) && Y.Equals(other.Y);
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is Point2d other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked {
+				return (X.GetHashCode() * 397) ^ Y.GetHashCode();
+			}
+		}
+
+		public Vector GetNormalized()
 		{
 			var v = new System.Windows.Vector(X, Y);
 			v.Normalize();
-			X = v.X;
-			Y = v.Y;
+			return new Vector(v.X, v.Y);
 		}
 
 		public Point2d ToPoint2d()

@@ -8,9 +8,7 @@ namespace SpaceStrategy
 			: base(owner, startPoint, endPoint)
 		{
 			Length = startPoint.DistanceTo(endPoint);
-			Vector dirVector = startPoint.VectorTo(endPoint);
-			dirVector.Normalize();
-			Direction = dirVector;
+			Direction = startPoint.VectorTo(endPoint).GetNormalized();
 			Position = new Position(startPoint, Direction);
 		}
 
