@@ -7,7 +7,6 @@ namespace SpaceStrategy
 	public class PositioningZone
 	{
 		Point2d _bottomRightPoint;
-		bool _creatingSpaceship;
 		int _maxSpaceshipsCount;
 		Point2d _topLeftPoint;
 
@@ -101,7 +100,6 @@ namespace SpaceStrategy
 		internal void StartPositioning()
 		{
 			if (CanCreateMoreSpaceships) {
-				_creatingSpaceship = true;
 				OnPositioningBegin(this, new EventArgs());
 			}
 		}
@@ -132,7 +130,6 @@ namespace SpaceStrategy
 
 			_maxSpaceshipsCount--;
 			if (!CanCreateMoreSpaceships) {
-				_creatingSpaceship = false;
 				OnPositioningComplete(this, new EventArgs());
 			}
 		}
