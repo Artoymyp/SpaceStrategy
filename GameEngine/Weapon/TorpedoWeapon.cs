@@ -53,12 +53,10 @@ namespace SpaceStrategy
 		protected override void AimingOnTarget(object sender, CursorEventArgs e)
 		{
 			Vector curDir = _launchedTorpedo.Position.Location.VectorTo(e.Position);
-			if (curDir == new Vector()) {
-				curDir = new Vector(1, 0);
-			}
-			else {
-				curDir = curDir.GetNormalized();
-			}
+			curDir =
+				curDir == new Vector()
+					? new Vector(1, 0)
+					: curDir.GetNormalized();
 
 			double dist = GeometryHelper.Distance(curDir.ToRadian() + GeometryHelper.PiDiv4, curDir.ToRadian() - GeometryHelper.PiDiv4, true);
 			var pos = new Position(_launchedTorpedo.Position.Location, curDir);
@@ -67,12 +65,10 @@ namespace SpaceStrategy
 			//	launchedTorpedo.Position = pos;
 			//else
 			//	launchedTorpedo.Position = new Position(launchedTorpedo.Position.Location, Owner.Position.Direction);
-			if (GeometryHelper.IsBetween(pos.Angle + GeometryHelper.PiDiv4, pos.Angle - GeometryHelper.PiDiv4, OwnerSpaceship.Position.Angle)) {
-				_launchedTorpedo.Position = pos;
-			}
-			else {
-				_launchedTorpedo.Position = new Position(_launchedTorpedo.Position.Location, OwnerSpaceship.Position.Direction);
-			}
+			_launchedTorpedo.Position = 
+				GeometryHelper.IsBetween(pos.Angle + GeometryHelper.PiDiv4, pos.Angle - GeometryHelper.PiDiv4, OwnerSpaceship.Position.Angle) 
+					? pos 
+					: new Position(_launchedTorpedo.Position.Location, OwnerSpaceship.Position.Direction);
 		}
 
 		protected override void LockOnTarget(object sender, Point2dSelectEventArgs e)

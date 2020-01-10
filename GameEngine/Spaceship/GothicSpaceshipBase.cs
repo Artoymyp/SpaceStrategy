@@ -142,12 +142,12 @@ namespace SpaceStrategy
 					}
 
 				if (blastedRangeAroundPreferredPosition != null) {
-					if (GeometryHelper.Distance(blastedRangeAroundPreferredPosition.Item1, preferredBmPositionPolar.Ro, true) > GeometryHelper.Distance(preferredBmPositionPolar.Ro, blastedRangeAroundPreferredPosition.Item2, true)) {
-						actualBmPosition = new Point2d(blastedRangeAroundPreferredPosition.Item1, preferredBmPositionPolar.R * 0.9).ToEuclidCs(_owner.Position.Location);
-					}
-					else {
-						actualBmPosition = new Point2d(blastedRangeAroundPreferredPosition.Item2, preferredBmPositionPolar.R * 0.9).ToEuclidCs(_owner.Position.Location);
-					}
+					double d = 
+						GeometryHelper.Distance(blastedRangeAroundPreferredPosition.Item1, preferredBmPositionPolar.Ro, true) > GeometryHelper.Distance(preferredBmPositionPolar.Ro, blastedRangeAroundPreferredPosition.Item2, true)
+							? blastedRangeAroundPreferredPosition.Item1
+							: blastedRangeAroundPreferredPosition.Item2;
+
+					actualBmPosition = new Point2d(d, preferredBmPositionPolar.R * 0.9).ToEuclidCs(_owner.Position.Location);
 				}
 				else {
 					actualBmPosition = preferredPosition;
@@ -233,14 +233,7 @@ namespace SpaceStrategy
 
 		internal BlastMarkersAtBase BlastMarkersAtBase
 		{
-			get
-			{
-				if (_blastMarkersAtBase == null) {
-					_blastMarkersAtBase = new BlastMarkersAtBase(this);
-				}
-
-				return _blastMarkersAtBase;
-			}
+			get { return _blastMarkersAtBase ?? (_blastMarkersAtBase = new BlastMarkersAtBase(this)); }
 		}
 
 		//protected set { hitPoints = Math.Max(0, value); } }

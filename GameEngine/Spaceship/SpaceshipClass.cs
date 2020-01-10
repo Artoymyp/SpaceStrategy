@@ -47,12 +47,7 @@ namespace SpaceStrategy
 
 			IEnumerable<GothicSpaceshipBonus> bonuses = GameDataAdapter.GetBonusesByClassName(ClassName);
 
-			if (bonuses.Any(a => a.Name == GothicSpaceshipBonusName.ImprovedThrusters)) {
-				AllAheadFullMultiplier = 5;
-			}
-			else {
-				AllAheadFullMultiplier = 4;
-			}
+			AllAheadFullMultiplier = bonuses.Any(a => a.Name == GothicSpaceshipBonusName.ImprovedThrusters) ? 5 : 4;
 		}
 
 		public int AllAheadFullMultiplier { get; }
@@ -101,7 +96,7 @@ namespace SpaceStrategy
 				case "Ordnance": return SpaceshipCategory.Ordnance;
 				case "Defense": return SpaceshipCategory.Defense;
 				default:
-					throw new ArgumentOutOfRangeException("categoryName", "Invalid spaceship category name");
+					throw new ArgumentOutOfRangeException(nameof(categoryName), "Invalid spaceship category name");
 			}
 		}
 	}

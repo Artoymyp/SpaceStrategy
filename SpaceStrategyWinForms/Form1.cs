@@ -71,8 +71,7 @@ namespace SpaceStrategyWinForms
 		void dataGridView1_SelectionChanged(object sender, EventArgs e)
 		{
 			if (spaceshipLibraryGridView.CurrentRow != null) {
-				var selectedSpaceshipClass = spaceshipLibraryGridView.CurrentRow.DataBoundItem as SpaceshipClass;
-				if (selectedSpaceshipClass != null) {
+				if (spaceshipLibraryGridView.CurrentRow.DataBoundItem is SpaceshipClass selectedSpaceshipClass) {
 					_gameEngine.CurrentPlayer.PositioningZone.BeginSpaceshipCreation(selectedSpaceshipClass);
 				}
 			}
@@ -124,8 +123,10 @@ namespace SpaceStrategyWinForms
 			}
 			else if (e.PropertyName == "GameState") {
 				if (_gameEngine.GameState == GameState.End) {
-					var endDialog = new EndDialog();
-					endDialog.DataContext = _gameEngine.Players;
+					var endDialog = new EndDialog
+					{
+						DataContext = _gameEngine.Players
+					};
 					endDialog.ShowDialog();
 				}
 			}

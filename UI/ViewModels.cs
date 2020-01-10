@@ -52,19 +52,13 @@ namespace SpaceshipStrategy.ViewModels
 			target.SetValue(PreviewSpecialOrderAttachedProperty, value);
 		}
 
-		static void OnPreviewSpecialOrderAttachedPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+		static void OnPreviewSpecialOrderAttachedPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
 		{
 			if (Game != null) {
-				var b = o as Button;
-				if (b != null) {
-					var vm = b.DataContext as SpecialOrderCommand;
-					if (vm != null) {
-						if ((bool)e.NewValue) {
-							Game.SelectedSpaceship.PreviewSpecialOrder(vm.Order);
-						}
-						else {
-							Game.SelectedSpaceship.PreviewSpecialOrder(GothicOrder.None);
-						}
+				if (dependencyObject is Button button) {
+					if (button.DataContext is SpecialOrderCommand vm) {
+						GothicOrder order = (bool)e.NewValue ? vm.Order : GothicOrder.None;
+						Game.SelectedSpaceship.PreviewSpecialOrder(order);
 					}
 				}
 			}
@@ -180,17 +174,18 @@ namespace SpaceshipStrategy.ViewModels
 
 		static DamageTypeToViewModelConverter()
 		{
-			_StatusesDictionary = new Dictionary<Type, SpaceshipStatusViewModel>();
-			_StatusesDictionary.Add(typeof(FireDamage), new SpaceshipDamageStatusViewModel("Пожар!", Resources.DamagedFire, "Пожар. В конце каждого хода пожар попытаются потушить (1к6). В случае провала корабль получить 1 очко урона."));
-			_StatusesDictionary.Add(typeof(ThrustersDamaged), new SpaceshipDamageStatusViewModel("Основные двигатели повреждены!", Resources.DamagedSpeed, "Скорость снижена на 10 пунктов до восстановления повреждения."));
-			_StatusesDictionary.Add(typeof(EngineRoomDamaged), new SpaceshipDamageStatusViewModel("Маневровые двигатели повреждены!", Resources.DamagedTurn, "Корабль не может поворачивать до восстановления повреждения."));
+			_StatusesDictionary = new Dictionary<Type, SpaceshipStatusViewModel>
+			{
+				{typeof(FireDamage), new SpaceshipDamageStatusViewModel("Пожар!", Resources.DamagedFire, "Пожар. В конце каждого хода пожар попытаются потушить (1к6). В случае провала корабль получить 1 очко урона.")},
+				{typeof(ThrustersDamaged), new SpaceshipDamageStatusViewModel("Основные двигатели повреждены!", Resources.DamagedSpeed, "Скорость снижена на 10 пунктов до восстановления повреждения.")},
+				{typeof(EngineRoomDamaged), new SpaceshipDamageStatusViewModel("Маневровые двигатели повреждены!", Resources.DamagedTurn, "Корабль не может поворачивать до восстановления повреждения.")}
+			};
 		}
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			var result = new List<SpaceshipStatusViewModel>();
-			var damageCollection = value as GothicSpaceship.CriticalDamageCollection;
-			if (damageCollection != null) {
+			if (value is GothicSpaceship.CriticalDamageCollection damageCollection) {
 				foreach (CriticalDamageBase damage in damageCollection)
 					if (_StatusesDictionary.TryGetValue(damage.GetType(), out SpaceshipStatusViewModel damageViewModel)) {
 						result.Add(damageViewModel);
@@ -271,10 +266,9 @@ namespace SpaceshipStrategy.ViewModels
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var p = value as IEnumerable<Player>;
-			if (p != null) {
-				IEnumerable<CruiserCrashPlayerPointsViewModel> t = p.Select(a => new CruiserCrashPlayerPointsViewModel(a));
-				return p.Select(a => new CruiserCrashPlayerPointsViewModel(a));
+			if (value is IEnumerable<Player> players) {
+				IEnumerable<CruiserCrashPlayerPointsViewModel> t = players.Select(a => new CruiserCrashPlayerPointsViewModel(a));
+				return players.Select(a => new CruiserCrashPlayerPointsViewModel(a));
 			}
 
 			return new List<Player>();

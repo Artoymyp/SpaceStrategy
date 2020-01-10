@@ -199,8 +199,11 @@ namespace SpaceStrategy
 			: base(game, position, spaceshipClass, owner)
 		{
 			CriticalDamage = new CriticalDamageCollection(this);
-			_weapons = new List<SpaceshipWeapon>();
-			_weapons.Add(new TurretWeapon(this, Class.TurretsPower));
+			_weapons = new List<SpaceshipWeapon>
+			{
+				new TurretWeapon(this, Class.TurretsPower)
+			};
+
 			var weaponsTableAdapter = new SpaceshipClassWeaponryTableAdapter();
 			GameDataSet.SpaceshipClassWeaponryDataTable weaponsTable = weaponsTableAdapter.GetDataBySpaceshipClassId(Class.ClassName);
 			foreach (GameDataSet.SpaceshipClassWeaponryRow weaponDataRow in weaponsTable) {
@@ -444,11 +447,8 @@ namespace SpaceStrategy
 		public void PreviewSpecialOrder(GothicOrder specialOrder)
 		{
 			if (AvailableOrders.Contains(specialOrder)) {
-				if (Trajectory != null) {
-					var trajectory = Trajectory.FirstOrDefault() as GothicTrajectory;
-					if (trajectory != null) {
-						trajectory.PreviewSpecialOrder(specialOrder);
-					}
+				if (Trajectory?.FirstOrDefault() is GothicTrajectory trajectory) {
+					trajectory.PreviewSpecialOrder(specialOrder);
 				}
 			}
 		}
@@ -504,11 +504,8 @@ namespace SpaceStrategy
 				case GothicOrder.LockOn:
 				case GothicOrder.BraceForImpact:
 					SpecialOrder = specialOrder;
-					if (Trajectory != null) {
-						var trajectory = Trajectory.FirstOrDefault() as GothicTrajectory;
-						if (trajectory != null) {
-							trajectory.SetSpecialOrder(specialOrder);
-						}
+					if (Trajectory?.FirstOrDefault() is GothicTrajectory trajectory) {
+						trajectory.SetSpecialOrder(specialOrder);
 					}
 
 					break;
@@ -689,23 +686,17 @@ namespace SpaceStrategy
 				}
 			}
 
-			if (Trajectory != null) {
-				var curTrajectory = Trajectory.FirstOrDefault() as GothicTrajectory;
-				if (curTrajectory != null) {
-					curTrajectory.CutDistanceToMove(Game.Params.BlastMarkerSpeedDamage);
-				}
+			if (Trajectory?.FirstOrDefault() is GothicTrajectory curTrajectory) {
+				curTrajectory.CutDistanceToMove(Game.Params.BlastMarkerSpeedDamage);
 			}
 		}
 
 		int BraceDamage(int damagePoints)
 		{
-			int result;
-			if (SpecialOrder == GothicOrder.BraceForImpact) {
-				result = Dice.RolledDicesCount(6, damagePoints, 4, "Попытка избежать повреждений.");
-			}
-			else {
-				result = damagePoints;
-			}
+			int result = 
+				SpecialOrder == GothicOrder.BraceForImpact 
+					? Dice.RolledDicesCount(6, damagePoints, 4, "Попытка избежать повреждений.") 
+					: damagePoints;
 
 			return result;
 		}

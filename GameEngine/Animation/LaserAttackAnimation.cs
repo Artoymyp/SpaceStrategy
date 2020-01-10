@@ -58,13 +58,10 @@ namespace SpaceStrategy.Animation
 			Vector dir = _source.OwnerSpaceship.Position.Location.VectorTo(_target.Position);
 			Vector dirNorm = dir.GetNormalized();
 			for (int i = 0; i < _workingWeapons.Count; i++) {
-				Position weaponPos;
-				if (_source.OwnerSpaceship.WeaponPlacements.TryGetValue(_source, out List<Position> weaponPoses)) {
-					weaponPos = weaponPoses[_workingWeapons[i]];
-				}
-				else {
-					weaponPos = _source.OwnerSpaceship.Position;
-				}
+				Position weaponPos = 
+					_source.OwnerSpaceship.WeaponPlacements.TryGetValue(_source, out List<Position> weaponPoses) 
+						? weaponPoses[_workingWeapons[i]] 
+						: _source.OwnerSpaceship.Position;
 
 				Point2d globalWeaponPos = weaponPos.Location.TransformBy(_source.OwnerSpaceship.Position);
 				if (curDiam > 0) {

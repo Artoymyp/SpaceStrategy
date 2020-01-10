@@ -131,20 +131,17 @@ namespace SpaceStrategy
 				}
 
 				if (p.RandomDistance > 0) {
-					var randomDistancePen = new Pen(Game.Params.MandatoryTrajectoryColor, Game.Params.TrajectoryLineThickness);
-					randomDistancePen.DashStyle = DashStyle.Dash;
+					var randomDistancePen = new Pen(Game.Params.MandatoryTrajectoryColor, Game.Params.TrajectoryLineThickness)
+					{
+						DashStyle = DashStyle.Dash
+					};
 					dc.DrawLine(randomDistancePen, p.MandatoryDistance + p.OptionalDistance, 0, p.MandatoryDistance + p.OptionalDistance + p.RandomDistance, 0);
 				}
 
 				if (_highlightPoint.HasValue) {
 					Point2d globalCsPoint = _highlightPoint.Value.TransformBy(Position);
-					if (_highlightedParts.HasFlag(GothicTrajectoryParts.MandatoryPart)) {
-						Game.Cursor.SetForm(CursorForm.TrajectoryMandatory);
-					}
-					else {
-						Game.Cursor.SetForm(CursorForm.TrajectoryOptional);
-					}
-
+					CursorForm cursorForm = _highlightedParts.HasFlag(GothicTrajectoryParts.MandatoryPart) ? CursorForm.TrajectoryMandatory : CursorForm.TrajectoryOptional;
+					Game.Cursor.SetForm(cursorForm);
 					Game.Cursor.SetLocation(Game.CoordinateConverter.GetWinCsPoint(globalCsPoint));
 				}
 
@@ -253,8 +250,7 @@ namespace SpaceStrategy
 
 		internal bool Autocomplete()
 		{
-			var gothicSpaceshipBase = Owner.Spaceship as GothicSpaceshipBase;
-			if (gothicSpaceshipBase != null) {
+			if (Owner.Spaceship is GothicSpaceshipBase gothicSpaceshipBase) {
 				GothicTrajectoryParams p = GetTrajectoryParams();
 				if (p.MandatoryDistance > 0.001) {
 					double distanceToMove = Math.Min(p.MandatoryDistance, p.DistanceToMove);

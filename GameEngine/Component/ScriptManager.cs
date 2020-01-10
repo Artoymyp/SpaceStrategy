@@ -84,8 +84,7 @@ namespace SpaceStrategy
 		public void OnTime(TimeSpan dt)
 		{
 			_actions.RemoveAll(a => a.Complete);
-			for (int i = 0; i < _actions.Count; i++) {
-				ScriptEvent script = _actions[i];
+			foreach (ScriptEvent script in _actions) {
 				script.CurTime += dt;
 				if (script.CurTime >= script.StartTime) {
 					script.Run();

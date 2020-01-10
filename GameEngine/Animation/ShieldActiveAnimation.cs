@@ -37,13 +37,10 @@ namespace SpaceStrategy.Animation
 		{
 			GraphicsState oldDc = dc.Save();
 			dc.TranslateTransform((float)_spaceship.Position.Location.X, (float)_spaceship.Position.Location.Y);
-			Color curColor;
-			if (Phase < 0.5) {
-				curColor = AnimationHelper.AnimateColor(Phase * 2, ShieldColorMin, ShieldColorMax);
-			}
-			else {
-				curColor = AnimationHelper.AnimateColor((Phase - 0.5) * 2, ShieldColorMax, ShieldColorMin);
-			}
+			Color curColor = 
+				Phase < 0.5 
+					? AnimationHelper.AnimateColor(Phase * 2, ShieldColorMin, ShieldColorMax) 
+					: AnimationHelper.AnimateColor((Phase - 0.5) * 2, ShieldColorMax, ShieldColorMin);
 
 			float radius = _spaceship.Diameter * 0.5F * SizeFactor;
 			var rect = new RectangleF(-radius, -radius, radius * 2, radius * 2);

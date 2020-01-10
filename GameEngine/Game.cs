@@ -359,8 +359,7 @@ namespace SpaceStrategy
 				Point2d gameCsPoint = CoordinateConverter.GetGameCsPoint(point);
 				switch (GameState) {
 					case GameState.Battle:
-						if (SelectedSpaceship != null &&
-							SelectedSpaceship.Trajectory != null) {
+						if (SelectedSpaceship?.Trajectory != null) {
 							SelectedSpaceship.Trajectory.OnMouseMove(gameCsPoint);
 						}
 
@@ -597,7 +596,7 @@ namespace SpaceStrategy
 			_stopwatch.Start();
 			bool debug = true;
 			if (debug) {
-				_curBlastMarkersAtBase = SelectedSpaceship != null ? SelectedSpaceship.BlastMarkersAtBase.Count : 0;
+				_curBlastMarkersAtBase = SelectedSpaceship?.BlastMarkersAtBase.Count ?? 0;
 			}
 
 			if (!Paused) {
@@ -724,8 +723,7 @@ namespace SpaceStrategy
 		internal void RemoveSpaceship(Spaceship spaceship)
 		{
 			_graphicObjects.Remove(spaceship);
-			var gss = spaceship as GothicSpaceship;
-			if (gss != null) {
+			if (spaceship is GothicSpaceship gss) {
 				if (!_destroyedSpaceships.Contains(gss) && gss.IsDestroyed != CatastrophicDamage.None) {
 					_destroyedSpaceships.Add(gss);
 				}

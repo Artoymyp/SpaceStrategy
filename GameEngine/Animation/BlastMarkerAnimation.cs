@@ -24,10 +24,12 @@ namespace SpaceStrategy
 			float elementDiameter = Game.Params.BlastMarkerDiameter / 2;
 			var path = new GraphicsPath();
 			path.AddEllipse(-elementDiameter / 2, -elementDiameter / 2, elementDiameter, elementDiameter);
-			var epicenterBrush = new PathGradientBrush(path);
-			epicenterBrush.CenterColor = epicenterColor;
-			epicenterBrush.SurroundColors = new[] {perimeterColor};
-			epicenterBrush.FocusScales = new PointF(0.2F, 0.2F);
+			var epicenterBrush = new PathGradientBrush(path)
+			{
+				CenterColor = epicenterColor,
+				SurroundColors = new[] {perimeterColor},
+				FocusScales = new PointF(0.2F, 0.2F)
+			};
 			Brush perimeterBrush = new SolidBrush(perimeterColor);
 
 			float y = elementDiameter / 2 * (GeometryHelper.Sqrt3Div2 + 1);

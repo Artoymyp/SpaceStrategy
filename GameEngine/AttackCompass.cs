@@ -18,8 +18,11 @@ namespace SpaceStrategy
 			dc.TranslateTransform((float)pos.Location.X, (float)pos.Location.Y);
 			dc.RotateTransform((float)pos.Degree);
 
-			var pen = new Pen(color, Game.Params.AttackCompassThickness);
-			pen.DashStyle = DashStyle.Dash;
+			var pen = new Pen(color, Game.Params.AttackCompassThickness)
+			{
+				DashStyle = DashStyle.Dash
+			};
+
 			double x45degree = GeometryHelper.Cos(GeometryHelper.Pi / 4) * radius;
 
 			var centerPoint = new Point2d(0, 0);

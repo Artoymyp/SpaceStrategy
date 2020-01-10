@@ -46,13 +46,10 @@ namespace SpaceStrategy
 
 		internal void Add(Point2d targetPoint)
 		{
-			Point2d prevPoint;
-			if (_items.Count > 0) {
-				prevPoint = _items.Last().EndPoint;
-			}
-			else {
-				prevPoint = StartPoint;
-			}
+			Point2d prevPoint =
+				_items.Count > 0
+					? _items.Last().EndPoint
+					: StartPoint;
 
 			var newSegment = new LinearTrajectory(this, prevPoint, targetPoint);
 			_items.Add(newSegment);
@@ -80,8 +77,7 @@ namespace SpaceStrategy
 			Position newPosition;
 			do {
 				Trajectory curTrajectory = _items[0];
-				double newUnusedDistance;
-				curTrajectory.AddToCurrentDistance(unusedDistance, out newUnusedDistance);
+				curTrajectory.AddToCurrentDistance(unusedDistance, out double newUnusedDistance);
 				double usedDistance = unusedDistance - newUnusedDistance;
 				DistanceAfterLastTurn += usedDistance;
 

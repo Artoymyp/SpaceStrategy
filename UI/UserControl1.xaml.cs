@@ -43,21 +43,18 @@ namespace UI
 				var sP = new Point(cP.X + Math.Cos(StartAng) * r, cP.Y + Math.Sin(StartAng) * r);
 				var eP = new Point(cP.X + Math.Cos(EndAng) * r, cP.Y + Math.Sin(EndAng) * r);
 
-				var lines = new PathFigure();
-				lines.StartPoint = sP;
+				var lines = new PathFigure
+				{
+					StartPoint = sP,
+					Segments = new PathSegmentCollection
+					{
+						new LineSegment(cP, false),
+						new LineSegment(eP, false),
+						new ArcSegment(sP, new Size(r, r), EndAng - StartAng, false, SweepDirection.Counterclockwise, false)
+					}
+				};
 
-				var myPathSegmentCollection = new PathSegmentCollection();
-				myPathSegmentCollection.Add(new LineSegment(cP, false));
-				myPathSegmentCollection.Add(new LineSegment(eP, false));
-				myPathSegmentCollection.Add(new ArcSegment(sP, new Size(r, r), EndAng - StartAng, false, SweepDirection.Counterclockwise, false));
-				lines.Segments = myPathSegmentCollection;
-
-				var myPathFigureCollection = new PathFigureCollection();
-				myPathFigureCollection.Add(lines);
-
-				var pathGeometry = new PathGeometry();
-				pathGeometry.Figures = myPathFigureCollection;
-				return pathGeometry;
+				return new PathGeometry {Figures = new PathFigureCollection { lines } };
 			}
 		}
 
