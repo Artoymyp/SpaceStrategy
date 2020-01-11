@@ -6,7 +6,6 @@ namespace SpaceStrategy
 	class InflictDamage : ScriptEvent
 	{
 		readonly int _damage;
-		SpaceshipWeapon _attacker;
 		protected GothicSpaceshipBase Spaceship;
 
 		public InflictDamage(GothicSpaceshipBase spaceship, SpaceshipWeapon attacker, int damage, TimeSpan startTime)
@@ -14,7 +13,6 @@ namespace SpaceStrategy
 		{
 			Spaceship = spaceship;
 			_damage = damage;
-			_attacker = attacker;
 			Action = InflictSpaceshipDamage;
 		}
 
@@ -35,9 +33,14 @@ namespace SpaceStrategy
 			_destructionDispersion = destructionDispersion;
 		}
 
+		TorpedoSalvo Torpedo
+		{
+			get { return (TorpedoSalvo)Spaceship; }
+		}
+
 		protected override void InflictSpaceshipDamage()
 		{
-			(Spaceship as TorpedoSalvo).SetMaxTorpedoDestructionDelay(_destructionDispersion);
+			Torpedo.SetMaxTorpedoDestructionDelay(_destructionDispersion);
 
 			base.InflictSpaceshipDamage();
 		}
