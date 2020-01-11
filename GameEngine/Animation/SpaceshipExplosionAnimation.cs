@@ -27,9 +27,7 @@ namespace SpaceStrategy
 		{
 			GraphicsState oldDc = dc.Save();
 			dc.TranslateTransform((float)_explosionPosition.Location.X, (float)_explosionPosition.Location.Y);
-			if (_explosionPosition.Degree != 0) {
-				dc.RotateTransform((float)_explosionPosition.Degree);
-			}
+			dc.RotateTransform((float)_explosionPosition.Degree);
 
 			float curExplosionRadius = AnimationHelper.AnimateFloat(Phase, _startDiameter, _endDiameter) / 2;
 			Color curColor = AnimationHelper.AnimateColor(Phase, Color.FromArgb(0xFF, 0xFF, 0xD7, 0), Color.FromArgb(0, 0, 0, 0), AnimationMode.Pow8);
