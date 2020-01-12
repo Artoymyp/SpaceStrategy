@@ -22,8 +22,9 @@ namespace SpaceStrategy
 
 		internal CoordinateConverter CoordinateConverter;
 		internal GameCursor Cursor;
-		internal List<AnimationObject> DroppedAnimations = new List<AnimationObject>();
 		readonly List<AnimationObject> _animations = new List<AnimationObject>();
+		readonly List<AnimationObject> _animationsToAdd = new List<AnimationObject>();
+		readonly List<AnimationObject> _animationsToRemove = new List<AnimationObject>();
 		readonly AttackCompass _attackCompass;
 		readonly Bitmap _background = Resources.background;
 		readonly List<GothicSpaceship> _destroyedSpaceships = new List<GothicSpaceship>();
@@ -638,11 +639,24 @@ namespace SpaceStrategy
 
 				_allShipsStand = newAllShipsStand;
 
-				foreach (AnimationObject droppedAnimation in DroppedAnimations) RemoveAnimation(droppedAnimation);
-				DroppedAnimations.Clear();
-				foreach (AnimationObject animation in _animations) {
-					animation.OnTime(TimerStep);
-				}
+				ProcessAnimations();
+			}
+		}
+
+		void ProcessAnimations()
+		{
+			foreach (AnimationObject animation in _animationsToRemove) {
+				_animations.Remove(animation);
+			}
+			_animationsToRemove.Clear();
+
+			foreach (AnimationObject animation in _animationsToAdd) {
+				_animations.Add(animation);
+			}
+			_animationsToAdd.Clear();
+
+			foreach (AnimationObject animation in _animations) {
+				animation.OnTime(TimerStep);
 			}
 		}
 
@@ -672,7 +686,7 @@ namespace SpaceStrategy
 
 		internal void AddAnimation(AnimationObject animation)
 		{
-			_animations.Add(animation);
+			_animationsToAdd.Add(animation);
 		}
 
 		internal void AddGraphicObject(GraphicObject obj)
@@ -711,7 +725,7 @@ namespace SpaceStrategy
 
 		internal void RemoveAnimation(AnimationObject animation)
 		{
-			_animations.Remove(animation);
+			_animationsToRemove.Remove(animation);
 		}
 
 		internal void RemoveSpaceship(Spaceship spaceship)
