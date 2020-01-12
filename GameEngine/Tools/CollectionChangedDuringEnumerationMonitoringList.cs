@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace SpaceStrategy
+namespace SpaceStrategy.Tools
 {
 	class CollectionChangedDuringEnumerationMonitoringList<T> : IList<T>
 	{
@@ -74,6 +74,11 @@ namespace SpaceStrategy
 		{
 			OnCollectionChangedDuringEnumeration();
 			_list.RemoveAt(index);
+		}
+
+		public void RemoveAll(Predicate<T> predicate)
+		{
+			_list.RemoveAll(predicate);
 		}
 
 		public T this[int index]

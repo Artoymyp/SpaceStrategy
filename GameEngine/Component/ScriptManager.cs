@@ -78,14 +78,18 @@ namespace SpaceStrategy
 	class ScriptManager
 	{
 		readonly List<ScriptEvent> _actions = new List<ScriptEvent>();
+		readonly List<ScriptEvent> _actionsToAdd = new List<ScriptEvent>();
 
 		public void AddEvent(ScriptEvent action)
 		{
-			_actions.Add(action);
+			_actionsToAdd.Add(action);
 		}
 
 		public void OnTime(TimeSpan dt)
 		{
+			_actions.AddRange(_actionsToAdd);
+			_actionsToAdd.Clear();
+
 			_actions.RemoveAll(a => a.Complete);
 			foreach (ScriptEvent script in _actions) {
 				script.CurTime += dt;
