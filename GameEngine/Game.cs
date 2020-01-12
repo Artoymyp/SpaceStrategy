@@ -31,17 +31,12 @@ namespace SpaceStrategy
 
 		readonly Stopwatch _stopwatch = new Stopwatch();
 
-		readonly List<PositioningZone> _zones;
-
 		//10000 ticks = 1 ms
 		bool _allShipsStand = true;
 
 		GamePhase _battlePhase = GamePhase.Ending;
-		double _curAntiTorpedoDist;
 		int _curBlastMarkersAtBase;
-		int _curObjectsOnCourseCount;
 		Player _currentPlayer;
-		double _curTorpedoDist;
 		int _fps;
 		int _frameCounter;
 		GameState _gameState;
@@ -67,21 +62,21 @@ namespace SpaceStrategy
 			}
 
 			CurrentPlayer = Players[0];
-			_zones = new List<PositioningZone>();
+			var zones = new List<PositioningZone>();
 
 			int positioningZoneWidth = 90;
 			int positioningZoneHeight = 30;
 			int distanceBetweenZones = 60;
 			int centerX = 0;
 			int centerY = 0;
-			_zones.Add(new PositioningZone(this, Players[0],
+			zones.Add(new PositioningZone(this, Players[0],
 				new Point2d(centerX - positioningZoneWidth / 2, centerY - distanceBetweenZones / 2 - positioningZoneHeight),
 				new Point2d(centerX + positioningZoneWidth / 2, centerY - distanceBetweenZones / 2)));
-			_zones.Add(new PositioningZone(this, Players[1],
+			zones.Add(new PositioningZone(this, Players[1],
 				new Point2d(centerX - positioningZoneWidth / 2, centerY + distanceBetweenZones / 2),
 				new Point2d(centerX + positioningZoneWidth / 2, centerY + distanceBetweenZones / 2 + positioningZoneHeight)));
 
-			foreach (PositioningZone zone in _zones) {
+			foreach (PositioningZone zone in zones) {
 				zone.PositioningBegin += zone_PositioningBegin;
 				zone.PositioningComplete += zone_PositioningComplete;
 			}
@@ -268,8 +263,6 @@ namespace SpaceStrategy
 			get { return _graphicObjects.OfType<BlastMarker>(); }
 		}
 
-		internal TurnPhase CurrentPhase { get; private set; }
-
 		internal IEnumerable<GothicSpaceship> GothicSpaceships
 		{
 			get { return _graphicObjects.OfType<GothicSpaceship>(); }
@@ -413,9 +406,7 @@ namespace SpaceStrategy
 			}
 
 			foreach (GraphicObject graphicObject in GraphicObjects) {
-				if (graphicObject is GothicSpaceship) {
-					var spaceship = graphicObject as GothicSpaceship;
-
+				if (graphicObject is GothicSpaceship spaceship) {
 					if (spaceship.Player == CurrentPlayer || spaceship.IsSelected) {
 						if (spaceship.IsDestroyed == CatastrophicDamage.None) {
 							if (BattlePhase == GamePhase.Movement) {
@@ -446,7 +437,10 @@ namespace SpaceStrategy
 				graphicObject.Draw(dc);
 			}
 
-			for (int i = 0; i < _animations.Count(); i++) _animations[i].Draw(dc);
+			foreach (AnimationObject animation in _animations) {
+				animation.Draw(dc);
+			}
+
 			dc.ResetTransform();
 
 			//int pointsFontSize=10;
@@ -507,14 +501,14 @@ namespace SpaceStrategy
 				case GameState.Battle:
 					if (button == MouseButtons.Left) {
 						if (TrySelectSpaceship(gameCsPoint, out GothicSpaceshipBase newSelectedSpaceship)) {
-							if (newSelectedSpaceship is GothicSpaceship) {
+							if (newSelectedSpaceship is GothicSpaceship gothicSpaceship) {
 								if (SelectedSpaceship == null) {
-									SelectedSpaceship = newSelectedSpaceship as GothicSpaceship;
+									SelectedSpaceship = gothicSpaceship;
 									SelectedSpaceship.IsSelected = true;
 								}
 								else if (SelectedSpaceship != newSelectedSpaceship) {
 									SelectedSpaceship.IsSelected = false;
-									SelectedSpaceship = newSelectedSpaceship as GothicSpaceship;
+									SelectedSpaceship = gothicSpaceship;
 									SelectedSpaceship.IsSelected = true;
 								}
 							}
@@ -622,15 +616,13 @@ namespace SpaceStrategy
 						var objectsOnCourse = new List<GraphicObject>();
 						Trajectory trajectory = spaceship.Trajectory.First();
 						foreach (GraphicObject possiblyCollidedObject in GraphicObjects.Where(a => a != spaceship && a.IsCollisionObject))
-							if (possiblyCollidedObject is Spaceship) {
-								if (trajectory.IsOnCourse(possiblyCollidedObject.Position.Location, (possiblyCollidedObject as Spaceship).Diameter / 2 + spaceship.Diameter / 2)) {
-									objectsOnCourse.Add(possiblyCollidedObject);
+							if (possiblyCollidedObject is Spaceship collidedSpaceship) {
+								if (trajectory.IsOnCourse(collidedSpaceship.Position.Location, collidedSpaceship.Diameter / 2 + spaceship.Diameter / 2)) {
+									objectsOnCourse.Add(collidedSpaceship);
 								}
 							}
 
-						if (debug) {
-							_curObjectsOnCourseCount = objectsOnCourse.Count;
-						}
+						if (debug) { }
 
 						CheckSpaceshipCollision(spaceship, objectsOnCourse);
 					}
@@ -648,7 +640,9 @@ namespace SpaceStrategy
 
 				foreach (AnimationObject droppedAnimation in DroppedAnimations) RemoveAnimation(droppedAnimation);
 				DroppedAnimations.Clear();
-				for (int i = 0; i < _animations.Count(); i++) _animations[i].OnTime(TimerStep);
+				foreach (AnimationObject animation in _animations) {
+					animation.OnTime(TimerStep);
+				}
 			}
 		}
 
@@ -874,30 +868,30 @@ namespace SpaceStrategy
 				}
 
 				if (spaceship is TorpedoSalvo || possibleCollision is TorpedoSalvo) {
-					TorpedoSalvo torpedo = spaceship is TorpedoSalvo ? spaceship as TorpedoSalvo : possibleCollision is TorpedoSalvo ? possibleCollision as TorpedoSalvo : null;
+					TorpedoSalvo torpedo = 
+						spaceship is TorpedoSalvo salvo 
+							? salvo 
+							: (TorpedoSalvo)possibleCollision;
+
 					GraphicObject collisionObject = torpedo == spaceship ? possibleCollision : spaceship;
 
 					double distance = collisionObject.Position.Location.DistanceTo(torpedo.Position.Location);
 					if (!CommittedAttacks.Any(a => a.Item1 == collisionObject && a.Item2 == torpedo)) {
-						if (collisionObject is GothicSpaceship) {
-							var gss = collisionObject as GothicSpaceship;
-							double antiTorpedoAttackDistance = torpedo.Size + gss.Diameter * 3;
-							_curTorpedoDist = distance;
-							_curAntiTorpedoDist = antiTorpedoAttackDistance;
+						if (collisionObject is GothicSpaceship gothicSpaceship) {
+							double antiTorpedoAttackDistance = torpedo.Size + gothicSpaceship.Diameter * 3;
 							if (distance < antiTorpedoAttackDistance) {
-								TurretWeapon turret = gss.Weapons.OfType<TurretWeapon>().FirstOrDefault();
+								TurretWeapon turret = gothicSpaceship.Weapons.OfType<TurretWeapon>().FirstOrDefault();
 								if (turret != null) {
 									turret.Attack(torpedo, new List<SpaceshipWeapon> { turret });
 								}
 
-								CommittedAttacks.Add(new Tuple<Spaceship, Spaceship>(gss, torpedo));
+								CommittedAttacks.Add(new Tuple<Spaceship, Spaceship>(gothicSpaceship, torpedo));
 							}
 						}
 					}
 
 					if (!CommittedAttacks.Any(a => a.Item1 == torpedo && a.Item2 == collisionObject)) {
-						if (collisionObject is GothicSpaceshipBase) {
-							var spaceshipBase = collisionObject as GothicSpaceshipBase;
+						if (collisionObject is GothicSpaceshipBase spaceshipBase) {
 							double torpedoAttackDistance = torpedo.Size / 2 + spaceshipBase.Diameter / 2;
 							if (distance < torpedoAttackDistance) {
 								torpedo.Attack(spaceshipBase);
@@ -1006,7 +1000,7 @@ namespace SpaceStrategy
 
 		bool TrySelectSpaceship(Point2d point, out GothicSpaceshipBase selectedSpaceship)
 		{
-			double spaceshipRadiusSqr = Params.SpaceshipDiameter * Params.SpaceshipDiameter / 4;
+			double spaceshipRadiusSqr = Params.SpaceshipDiameter * (Params.SpaceshipDiameter / 4);
 			var possiblySelectedSpaceships = new List<Tuple<GothicSpaceshipBase, double>>();
 			foreach (GothicSpaceshipBase spaceship in SpaceBodies) {
 				double distanceSqrToSpaceship = point.DistanceSqrTo(spaceship.Position.Location);
