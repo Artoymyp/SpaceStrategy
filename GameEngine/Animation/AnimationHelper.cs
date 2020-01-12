@@ -70,7 +70,7 @@ namespace SpaceStrategy
 
 		internal static void CreateAnimation(AnimationObject animation)
 		{
-			Game.AddAnimation(animation);
+			Game.AnimationManager.AddAnimation(animation);
 		}
 	}
 }

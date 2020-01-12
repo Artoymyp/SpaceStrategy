@@ -28,7 +28,7 @@ namespace SpaceStrategy
 
 		public virtual void Drop()
 		{
-			Game.RemoveAnimation(this);
+			Game.AnimationManager.RemoveAnimation(this);
 		}
 
 		public virtual void OnTime(TimeSpan dt)

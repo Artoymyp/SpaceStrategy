@@ -90,6 +90,7 @@
     <Compile Include="Animation\ShieldActiveAnimation.cs" />
     <Compile Include="AttackCompass.cs" />
     <Compile Include="Animation\BlastMarkerAnimation.cs" />
+    <Compile Include="Component\AnimationManager.cs" />
     <Compile Include="Tools\CollectionChangedDuringEnumerationMonitoringList.cs" />
     <Compile Include="Component\CursorForm.cs" />
     <Compile Include="Component\ScriptManager.cs" />

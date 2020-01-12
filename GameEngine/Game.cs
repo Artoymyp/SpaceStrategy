@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using SpaceStrategy.Component;
 using SpaceStrategy.Properties;
 
 namespace SpaceStrategy
@@ -22,9 +23,6 @@ namespace SpaceStrategy
 
 		internal CoordinateConverter CoordinateConverter;
 		internal GameCursor Cursor;
-		readonly List<AnimationObject> _animations = new List<AnimationObject>();
-		readonly List<AnimationObject> _animationsToAdd = new List<AnimationObject>();
-		readonly List<AnimationObject> _animationsToRemove = new List<AnimationObject>();
 		readonly AttackCompass _attackCompass;
 		readonly Bitmap _background = Resources.background;
 		readonly List<GothicSpaceship> _destroyedSpaceships = new List<GothicSpaceship>();
@@ -239,10 +237,7 @@ namespace SpaceStrategy
 
 		public Size Size { get; }
 
-		internal IEnumerable<AnimationObject> Animations
-		{
-			get { return _animations; }
-		}
+		internal AnimationManager AnimationManager { get; } = new AnimationManager();
 
 		internal GamePhase BattlePhase
 		{
@@ -438,9 +433,7 @@ namespace SpaceStrategy
 				graphicObject.Draw(dc);
 			}
 
-			foreach (AnimationObject animation in _animations) {
-				animation.Draw(dc);
-			}
+			AnimationManager.DrawAnimations(dc);
 
 			dc.ResetTransform();
 
@@ -639,24 +632,7 @@ namespace SpaceStrategy
 
 				_allShipsStand = newAllShipsStand;
 
-				ProcessAnimations();
-			}
-		}
-
-		void ProcessAnimations()
-		{
-			foreach (AnimationObject animation in _animationsToRemove) {
-				_animations.Remove(animation);
-			}
-			_animationsToRemove.Clear();
-
-			foreach (AnimationObject animation in _animationsToAdd) {
-				_animations.Add(animation);
-			}
-			_animationsToAdd.Clear();
-
-			foreach (AnimationObject animation in _animations) {
-				animation.OnTime(TimerStep);
+				AnimationManager.ProcessAnimations(TimerStep);
 			}
 		}
 
@@ -682,11 +658,6 @@ namespace SpaceStrategy
 		public void StartGame()
 		{
 			StartFleetPositioning();
-		}
-
-		internal void AddAnimation(AnimationObject animation)
-		{
-			_animationsToAdd.Add(animation);
 		}
 
 		internal void AddGraphicObject(GraphicObject obj)
@@ -721,11 +692,6 @@ namespace SpaceStrategy
 			}
 
 			return 0;
-		}
-
-		internal void RemoveAnimation(AnimationObject animation)
-		{
-			_animationsToRemove.Add(animation);
 		}
 
 		internal void RemoveSpaceship(Spaceship spaceship)
