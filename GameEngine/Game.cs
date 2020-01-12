@@ -725,7 +725,7 @@ namespace SpaceStrategy
 
 		internal void RemoveAnimation(AnimationObject animation)
 		{
-			_animationsToRemove.Remove(animation);
+			_animationsToRemove.Add(animation);
 		}
 
 		internal void RemoveSpaceship(Spaceship spaceship)
