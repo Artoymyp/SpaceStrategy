@@ -1000,7 +1000,7 @@ namespace SpaceStrategy
 
 		bool TrySelectSpaceship(Point2d point, out GothicSpaceshipBase selectedSpaceship)
 		{
-			double spaceshipRadiusSqr = Params.SpaceshipDiameter * (Params.SpaceshipDiameter / 4);
+			double spaceshipRadiusSqr = (double)(Params.SpaceshipDiameter * Params.SpaceshipDiameter) / 4;
 			var possiblySelectedSpaceships = new List<Tuple<GothicSpaceshipBase, double>>();
 			foreach (GothicSpaceshipBase spaceship in SpaceBodies) {
 				double distanceSqrToSpaceship = point.DistanceSqrTo(spaceship.Position.Location);
